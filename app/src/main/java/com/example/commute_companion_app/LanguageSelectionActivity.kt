@@ -43,7 +43,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
             currentlySelectedLanguage = optionLanguageNames[index]
         }
 
-        // Apply the restored/default selection visually on screen load
+        // Apply the restored/default selection visually on screen loads
         selectOption(initialIndex)
 
         options.forEachIndexed { i, layout -> layout.setOnClickListener { selectOption(i) } }

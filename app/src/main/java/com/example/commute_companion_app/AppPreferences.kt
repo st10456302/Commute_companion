@@ -7,13 +7,16 @@ import android.content.SharedPreferences
  * Central local storage for the Commute Companion prototype.
  *
  * This wraps Android's SharedPreferences behind a single, simple class.
- * As we implement later steps, we will add more fields here (accountEmail,
- * savedLocation, savedRoute, notificationsEnabled, biometricEnabled).
+ * As we implement later steps, we will add more fields here (savedLocation,
+ * savedRoute, notificationsEnabled, biometricEnabled).
  *
  * IMPORTANT: This is a prototype-stage storage layer only. It is intentionally
  * kept simple so that a future real backend (ASP.NET Core API + Azure SQL) can
  * replace or supplement it later without Activities needing to change how they
  * call this class.
+ *
+ * SECURITY NOTE: Passwords are intentionally NEVER stored here. This class only
+ * ever holds non-sensitive account info (name, email) for prototype purposes.
  */
 class AppPreferences(context: Context) {
 
@@ -38,9 +41,29 @@ class AppPreferences(context: Context) {
         get() = prefs.getString(KEY_SELECTED_LANGUAGE, "English") ?: "English"
         set(value) = prefs.edit().putString(KEY_SELECTED_LANGUAGE, value).apply()
 
+    /**
+     * The user's full name, entered on the Create Account screen.
+     * Defaults to an empty string if not yet set.
+     */
+    var userName: String
+        get() = prefs.getString(KEY_USER_NAME, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_USER_NAME, value).apply()
+
+    /**
+     * The user's account email, entered on the Create Account screen.
+     * Defaults to an empty string if not yet set.
+     *
+     * NOTE: The corresponding password is deliberately never stored here.
+     */
+    var accountEmail: String
+        get() = prefs.getString(KEY_ACCOUNT_EMAIL, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_ACCOUNT_EMAIL, value).apply()
+
     companion object {
         private const val PREFS_NAME = "commute_companion_prefs"
         private const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
         private const val KEY_SELECTED_LANGUAGE = "selected_language"
+        private const val KEY_USER_NAME = "user_name"
+        private const val KEY_ACCOUNT_EMAIL = "account_email"
     }
 }
