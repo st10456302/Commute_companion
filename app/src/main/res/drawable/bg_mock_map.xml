@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="260dp"
+    android:viewportWidth="400"
+    android:viewportHeight="260">
+
+    <!-- Base map background -->
+    <path
+        android:fillColor="#FFE5EAEF"
+        android:pathData="M0,0h400v260h-400z" />
+
+    <!-- City blocks -->
+    <path android:fillColor="#FFD8DEE6" android:pathData="M20,20h90v60h-90z" />
+    <path android:fillColor="#FFD8DEE6" android:pathData="M140,15h70v50h-70z" />
+    <path android:fillColor="#FFD8DEE6" android:pathData="M240,25h100v45h-100z" />
+    <path android:fillColor="#FFD8DEE6" android:pathData="M20,110h60v70h-60z" />
+    <path android:fillColor="#FFD8DEE6" android:pathData="M110,120h80v60h-80z" />
+    <path android:fillColor="#FFD8DEE6" android:pathData="M230,110h140v80h-140z" />
+    <path android:fillColor="#FFD8DEE6" android:pathData="M40,200h100v45h-100z" />
+    <path android:fillColor="#FFD8DEE6" android:pathData="M260,210h110v40h-110z" />
+
+    <!-- Green space -->
+    <path android:fillColor="#FFCFE3D4" android:pathData="M300,30h80v60h-80z" />
+    <path android:fillColor="#FFCFE3D4" android:pathData="M0,150h30v90h-30z" />
+
+    <!-- Roads (white) -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M0,95h400v14h-400z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M0,190h400v10h-400z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M100,0h14v260h-14z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M225,0h12v260h-12z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M330,0h10v260h-10z" />
+
+    <!-- Rail line (dashed effect using short segments) -->
+    <path android:fillColor="#FFB9C2CE" android:pathData="M0,60h20v4h-20z" />
+    <path android:fillColor="#FFB9C2CE" android:pathData="M30,60h20v4h-20z" />
+    <path android:fillColor="#FFB9C2CE" android:pathData="M60,60h20v4h-20z" />
+    <path android:fillColor="#FFB9C2CE" android:pathData="M90,60h20v4h-20z" />
+    <path android:fillColor="#FFB9C2CE" android:pathData="M120,60h20v4h-20z" />
+    <path android:fillColor="#FFB9C2CE" android:pathData="M150,60h20v4h-20z" />
+    <path android:fillColor="#FFB9C2CE" android:pathData="M180,60h20v4h-20z" />
+    <path android:fillColor="#FFB9C2CE" android:pathData="M210,60h20v4h-20z" />
+
+</vector>

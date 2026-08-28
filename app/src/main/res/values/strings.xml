@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Commute Companion</string>
+
+    <!-- Loading -->
+    <string name="tagline">Your journey, all in one place.</string>
+    <string name="checking_routes">CHECKING ROUTES</string>
+
+    <!-- Welcome -->
+    <string name="welcome_heading">Your commute,\nmastered.</string>
+    <string name="welcome_sub">Navigate South Africa with real-time intelligence for traffic, load-shedding, and weather.</string>
+    <string name="live_traffic_label">LIVE TRAFFIC</string>
+    <string name="dynamic_routing_title">Dynamic Routing</string>
+    <string name="dynamic_routing_sub">Avoid congestion and sudden road closures effortlessly.</string>
+    <string name="eskom_alerts_title">Eskom Alerts</string>
+    <string name="eskom_alerts_sub">Stage changes &amp; schedules.</string>
+    <string name="local_weather_title">Local Weather</string>
+    <string name="local_weather_sub">Rain and storm warnings.</string>
+    <string name="get_started">Get started</string>
+    <string name="already_have_account">I already have an account</string>
+
+    <!-- Account entry -->
+    <string name="journey_starts_here">Your Journey Starts Here</string>
+    <string name="privacy_explanation">We value your privacy. Commute Companion only uses your location data to provide real-time updates for your South African commute.</string>
+    <string name="create_account">Create account</string>
+    <string name="sign_in">Sign in</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
+    <!-- Language -->
+    <string name="select_language">Select Language</string>
+    <string name="select_language_sub">Choose your preferred language for the Commute Companion app.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_english_greeting">Hello, welcome to Commute Companion.</string>
+    <string name="lang_zulu">isiZulu</string>
+    <string name="lang_zulu_greeting">Sawubona, wamukelekile ku-Commute Companion.</string>
+    <string name="lang_afrikaans">Afrikaans</string>
+    <string name="lang_afrikaans_greeting">Hallo, welkom by Commute Companion.</string>
+
+    <!-- Create account -->
+    <string name="create_account_title">Create Account</string>
+    <string name="create_account_sub">Join Commute Companion to navigate smarter.</string>
+    <string name="full_name">Full Name</string>
+    <string name="full_name_hint">e.g. Sipho Ndlovu</string>
+    <string name="email_address">Email Address</string>
+    <string name="email_hint">name@example.com</string>
+    <string name="password">Password</string>
+    <string name="min_chars">Minimum 8 characters.</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="terms_agreement">I agree to the Terms of Service and Privacy Policy.</string>
+
+    <!-- Sign in -->
+    <string name="welcome_back">Welcome Back</string>
+    <string name="signin_sub">Sign in to Commute Companion</string>
+    <string name="email_hint_user">user@example.com</string>
+    <string name="incorrect_credentials">Incorrect email or password.</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="or_divider">or</string>
+    <string name="biometric">Biometric</string>
+
+    <!-- Reset password -->
+    <string name="reset_password">Reset Password</string>
+    <string name="reset_password_sub">Enter your email address and we\'ll send you a link to reset your password.</string>
+    <string name="send_reset_link">Send reset link</string>
+    <string name="return_to_sign_in">Return to sign in</string>
+
+    <!-- Notifications -->
+    <string name="stay_ahead">Stay Ahead of the Chaos</string>
+    <string name="stay_ahead_sub">Enable notifications to get real-time alerts tailored for your South African commute.</string>
+    <string name="traffic_updates">Traffic Updates</string>
+    <string name="traffic_updates_sub">Accidents, roadblocks, and taxi rank delays.</string>
+    <string name="load_shedding">Load-shedding</string>
+    <string name="load_shedding_sub">Stage changes and \"robots\" out on your route.</string>
+    <string name="weather_warnings">Weather Warnings</string>
+    <string name="weather_warnings_sub">Flash floods and severe storms ahead.</string>
+    <string name="enable_notifications">Enable notifications</string>
+
+    <!-- Location access -->
+    <string name="find_way_faster">Find your way faster</string>
+    <string name="find_way_faster_sub">We use your location to provide accurate Gautrain schedules, avoid load shedding traffic in Sandton Central, and find the nearest taxi ranks instantly.</string>
+    <string name="allow_location_access">Allow location access</string>
+    <string name="enter_location_manually">Enter a location manually</string>
+    <string name="not_now">Not now</string>
+
+    <!-- Biometric -->
+    <string name="fast_secure_login">Fast &amp; Secure Login</string>
+    <string name="fast_secure_login_sub">Use your device\'s biometrics (Fingerprint or Face ID) to sign in quickly and securely. Your biometric data never leaves your device.</string>
+    <string name="device_side_security">Device-side security</string>
+    <string name="instant_access">Instant access</string>
+    <string name="no_passwords">No passwords to remember</string>
+    <string name="enable_biometric_login">Enable biometric login</string>
+
+    <!-- Dashboard common -->
+    <string name="good_morning">Good Morning.</string>
+    <string name="good_morning_sipho">Good Morning, Sipho</string>
+    <string name="sandton_central_temp">Sandton Central • 18°C</string>
+    <string name="weather">Weather</string>
+    <string name="sandton">Sandton</string>
+    <string name="weather_desc">Clear skies today. High of 24°C.</string>
+    <string name="load_shedding_time">12:00 - 14:30</string>
+    <string name="next_slot">Next slot: 20:00 - 22:30</string>
+    <string name="stage_2">Stage 2</string>
+    <string name="traffic_to_sandton">Traffic to Sandton</string>
+    <string name="offline_badge">Offline</string>
+    <string name="traffic_unavailable">Traffic temporarily unavailable</string>
+    <string name="traffic_unavailable_sub">We\'re having trouble connecting to the traffic service. Other services are working normally.</string>
+    <string name="retry_traffic">Retry traffic</string>
+    <string name="gautrain_schedule">Gautrain Schedule</string>
+    <string name="on_time">On Time</string>
+
+    <!-- Offline dashboard -->
+    <string name="youre_offline">You\'re offline</string>
+    <string name="retry">Retry</string>
+    <string name="traffic_cached">Traffic (Cached)</string>
+    <string name="moderate">Moderate</string>
+    <string name="n1_delay">N1 Northbound: 15min delay near Sandton.</string>
+    <string name="offline_updated">Offline - last updated 10m ago</string>
+    <string name="next_slot_zone">Next slot: 18:00 - 20:30 (Zone 4)</string>
+    <string name="weather_forecast">Weather Forecast</string>
+    <string name="partly_cloudy">Partly cloudy. No rain expected during afternoon</string>
+
+    <!-- Live dashboard -->
+    <string name="sandton_central">Sandton Central</string>
+    <string name="home_to_campus">Home to Campus</string>
+    <string name="moderate_traffic">Moderate Traffic</string>
+    <string name="commute_mins">25</string>
+    <string name="commute_delay">5 min delay</string>
+    <string name="incidents_reported">2 incidents reported on route</string>
+    <string name="start_commute">Start commute</string>
+    <string name="view_traffic">View traffic</string>
+    <string name="power_available">Power Available</string>
+    <string name="change_in">Change in 2h 15m</string>
+    <string name="next_slot_label">Next Slot:</string>
+    <string name="next_slot_value">14:00 - 16:30</string>
+    <string name="view_schedule">View schedule</string>
+    <string name="temp_22">22°C</string>
+    <string name="sunny">Sunny</string>
+    <string name="wet_roads">Wet roads expected later</string>
+
+    <!-- Set location -->
+    <string name="set_location">Set Location</string>
+    <string name="search_address_hint">Search for an address or area...</string>
+    <string name="use_current_location">Use my current location</string>
+    <string name="suggested">SUGGESTED</string>
+    <string name="sandton_central_address">Johannesburg, Gauteng</string>
+    <string name="save_as">SAVE AS</string>
+    <string name="home">Home</string>
+    <string name="work">Work</string>
+    <string name="campus">Campus</string>
+    <string name="custom">Custom</string>
+    <string name="save_location">Save Location</string>
+    <string name="map_label">SANDTON CENTRAL\nMaude St &amp; Rivonia Rd, Sandton, 2196</string>
+
+    <!-- Set route -->
+    <string name="set_up_route">Set Up Your Route</string>
+    <string name="set_up_route_sub">Add your usual commute to get personalized traffic and load shedding alerts.</string>
+    <string name="route_name_label">Route Name (e.g., Home to Sandton)</string>
+    <string name="morning_commute">Morning Commute</string>
+    <string name="starting_point">Starting Point</string>
+    <string name="current_location">Current Location</string>
+    <string name="destination">Destination</string>
+    <string name="search_destination">Search destination...</string>
+    <string name="quick_select">Quick select:</string>
+    <string name="office_sandton">Office (Sandton Central)</string>
+    <string name="save_route">Save Route</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_home">Home</string>
+    <string name="nav_alerts">Alerts</string>
+    <string name="nav_locations">Locations</string>
+    <string name="nav_profile">Profile</string>
+</resources>

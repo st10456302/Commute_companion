@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Outer pin/teardrop shape -->
+    <path
+        android:fillColor="#FF7FC4C4"
+        android:pathData="M12,2C8.14,2 5,5.14 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13C19,5.14 15.86,2 12,2z" />
+
+    <!-- Small bolt accent, upper right of pin -->
+    <path
+        android:fillColor="#FF0F2438"
+        android:pathData="M13.8,4.2l-1.9,3.3h1.3l-0.9,2.1l2.4,-3.2h-1.3z" />
+
+    <!-- Car silhouette in the middle of the pin -->
+    <path
+        android:fillColor="#FF0F2438"
+        android:pathData="M8.5,9.7l0.4,-1.2c0.08,-0.24 0.3,-0.4 0.55,-0.4h5.1c0.25,0 0.47,0.16 0.55,0.4l0.4,1.2H8.5z" />
+    <path
+        android:fillColor="#FF0F2438"
+        android:pathData="M8.3,9.7h7.4v0.9H8.3z" />
+    <path
+        android:fillColor="#FF7FC4C4"
+        android:pathData="M9.2,11.4a0.6,0.6 0,1 0,0 -1.2a0.6,0.6 0,1 0,0 1.2z" />
+    <path
+        android:fillColor="#FF7FC4C4"
+        android:pathData="M14.8,11.4a0.6,0.6 0,1 0,0 -1.2a0.6,0.6 0,1 0,0 1.2z" />
+
+    <!-- Small weather dot at the base of the pin -->
+    <path
+        android:fillColor="#FF0F2438"
+        android:pathData="M10.3,13a1.7,1.7 0,1 0,3.4 0a1.7,1.7 0,1 0,-3.4 0z" />
+
+</vector>

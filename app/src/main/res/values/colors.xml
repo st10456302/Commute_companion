@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary -->
+    <color name="teal_primary">#3D8B8B</color>
+    <color name="teal_dark">#2E6B6B</color>
+    <color name="teal_light">#7FC4C4</color>
+
+    <!-- Navy / Charcoal -->
+    <color name="navy_dark">#0F2438</color>
+    <color name="navy_text">#1A2B3C</color>
+    <color name="charcoal_text">#2C2C2C</color>
+
+    <!-- Backgrounds -->
+    <color name="bg_light_blue">#F0F4F8</color>
+    <color name="bg_lighter">#F7FAFC</color>
+    <color name="bg_selected_blue">#DCEAF5</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A2B3C</color>
+    <color name="text_secondary">#6B7C8D</color>
+    <color name="text_hint">#A0AEC0</color>
+
+    <!-- Status -->
+    <color name="red_error">#D9534F</color>
+    <color name="red_bg_light">#FBEAEA</color>
+    <color name="red_offline_bg">#F5D9D9</color>
+    <color name="red_offline_dark">#8B2E2E</color>
+    <color name="blue_info">#2E7BD6</color>
+    <color name="blue_info_bg">#2E7BD6</color>
+    <color name="orange_stage">#E8A33D</color>
+    <color name="orange_bg_light">#FCEFDD</color>
+    <color name="green_ok">#3D8B5F</color>
+    <color name="green_bg_light">#E3F2E9</color>
+
+    <!-- Borders -->
+    <color name="border_light">#E2E8F0</color>
+    <color name="border_selected">#3D8B8B</color>
+    <color name="divider">#E8EDF2</color>
+
+    <!-- Nav -->
+    <color name="nav_selected_bg">#DCEAF5</color>
+    <color name="nav_unselected">#94A3B8</color>
+</resources>
