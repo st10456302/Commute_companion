@@ -40,14 +40,16 @@
                 style="@style/Text.Label" />
 
             <EditText
+                android:id="@+id/etRouteName"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
                 android:layout_marginTop="@dimen/spacing_xs"
                 android:background="@drawable/bg_input_field"
                 android:paddingStart="@dimen/spacing_md"
                 android:paddingEnd="@dimen/spacing_md"
-                android:text="@string/morning_commute"
+                android:hint="@string/morning_commute"
                 android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint"
                 android:textSize="@dimen/text_body" />
 
             <TextView
@@ -117,12 +119,15 @@
                     android:layout_height="@dimen/icon_size_sm"
                     android:src="@drawable/ic_location_pin"
                     app:tint="@color/teal_primary" />
-                <TextView
+                <EditText
+                    android:id="@+id/etDestination"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_sm"
-                    android:text="@string/search_destination"
-                    android:textColor="@color/text_hint"
+                    android:background="@null"
+                    android:hint="@string/search_destination"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
                     android:textSize="@dimen/text_body" />
             </LinearLayout>
 

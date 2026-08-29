@@ -7,8 +7,8 @@ import android.content.SharedPreferences
  * Central local storage for the Commute Companion prototype.
  *
  * This wraps Android's SharedPreferences behind a single, simple class.
- * As we implement later steps, we will add more fields here (savedRoute,
- * notificationsEnabled).
+ * As we implement later steps, we will add more fields here
+ * (notificationsEnabled).
  *
  * IMPORTANT: This is a prototype-stage storage layer only. It is intentionally
  * kept simple so that a future real backend (ASP.NET Core API + Azure SQL) can
@@ -84,6 +84,22 @@ class AppPreferences(context: Context) {
         get() = prefs.getString(KEY_SAVED_LOCATION_LABEL, "Work") ?: "Work"
         set(value) = prefs.edit().putString(KEY_SAVED_LOCATION_LABEL, value).apply()
 
+    /**
+     * The name the user gave their route on the Set Route screen.
+     * Defaults to an empty string if not yet set.
+     */
+    var savedRouteName: String
+        get() = prefs.getString(KEY_SAVED_ROUTE_NAME, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_SAVED_ROUTE_NAME, value).apply()
+
+    /**
+     * The destination the user entered on the Set Route screen.
+     * Defaults to an empty string if not yet set.
+     */
+    var savedRouteDestination: String
+        get() = prefs.getString(KEY_SAVED_ROUTE_DESTINATION, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_SAVED_ROUTE_DESTINATION, value).apply()
+
     companion object {
         private const val PREFS_NAME = "commute_companion_prefs"
         private const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
@@ -93,5 +109,7 @@ class AppPreferences(context: Context) {
         private const val KEY_BIOMETRIC_ENABLED = "biometric_enabled"
         private const val KEY_SAVED_LOCATION_ADDRESS = "saved_location_address"
         private const val KEY_SAVED_LOCATION_LABEL = "saved_location_label"
+        private const val KEY_SAVED_ROUTE_NAME = "saved_route_name"
+        private const val KEY_SAVED_ROUTE_DESTINATION = "saved_route_destination"
     }
 }
