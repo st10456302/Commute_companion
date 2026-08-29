@@ -78,7 +78,7 @@ class CreateAccountActivity : AppCompatActivity() {
             Log.d("CommuteCompanion", "Account created — userName='${prefs.userName}', accountEmail='${prefs.accountEmail}'")
             // Password is intentionally NOT logged and NOT saved to AppPreferences.
 
-            startActivity(Intent(this, NotificationPermissionActivity::class.java))
+            startActivity(Intent(this, BiometricActivity::class.java))
         }
     }
 }

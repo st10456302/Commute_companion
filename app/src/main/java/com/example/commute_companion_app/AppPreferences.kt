@@ -8,7 +8,7 @@ import android.content.SharedPreferences
  *
  * This wraps Android's SharedPreferences behind a single, simple class.
  * As we implement later steps, we will add more fields here (savedLocation,
- * savedRoute, notificationsEnabled, biometricEnabled).
+ * savedRoute, notificationsEnabled).
  *
  * IMPORTANT: This is a prototype-stage storage layer only. It is intentionally
  * kept simple so that a future real backend (ASP.NET Core API + Azure SQL) can
@@ -16,7 +16,7 @@ import android.content.SharedPreferences
  * call this class.
  *
  * SECURITY NOTE: Passwords are intentionally NEVER stored here. This class only
- * ever holds non-sensitive account info (name, email) for prototype purposes.
+ * ever holds non-sensitive account info (name, email) and prototype preferences.
  */
 class AppPreferences(context: Context) {
 
@@ -59,11 +59,20 @@ class AppPreferences(context: Context) {
         get() = prefs.getString(KEY_ACCOUNT_EMAIL, "") ?: ""
         set(value) = prefs.edit().putString(KEY_ACCOUNT_EMAIL, value).apply()
 
+    /**
+     * Whether the user chose to enable biometric login on the Biometric screen.
+     * Defaults to false until the user explicitly enables it.
+     */
+    var biometricEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BIOMETRIC_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED, value).apply()
+
     companion object {
         private const val PREFS_NAME = "commute_companion_prefs"
         private const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
         private const val KEY_SELECTED_LANGUAGE = "selected_language"
         private const val KEY_USER_NAME = "user_name"
         private const val KEY_ACCOUNT_EMAIL = "account_email"
+        private const val KEY_BIOMETRIC_ENABLED = "biometric_enabled"
     }
 }
