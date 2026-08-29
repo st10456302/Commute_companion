@@ -7,8 +7,6 @@ import android.content.SharedPreferences
  * Central local storage for the Commute Companion prototype.
  *
  * This wraps Android's SharedPreferences behind a single, simple class.
- * As we implement later steps, we will add more fields here
- * (notificationsEnabled).
  *
  * IMPORTANT: This is a prototype-stage storage layer only. It is intentionally
  * kept simple so that a future real backend (ASP.NET Core API + Azure SQL) can
@@ -25,8 +23,8 @@ class AppPreferences(context: Context) {
 
     /**
      * Whether the user has fully completed the onboarding flow at least once.
-     * Defaults to false until we explicitly set it to true in a later step
-     * (once Home Dashboard is reached for the first time).
+     * Set to true once the user reaches Home Dashboard for the first time
+     * (from Notification Permission, the final onboarding step).
      */
     var onboardingComplete: Boolean
         get() = prefs.getBoolean(KEY_ONBOARDING_COMPLETE, false)
@@ -100,6 +98,14 @@ class AppPreferences(context: Context) {
         get() = prefs.getString(KEY_SAVED_ROUTE_DESTINATION, "") ?: ""
         set(value) = prefs.edit().putString(KEY_SAVED_ROUTE_DESTINATION, value).apply()
 
+    /**
+     * Whether the user granted/enabled notifications on the Notification
+     * Permission screen. Defaults to false until explicitly set.
+     */
+    var notificationsEnabled: Boolean
+        get() = prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, value).apply()
+
     companion object {
         private const val PREFS_NAME = "commute_companion_prefs"
         private const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
@@ -111,5 +117,6 @@ class AppPreferences(context: Context) {
         private const val KEY_SAVED_LOCATION_LABEL = "saved_location_label"
         private const val KEY_SAVED_ROUTE_NAME = "saved_route_name"
         private const val KEY_SAVED_ROUTE_DESTINATION = "saved_route_destination"
+        private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
     }
 }
