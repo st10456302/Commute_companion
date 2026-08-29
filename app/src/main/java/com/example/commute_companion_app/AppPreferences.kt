@@ -7,8 +7,8 @@ import android.content.SharedPreferences
  * Central local storage for the Commute Companion prototype.
  *
  * This wraps Android's SharedPreferences behind a single, simple class.
- * As we implement later steps, we will add more fields here (savedLocation,
- * savedRoute, notificationsEnabled).
+ * As we implement later steps, we will add more fields here (savedRoute,
+ * notificationsEnabled).
  *
  * IMPORTANT: This is a prototype-stage storage layer only. It is intentionally
  * kept simple so that a future real backend (ASP.NET Core API + Azure SQL) can
@@ -67,6 +67,23 @@ class AppPreferences(context: Context) {
         get() = prefs.getBoolean(KEY_BIOMETRIC_ENABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED, value).apply()
 
+    /**
+     * The location text the user entered/selected on the Set Location screen.
+     * Defaults to an empty string if not yet set.
+     */
+    var savedLocationAddress: String
+        get() = prefs.getString(KEY_SAVED_LOCATION_ADDRESS, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_SAVED_LOCATION_ADDRESS, value).apply()
+
+    /**
+     * Which "Save As" label the user chose for their location
+     * (Home / Work / Campus / Custom). Defaults to "Work" since that is
+     * the chip shown as pre-selected in the existing UI.
+     */
+    var savedLocationLabel: String
+        get() = prefs.getString(KEY_SAVED_LOCATION_LABEL, "Work") ?: "Work"
+        set(value) = prefs.edit().putString(KEY_SAVED_LOCATION_LABEL, value).apply()
+
     companion object {
         private const val PREFS_NAME = "commute_companion_prefs"
         private const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
@@ -74,5 +91,7 @@ class AppPreferences(context: Context) {
         private const val KEY_USER_NAME = "user_name"
         private const val KEY_ACCOUNT_EMAIL = "account_email"
         private const val KEY_BIOMETRIC_ENABLED = "biometric_enabled"
+        private const val KEY_SAVED_LOCATION_ADDRESS = "saved_location_address"
+        private const val KEY_SAVED_LOCATION_LABEL = "saved_location_label"
     }
 }
