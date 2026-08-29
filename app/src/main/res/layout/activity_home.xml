@@ -50,6 +50,7 @@
             android:padding="@dimen/spacing_md">
 
             <TextView
+                android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/good_morning"
@@ -57,6 +58,7 @@
                 android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/tvLocationSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sandton_central_temp"
@@ -88,6 +90,7 @@
                         android:text="@string/weather"
                         style="@style/Text.Heading" />
                     <TextView
+                        android:id="@+id/tvWeatherLocationTag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sandton"
@@ -190,6 +193,7 @@
                         android:src="@drawable/ic_directions_car"
                         app:tint="@color/text_secondary" />
                     <TextView
+                        android:id="@+id/tvTrafficHeading"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

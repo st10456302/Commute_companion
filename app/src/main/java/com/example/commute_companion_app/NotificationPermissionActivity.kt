@@ -61,6 +61,11 @@ class NotificationPermissionActivity : AppCompatActivity() {
         )
 
         // Continue regardless of whether permission was granted or denied.
-        startActivity(Intent(this, HomeActivity::class.java))
+        // Clear the entire onboarding back stack so Home Dashboard becomes
+        // the new task root — pressing Back from Home will no longer walk
+        // backward through onboarding.
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }
