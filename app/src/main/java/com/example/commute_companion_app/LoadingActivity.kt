@@ -12,15 +12,27 @@ class LoadingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
 
-        // --- Step 1 test only: prove AppPreferences reads/writes correctly ---
+        // --- Step 1 diagnostic: confirm AppPreferences reads/writes correctly ---
         val prefs = AppPreferences(this)
         Log.d("CommuteCompanion", "onboardingComplete (before) = ${prefs.onboardingComplete}")
-        // We are NOT changing the stored value yet — just confirming we can read it.
-        // In a later step, we'll set this to true once the user reaches Home Dashboard.
         // -----------------------------------------------------------------------
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, WelcomeActivity::class.java))
+            if (prefs.onboardingComplete) {
+                // Returning user — skip onboarding entirely and go straight to Home.
+                // Home becomes the new task root, matching the Step 9 back-stack fix,
+                // so pressing Back from Home does not reveal Welcome/onboarding.
+                Log.d("CommuteCompanion", "Loading complete — onboarding complete, skipping to HomeActivity")
+
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            } else {
+                // First-time / incomplete onboarding — unchanged existing behavior.
+                Log.d("CommuteCompanion", "Loading complete — onboarding not complete, starting WelcomeActivity")
+
+                startActivity(Intent(this, WelcomeActivity::class.java))
+            }
             finish()
         }, 2000)
     }
