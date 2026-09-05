@@ -62,6 +62,7 @@
                 android:src="@drawable/ic_mail"
                 app:tint="@color/text_secondary" />
             <EditText
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_sm"
@@ -97,13 +98,13 @@
                 android:src="@drawable/ic_lock"
                 app:tint="@color/red_error" />
             <EditText
+                android:id="@+id/etPassword"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/spacing_sm"
                 android:background="@null"
                 android:inputType="textPassword"
-                android:text="password123456"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_body" />
             <ImageView
@@ -111,26 +112,6 @@
                 android:layout_height="@dimen/icon_size_sm"
                 android:src="@drawable/ic_visibility_off"
                 app:tint="@color/text_secondary" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_xs"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/ic_error"
-                app:tint="@color/red_error" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/incorrect_credentials"
-                android:textColor="@color/red_error"
-                android:textSize="@dimen/text_small" />
         </LinearLayout>
 
         <LinearLayout
