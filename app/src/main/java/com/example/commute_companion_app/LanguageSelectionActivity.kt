@@ -43,7 +43,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
             currentlySelectedLanguage = optionLanguageNames[index]
         }
 
-        // Apply the restored/default selection visually on screen loads
+        // Apply the restored/default selection visually on screen load
         selectOption(initialIndex)
 
         options.forEachIndexed { i, layout -> layout.setOnClickListener { selectOption(i) } }
@@ -51,7 +51,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
         findViewById<android.widget.Button>(R.id.btnContinue).setOnClickListener {
             prefs.selectedLanguage = currentlySelectedLanguage
             Log.d("CommuteCompanion", "selectedLanguage saved = ${prefs.selectedLanguage}")
-            startActivity(Intent(this, CreateAccountActivity::class.java))
+            startActivity(Intent(this, AccountEntryActivity::class.java))
         }
     }
 }
