@@ -18,17 +18,21 @@ class LiveDashboardActivity : AppCompatActivity() {
     private lateinit var repository: CommuteRepository
 
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+        super.attachBaseContext(
+            LanguageManager.applyLanguage(newBase)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_live_dashboard)
 
         repository = CommuteRepository(
             AppPreferences(this)
         )
 
+        // Open saved-location management.
         findViewById<LinearLayout>(
             R.id.locationSelector
         ).setOnClickListener {
@@ -40,7 +44,7 @@ class LiveDashboardActivity : AppCompatActivity() {
             )
         }
 
-        loadDashboard()
+
     }
 
     override fun onResume() {
@@ -52,6 +56,7 @@ class LiveDashboardActivity : AppCompatActivity() {
     }
 
     private fun loadDashboard() {
+
         val prefs = AppPreferences(this)
 
         lifecycleScope.launch {
@@ -63,21 +68,6 @@ class LiveDashboardActivity : AppCompatActivity() {
 
             val locationsResult =
                 repository.getSavedLocations()
-
-            locationsResult.onFailure { exception ->
-
-                Log.e(
-                    "CommuteCompanionAPI",
-                    "Failed to load saved locations",
-                    exception
-                )
-
-                Toast.makeText(
-                    this@LiveDashboardActivity,
-                    "Unable to load your saved location.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
 
             locationsResult.onSuccess { locations ->
 
@@ -97,7 +87,9 @@ class LiveDashboardActivity : AppCompatActivity() {
                     return@onSuccess
                 }
 
-                val preferredLocation =
+                // Try to use the location selected during setup.
+                // If it cannot be found, use the first saved location.
+                val selectedLocation =
                     locations.firstOrNull {
                         it.label == prefs.savedLocationLabel
                     } ?: locations.first()
@@ -105,19 +97,34 @@ class LiveDashboardActivity : AppCompatActivity() {
                 Log.d(
                     "CommuteCompanionAPI",
                     "Dashboard location selected — " +
-                            "id='${preferredLocation.id}', " +
-                            "label='${preferredLocation.label}', " +
-                            "address='${preferredLocation.address}'"
+                            "id='${selectedLocation.id}', " +
+                            "label='${selectedLocation.label}', " +
+                            "address='${selectedLocation.address}'"
                 )
 
                 updateLocationDisplay(
-                    preferredLocation.label,
-                    preferredLocation.address
+                    selectedLocation.label,
+                    selectedLocation.address
                 )
 
                 loadDashboardData(
-                    preferredLocation.id
+                    selectedLocation.id
                 )
+            }
+
+            locationsResult.onFailure { exception ->
+
+                Log.e(
+                    "CommuteCompanionAPI",
+                    "Failed to load saved locations.",
+                    exception
+                )
+
+                Toast.makeText(
+                    this@LiveDashboardActivity,
+                    "Unable to load your saved location.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -126,25 +133,27 @@ class LiveDashboardActivity : AppCompatActivity() {
         label: String,
         address: String
     ) {
-        val locationTitle =
-            findViewById<TextView>(R.id.tvDashboardLocation)
 
-        val locationAddress =
-            findViewById<TextView>(R.id.tvDashboardAddress)
+        findViewById<TextView>(
+            R.id.tvDashboardLocation
+        ).text = label
 
-        locationTitle?.text = label
-        locationAddress?.text = address
+        findViewById<TextView>(
+            R.id.tvDashboardAddress
+        ).text = address
 
         Log.d(
             "CommuteCompanionAPI",
             "Dashboard location UI updated — " +
-                    "label='$label', address='$address'"
+                    "label='$label', " +
+                    "address='$address'"
         )
     }
 
     private fun loadDashboardData(
         locationId: Int
     ) {
+
         lifecycleScope.launch {
 
             Log.d(
@@ -182,7 +191,7 @@ class LiveDashboardActivity : AppCompatActivity() {
 
                 Log.e(
                     "CommuteCompanionAPI",
-                    "Dashboard API request failed",
+                    "Dashboard API request failed.",
                     exception
                 )
 
@@ -198,6 +207,11 @@ class LiveDashboardActivity : AppCompatActivity() {
     private fun updateDashboardUi(
         dashboard: DashboardResponse
     ) {
+
+        // -------------------------
+        // Traffic
+        // -------------------------
+
         findViewById<TextView>(
             R.id.tvTrafficStatus
         ).text =
@@ -217,6 +231,11 @@ class LiveDashboardActivity : AppCompatActivity() {
             R.id.tvTrafficIncidents
         ).text =
             "${dashboard.traffic.incidentCount} incidents"
+
+
+        // -------------------------
+        // Load shedding
+        // -------------------------
 
         findViewById<TextView>(
             R.id.tvLoadSheddingStage
@@ -241,6 +260,11 @@ class LiveDashboardActivity : AppCompatActivity() {
             R.id.tvNextLoadSheddingSlot
         ).text =
             dashboard.loadShedding.nextSlot
+
+
+        // -------------------------
+        // Weather
+        // -------------------------
 
         findViewById<TextView>(
             R.id.tvWeather
