@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.commute_companion_app.api.CommuteRepository
+import com.example.commute_companion_app.api.DashboardResponse
 import kotlinx.coroutines.launch
 
 class LiveDashboardActivity : AppCompatActivity() {
@@ -42,6 +43,14 @@ class LiveDashboardActivity : AppCompatActivity() {
         loadDashboard()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (::repository.isInitialized) {
+            loadDashboard()
+        }
+    }
+
     private fun loadDashboard() {
         val prefs = AppPreferences(this)
 
@@ -49,7 +58,7 @@ class LiveDashboardActivity : AppCompatActivity() {
 
             Log.d(
                 "CommuteCompanionAPI",
-                "Loading live dashboard..."
+                "Loading saved locations for Live Dashboard..."
             )
 
             val locationsResult =
@@ -76,7 +85,7 @@ class LiveDashboardActivity : AppCompatActivity() {
 
                     Log.d(
                         "CommuteCompanionAPI",
-                        "No saved locations were found."
+                        "No saved locations found."
                     )
 
                     Toast.makeText(
@@ -95,10 +104,15 @@ class LiveDashboardActivity : AppCompatActivity() {
 
                 Log.d(
                     "CommuteCompanionAPI",
-                    "Selected dashboard location — " +
+                    "Dashboard location selected — " +
                             "id='${preferredLocation.id}', " +
                             "label='${preferredLocation.label}', " +
                             "address='${preferredLocation.address}'"
+                )
+
+                updateLocationDisplay(
+                    preferredLocation.label,
+                    preferredLocation.address
                 )
 
                 loadDashboardData(
@@ -108,6 +122,26 @@ class LiveDashboardActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateLocationDisplay(
+        label: String,
+        address: String
+    ) {
+        val locationTitle =
+            findViewById<TextView>(R.id.tvDashboardLocation)
+
+        val locationAddress =
+            findViewById<TextView>(R.id.tvDashboardAddress)
+
+        locationTitle?.text = label
+        locationAddress?.text = address
+
+        Log.d(
+            "CommuteCompanionAPI",
+            "Dashboard location UI updated — " +
+                    "label='$label', address='$address'"
+        )
+    }
+
     private fun loadDashboardData(
         locationId: Int
     ) {
@@ -115,7 +149,7 @@ class LiveDashboardActivity : AppCompatActivity() {
 
             Log.d(
                 "CommuteCompanionAPI",
-                "Requesting dashboard data — " +
+                "Requesting dashboard API — " +
                         "locationId='$locationId'"
             )
 
@@ -126,11 +160,15 @@ class LiveDashboardActivity : AppCompatActivity() {
 
                 Log.d(
                     "CommuteCompanionAPI",
-                    "Dashboard loaded successfully — " +
+                    "Dashboard API request successful — " +
                             "location='${dashboard.locationLabel}', " +
                             "traffic='${dashboard.traffic.status}', " +
                             "commuteMinutes=" +
                             "${dashboard.traffic.commuteMinutes}, " +
+                            "delayMinutes=" +
+                            "${dashboard.traffic.delayMinutes}, " +
+                            "incidents=" +
+                            "${dashboard.traffic.incidentCount}, " +
                             "loadSheddingStage=" +
                             "${dashboard.loadShedding.stage}, " +
                             "temperature=" +
@@ -144,7 +182,7 @@ class LiveDashboardActivity : AppCompatActivity() {
 
                 Log.e(
                     "CommuteCompanionAPI",
-                    "Failed to load dashboard data",
+                    "Dashboard API request failed",
                     exception
                 )
 
@@ -158,12 +196,12 @@ class LiveDashboardActivity : AppCompatActivity() {
     }
 
     private fun updateDashboardUi(
-        dashboard: com.example.commute_companion_app.api.DashboardResponse
+        dashboard: DashboardResponse
     ) {
-
         findViewById<TextView>(
             R.id.tvTrafficStatus
-        ).text = dashboard.traffic.status
+        ).text =
+            dashboard.traffic.status
 
         findViewById<TextView>(
             R.id.tvCommuteMinutes
@@ -221,7 +259,7 @@ class LiveDashboardActivity : AppCompatActivity() {
 
         Log.d(
             "CommuteCompanion",
-            "Live dashboard UI updated successfully."
+            "Live Dashboard UI updated successfully."
         )
     }
 }

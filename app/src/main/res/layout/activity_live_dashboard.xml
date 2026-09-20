@@ -75,13 +75,29 @@
                     android:src="@drawable/ic_location_pin"
                     app:tint="@color/teal_primary" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_xs"
-                    android:text="@string/sandton_central"
-                    style="@style/Text.Heading"
-                    android:textSize="@dimen/text_body" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvDashboardLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sandton_central"
+                        style="@style/Text.Heading"
+                        android:textSize="@dimen/text_body" />
+
+                    <TextView
+                        android:id="@+id/tvDashboardAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/sandton_central"
+                        style="@style/Text.Small" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:layout_width="16dp"
@@ -89,6 +105,7 @@
                     android:layout_marginStart="4dp"
                     android:src="@drawable/ic_arrow_drop_down"
                     app:tint="@color/text_primary" />
+
             </LinearLayout>
 
             <!-- Commute Card -->
