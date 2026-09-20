@@ -24,7 +24,7 @@ class AppPreferences(context: Context) {
     /**
      * Whether the user has fully completed the onboarding flow at least once.
      * Set to true once the user reaches Home Dashboard for the first time
-     * (from Notification Permission, the final onboarding step).
+     * (from Notification Permission, the final onboarding steps).
      */
     var onboardingComplete: Boolean
         get() = prefs.getBoolean(KEY_ONBOARDING_COMPLETE, false)
