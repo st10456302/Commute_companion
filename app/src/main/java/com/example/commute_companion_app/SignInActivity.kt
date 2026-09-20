@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import com.example.commute_companion_app.api.CommuteRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -22,12 +23,15 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -148,11 +152,14 @@ class SignInActivity : AppCompatActivity() {
      * Processes the credential returned by Credential Manager
      * and signs the user into Firebase Authentication.
      */
-    private fun handleGoogleCredential(credential: androidx.credentials.Credential) {
+    private fun handleGoogleCredential(
+        credential: androidx.credentials.Credential
+    ) {
 
         if (
             credential is CustomCredential &&
-            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+            credential.type ==
+            GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
         ) {
             try {
 
@@ -194,7 +201,8 @@ class SignInActivity : AppCompatActivity() {
     }
 
     /**
-     * Exchanges the Google ID token for a Firebase credential.
+     * Exchanges the Google ID token for a Firebase credential,
+     * then synchronizes the authenticated user with the REST API.
      */
     private fun firebaseAuthWithGoogle(idToken: String) {
 
@@ -207,7 +215,6 @@ class SignInActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
 
                     val user = auth.currentUser
-
                     val prefs = AppPreferences(this)
 
                     user?.displayName?.let { name ->
@@ -225,21 +232,9 @@ class SignInActivity : AppCompatActivity() {
                                 "email='${user?.email}'"
                     )
 
-                    Toast.makeText(
-                        this,
-                        "Google sign-in successful.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    // Continue through the app's existing authentication flow.
-                    startActivity(
-                        Intent(
-                            this,
-                            BiometricActivity::class.java
-                        )
-                    )
-
-                    finish()
+                    // Synchronize the authenticated Firebase user
+                    // with the Commute Companion REST API.
+                    syncUserWithApi()
 
                 } else {
 
@@ -256,5 +251,63 @@ class SignInActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+    }
+
+    /**
+     * Creates or retrieves the current user's application profile
+     * through the authenticated REST API.
+     */
+    private fun syncUserWithApi() {
+
+        val repository = CommuteRepository(
+            AppPreferences(this)
+        )
+
+        CoroutineScope(Dispatchers.Main).launch {
+
+            val result = repository.syncCurrentUser()
+
+            result.onSuccess { userProfile ->
+
+                Log.d(
+                    "CommuteCompanionAPI",
+                    "User synchronized successfully — " +
+                            "databaseId='${userProfile.id}', " +
+                            "name='${userProfile.displayName}', " +
+                            "language='${userProfile.preferredLanguage}'"
+                )
+
+                Toast.makeText(
+                    this@SignInActivity,
+                    "Google sign-in successful.",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                // Continue through the existing authentication flow.
+                startActivity(
+                    Intent(
+                        this@SignInActivity,
+                        BiometricActivity::class.java
+                    )
+                )
+
+                finish()
+            }
+
+            result.onFailure { exception ->
+
+                Log.e(
+                    "CommuteCompanionAPI",
+                    "User synchronization failed",
+                    exception
+                )
+
+                Toast.makeText(
+                    this@SignInActivity,
+                    "Signed in, but your profile could not be synchronized.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 }
