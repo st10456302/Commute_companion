@@ -78,4 +78,14 @@ class CommuteRepository(
             Result.failure(exception)
         }
     }
+
+    suspend fun syncCurrentUser(): Result<UserResponse> {
+        val existingUser = getCurrentUser()
+
+        if (existingUser.isSuccess) {
+            return existingUser
+        }
+
+        return createCurrentUser()
+    }
 }
