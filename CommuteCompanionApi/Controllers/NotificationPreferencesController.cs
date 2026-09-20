@@ -16,13 +16,26 @@ public class NotificationPreferencesController : ControllerBase
         _context = context;
     }
 
-    // GET: /api/notificationpreferences/{userId}
-    [HttpGet("{userId}")]
+    // GET: /api/notificationpreferences
+    //
+    // Returns notification preferences for the
+    // currently authenticated Firebase user.
+    [HttpGet]
     public async Task<ActionResult<NotificationPreferences>>
-        GetPreferences(string userId)
+        GetPreferences()
     {
+        var firebaseUid = GetFirebaseUid();
+
+        if (firebaseUid == null)
+        {
+            return Unauthorized(new
+            {
+                error = "Authenticated Firebase user was not found."
+            });
+        }
+
         var preferences = await _context.NotificationPreferences
-            .FirstOrDefaultAsync(x => x.UserId == userId);
+            .FirstOrDefaultAsync(x => x.UserId == firebaseUid);
 
         if (preferences == null)
         {
@@ -33,12 +46,26 @@ public class NotificationPreferencesController : ControllerBase
     }
 
     // POST: /api/notificationpreferences
+    //
+    // Creates notification preferences for the
+    // currently authenticated Firebase user.
     [HttpPost]
     public async Task<ActionResult<NotificationPreferences>>
-        CreatePreferences(NotificationPreferences preferences)
+        CreatePreferences(
+            [FromBody] NotificationPreferences preferences)
     {
+        var firebaseUid = GetFirebaseUid();
+
+        if (firebaseUid == null)
+        {
+            return Unauthorized(new
+            {
+                error = "Authenticated Firebase user was not found."
+            });
+        }
+
         var existing = await _context.NotificationPreferences
-            .FirstOrDefaultAsync(x => x.UserId == preferences.UserId);
+            .FirstOrDefaultAsync(x => x.UserId == firebaseUid);
 
         if (existing != null)
         {
@@ -47,6 +74,10 @@ public class NotificationPreferencesController : ControllerBase
         }
 
         preferences.Id = 0;
+
+        // Never trust UserId supplied by the client.
+        preferences.UserId = firebaseUid;
+
         preferences.UpdatedAt = DateTime.UtcNow;
 
         _context.NotificationPreferences.Add(preferences);
@@ -55,19 +86,31 @@ public class NotificationPreferencesController : ControllerBase
 
         return CreatedAtAction(
             nameof(GetPreferences),
-            new { userId = preferences.UserId },
+            null,
             preferences);
     }
 
-    // PUT: /api/notificationpreferences/{userId}
-    [HttpPut("{userId}")]
+    // PUT: /api/notificationpreferences
+    //
+    // Updates notification preferences for the
+    // currently authenticated Firebase user.
+    [HttpPut]
     public async Task<ActionResult<NotificationPreferences>>
         UpdatePreferences(
-            string userId,
-            NotificationPreferences updatedPreferences)
+            [FromBody] NotificationPreferences updatedPreferences)
     {
+        var firebaseUid = GetFirebaseUid();
+
+        if (firebaseUid == null)
+        {
+            return Unauthorized(new
+            {
+                error = "Authenticated Firebase user was not found."
+            });
+        }
+
         var existing = await _context.NotificationPreferences
-            .FirstOrDefaultAsync(x => x.UserId == userId);
+            .FirstOrDefaultAsync(x => x.UserId == firebaseUid);
 
         if (existing == null)
         {
@@ -91,5 +134,10 @@ public class NotificationPreferencesController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(existing);
+    }
+
+    private string? GetFirebaseUid()
+    {
+        return HttpContext.Items["FirebaseUid"] as string;
     }
 }
