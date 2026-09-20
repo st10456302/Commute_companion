@@ -9,10 +9,14 @@ import kotlinx.coroutines.launch
 
 class ApiTestActivity : AppCompatActivity() {
 
-    private val repository = CommuteRepository()
+    private lateinit var repository: CommuteRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        repository = CommuteRepository(
+            AppPreferences(this)
+        )
 
         lifecycleScope.launch {
 
@@ -33,19 +37,28 @@ class ApiTestActivity : AppCompatActivity() {
                 )
             }
 
-            val userResult = repository.getCurrentUser()
+            var userResult = repository.getCurrentUser()
+
+            if (userResult.isFailure) {
+                Log.d(
+                    "CommuteCompanionAPI",
+                    "User profile not found. Creating profile..."
+                )
+
+                userResult = repository.createCurrentUser()
+            }
 
             userResult.onSuccess { response ->
                 Log.d(
                     "CommuteCompanionAPI",
-                    "Firebase authentication successful. UID: ${response.firebaseUid}"
+                    "User profile synced. Database ID: ${response.id}, name: ${response.displayName}, language: ${response.preferredLanguage}"
                 )
             }
 
             userResult.onFailure { exception ->
                 Log.e(
                     "CommuteCompanionAPI",
-                    "Authenticated API request failed",
+                    "User profile request failed",
                     exception
                 )
             }
