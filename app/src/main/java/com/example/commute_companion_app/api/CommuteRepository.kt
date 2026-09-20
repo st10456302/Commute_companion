@@ -275,4 +275,30 @@ class CommuteRepository(
         }
     }
 
+    suspend fun getDashboard(
+        locationId: Int
+    ): Result<DashboardResponse> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        return try {
+            val response = api.getDashboard(
+                authorization = "Bearer $token",
+                locationId = locationId
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(
+                    Exception("API returned HTTP ${response.code()}")
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
 }

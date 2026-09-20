@@ -25,39 +25,72 @@ class HomeActivity : AppCompatActivity() {
 
         val tvGreeting = findViewById<TextView>(R.id.tvGreeting)
         val userName = prefs.userName.trim()
+
         tvGreeting.text = if (userName.isNotEmpty()) {
             "Good Morning, $userName."
         } else {
             getString(R.string.good_morning)
         }
 
-        val locationDisplay = prefs.savedLocationAddress.trim().ifEmpty {
-            getString(R.string.sandton_central)
-        }
+        val locationDisplay =
+            prefs.savedLocationAddress.trim().ifEmpty {
+                getString(R.string.sandton_central)
+            }
 
-        val tvLocationSubtitle = findViewById<TextView>(R.id.tvLocationSubtitle)
+        val tvLocationSubtitle =
+            findViewById<TextView>(R.id.tvLocationSubtitle)
+
         // Temperature remains mock data — only the location portion is real.
-        tvLocationSubtitle.text = "$locationDisplay • 18°C"
+        tvLocationSubtitle.text =
+            "$locationDisplay • 18°C"
 
-        val tvWeatherLocationTag = findViewById<TextView>(R.id.tvWeatherLocationTag)
-        tvWeatherLocationTag.text = locationDisplay
+        val tvWeatherLocationTag =
+            findViewById<TextView>(R.id.tvWeatherLocationTag)
 
-        val routeDestination = prefs.savedRouteDestination.trim()
-        val tvTrafficHeading = findViewById<TextView>(R.id.tvTrafficHeading)
-        tvTrafficHeading.text = if (routeDestination.isNotEmpty()) {
-            "Traffic to $routeDestination"
-        } else {
-            getString(R.string.traffic_to_sandton)
-        }
+        tvWeatherLocationTag.text =
+            locationDisplay
+
+        val routeDestination =
+            prefs.savedRouteDestination.trim()
+
+        val tvTrafficHeading =
+            findViewById<TextView>(R.id.tvTrafficHeading)
+
+        tvTrafficHeading.text =
+            if (routeDestination.isNotEmpty()) {
+                "Traffic to $routeDestination"
+            } else {
+                getString(R.string.traffic_to_sandton)
+            }
 
         Log.d(
             "CommuteCompanion",
-            "Home Dashboard loaded — userName='${prefs.userName}', " +
+            "Home Dashboard loaded — " +
+                    "userName='${prefs.userName}', " +
                     "savedLocationAddress='${prefs.savedLocationAddress}', " +
                     "savedLocationLabel='${prefs.savedLocationLabel}', " +
                     "savedRouteName='${prefs.savedRouteName}', " +
                     "savedRouteDestination='${prefs.savedRouteDestination}'"
         )
+
+        // --- Open Live Dashboard from the Traffic card ---
+
+        findViewById<LinearLayout>(
+            R.id.cardTraffic
+        ).setOnClickListener {
+
+            Log.d(
+                "CommuteCompanion",
+                "Opening Live Dashboard from Home."
+            )
+
+            startActivity(
+                Intent(
+                    this,
+                    LiveDashboardActivity::class.java
+                )
+            )
+        }
 
         // --- Bottom navigation ---
 
@@ -66,15 +99,30 @@ class HomeActivity : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.navAlerts).setOnClickListener {
-            startActivity(Intent(this, AlertsActivity::class.java))
+            startActivity(
+                Intent(
+                    this,
+                    AlertsActivity::class.java
+                )
+            )
         }
 
         findViewById<LinearLayout>(R.id.navLocations).setOnClickListener {
-            startActivity(Intent(this, SetLocationActivity::class.java))
+            startActivity(
+                Intent(
+                    this,
+                    SetLocationActivity::class.java
+                )
+            )
         }
 
         findViewById<LinearLayout>(R.id.navProfile).setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
+            startActivity(
+                Intent(
+                    this,
+                    ProfileActivity::class.java
+                )
+            )
         }
     }
 }

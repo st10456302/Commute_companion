@@ -8,6 +8,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CommuteApiService {
 
@@ -58,6 +59,12 @@ interface CommuteApiService {
         @Header("Authorization") authorization: String,
         @Body request: NotificationPreferencesRequest
     ): Response<NotificationPreferencesResponse>
+
+    @GET("api/dashboard")
+    suspend fun getDashboard(
+        @Header("Authorization") authorization: String,
+        @Query("locationId") locationId: Int
+    ): Response<DashboardResponse>
 }
 
 data class HealthResponse(
@@ -114,4 +121,35 @@ data class NotificationPreferencesRequest(
     val trafficAlerts: Boolean,
     val weatherAlerts: Boolean,
     val loadSheddingAlerts: Boolean
+)
+
+data class DashboardResponse(
+    val locationId: Int?,
+    val locationLabel: String,
+    val locationAddress: String,
+    val traffic: TrafficDashboardData,
+    val loadShedding: LoadSheddingDashboardData,
+    val weather: WeatherDashboardData,
+    val retrievedAt: String
+)
+
+data class TrafficDashboardData(
+    val status: String,
+    val commuteMinutes: Int,
+    val delayMinutes: Int,
+    val incidentCount: Int
+)
+
+data class LoadSheddingDashboardData(
+    val stage: Int,
+    val powerAvailable: Boolean,
+    val changeIn: String,
+    val nextSlot: String
+)
+
+data class WeatherDashboardData(
+    val temperatureCelsius: Double,
+    val condition: String,
+    val wetRoads: Boolean,
+    val alertMessage: String
 )
