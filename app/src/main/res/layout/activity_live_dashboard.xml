@@ -18,6 +18,7 @@
             android:layout_height="@dimen/icon_size_sm"
             android:src="@drawable/ic_location_pin"
             app:tint="@color/teal_light" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
             android:textColor="@color/teal_light"
             android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_heading" />
+
         <ImageView
             android:layout_width="@dimen/icon_size_md"
             android:layout_height="@dimen/icon_size_md"
@@ -66,11 +68,13 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="@dimen/spacing_sm">
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_sm"
                     android:layout_height="@dimen/icon_size_sm"
                     android:src="@drawable/ic_location_pin"
                     app:tint="@color/teal_primary" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,6 +82,7 @@
                     android:text="@string/sandton_central"
                     style="@style/Text.Heading"
                     android:textSize="@dimen/text_body" />
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -99,11 +104,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
+
                     <ImageView
                         android:layout_width="@dimen/icon_size_sm"
                         android:layout_height="@dimen/icon_size_sm"
                         android:src="@drawable/ic_directions_car"
                         app:tint="@color/text_secondary" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -111,7 +118,9 @@
                         android:layout_marginStart="@dimen/spacing_xs"
                         android:text="@string/home_to_campus"
                         style="@style/Text.Heading" />
+
                     <TextView
+                        android:id="@+id/tvTrafficStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_orange"
@@ -133,18 +142,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="bottom">
+
                             <TextView
+                                android:id="@+id/tvCommuteMinutes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/commute_mins"
                                 android:textSize="@dimen/text_stat_large"
                                 android:fontFamily="sans-serif-medium"
                                 android:textColor="@color/text_primary" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -152,7 +165,9 @@
                                 android:layout_marginBottom="6dp"
                                 android:text="mins"
                                 style="@style/Text.Small" />
+
                             <TextView
+                                android:id="@+id/tvTrafficDelay"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/spacing_sm"
@@ -167,12 +182,15 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical">
+
                             <ImageView
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"
                                 android:src="@drawable/ic_warning_filled"
                                 app:tint="@color/red_error" />
+
                             <TextView
+                                android:id="@+id/tvTrafficIncidents"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
@@ -205,11 +223,13 @@
                         android:background="@drawable/bg_button_primary"
                         android:orientation="horizontal"
                         android:gravity="center">
+
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:src="@drawable/ic_navigation"
                             app:tint="@color/white" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -246,11 +266,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
+
                     <ImageView
                         android:layout_width="@dimen/icon_size_sm"
                         android:layout_height="@dimen/icon_size_sm"
                         android:src="@drawable/ic_bolt"
                         app:tint="@color/blue_info" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -258,7 +280,9 @@
                         android:layout_marginStart="@dimen/spacing_xs"
                         android:text="@string/load_shedding"
                         style="@style/Text.Heading" />
+
                     <TextView
+                        android:id="@+id/tvLoadSheddingStage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_teal"
@@ -280,17 +304,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical">
+
                             <ImageView
                                 android:layout_width="@dimen/icon_size_sm"
                                 android:layout_height="@dimen/icon_size_sm"
                                 android:src="@drawable/ic_check_circle"
                                 app:tint="@color/green_ok" />
+
                             <TextView
+                                android:id="@+id/tvPowerStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
@@ -305,12 +333,15 @@
                             android:layout_marginTop="4dp"
                             android:orientation="horizontal"
                             android:gravity="center_vertical">
+
                             <ImageView
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"
                                 android:src="@drawable/ic_schedule"
                                 app:tint="@color/text_secondary" />
+
                             <TextView
+                                android:id="@+id/tvLoadSheddingChange"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
@@ -336,13 +367,16 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="@dimen/spacing_sm">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/next_slot_label"
                         style="@style/Text.Small" />
+
                     <TextView
+                        android:id="@+id/tvNextLoadSheddingSlot"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/next_slot_value"
@@ -358,11 +392,13 @@
                     android:background="@drawable/bg_button_secondary"
                     android:orientation="horizontal"
                     android:gravity="center">
+
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:src="@drawable/ic_calendar_today"
                         app:tint="@color/text_primary" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -387,12 +423,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/weather"
                         style="@style/Text.Heading" />
+
                     <ImageView
                         android:layout_width="@dimen/icon_size_md"
                         android:layout_height="@dimen/icon_size_md"
@@ -401,6 +439,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvWeather"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
@@ -417,12 +456,15 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="@dimen/spacing_sm">
+
                     <ImageView
                         android:layout_width="@dimen/icon_size_sm"
                         android:layout_height="@dimen/icon_size_sm"
                         android:src="@drawable/ic_water_drop"
                         app:tint="@color/white" />
+
                     <TextView
+                        android:id="@+id/tvWeatherAlert"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/spacing_sm"
@@ -438,3 +480,4 @@
     <include layout="@layout/bottom_nav_bar" />
 
 </LinearLayout>
+
