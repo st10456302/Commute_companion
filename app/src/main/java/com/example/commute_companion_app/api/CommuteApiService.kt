@@ -6,6 +6,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CommuteApiService {
@@ -40,6 +41,23 @@ interface CommuteApiService {
         @Header("Authorization") authorization: String,
         @Path("id") id: Int
     ): Response<Unit>
+
+    @GET("api/notificationpreferences")
+    suspend fun getNotificationPreferences(
+        @Header("Authorization") authorization: String
+    ): Response<NotificationPreferencesResponse>
+
+    @POST("api/notificationpreferences")
+    suspend fun createNotificationPreferences(
+        @Header("Authorization") authorization: String,
+        @Body request: NotificationPreferencesRequest
+    ): Response<NotificationPreferencesResponse>
+
+    @PUT("api/notificationpreferences")
+    suspend fun updateNotificationPreferences(
+        @Header("Authorization") authorization: String,
+        @Body request: NotificationPreferencesRequest
+    ): Response<NotificationPreferencesResponse>
 }
 
 data class HealthResponse(
@@ -79,4 +97,21 @@ data class CreateLocationRequest(
     val address: String,
     val latitude: Double?,
     val longitude: Double?
+)
+
+data class NotificationPreferencesResponse(
+    val id: Int,
+    val userId: String,
+    val notificationsEnabled: Boolean,
+    val trafficAlerts: Boolean,
+    val weatherAlerts: Boolean,
+    val loadSheddingAlerts: Boolean,
+    val updatedAt: String
+)
+
+data class NotificationPreferencesRequest(
+    val notificationsEnabled: Boolean,
+    val trafficAlerts: Boolean,
+    val weatherAlerts: Boolean,
+    val loadSheddingAlerts: Boolean
 )

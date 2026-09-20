@@ -175,4 +175,104 @@ class CommuteRepository(
             Result.failure(exception)
         }
     }
+
+    suspend fun getNotificationPreferences():
+            Result<NotificationPreferencesResponse> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        return try {
+            val response = api.getNotificationPreferences(
+                authorization = "Bearer $token"
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(
+                    Exception("API returned HTTP ${response.code()}")
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
+
+    suspend fun createNotificationPreferences(
+        notificationsEnabled: Boolean,
+        trafficAlerts: Boolean,
+        weatherAlerts: Boolean,
+        loadSheddingAlerts: Boolean
+    ): Result<NotificationPreferencesResponse> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        val request = NotificationPreferencesRequest(
+            notificationsEnabled = notificationsEnabled,
+            trafficAlerts = trafficAlerts,
+            weatherAlerts = weatherAlerts,
+            loadSheddingAlerts = loadSheddingAlerts
+        )
+
+        return try {
+            val response = api.createNotificationPreferences(
+                authorization = "Bearer $token",
+                request = request
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(
+                    Exception("API returned HTTP ${response.code()}")
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
+
+    suspend fun updateNotificationPreferences(
+        notificationsEnabled: Boolean,
+        trafficAlerts: Boolean,
+        weatherAlerts: Boolean,
+        loadSheddingAlerts: Boolean
+    ): Result<NotificationPreferencesResponse> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        val request = NotificationPreferencesRequest(
+            notificationsEnabled = notificationsEnabled,
+            trafficAlerts = trafficAlerts,
+            weatherAlerts = weatherAlerts,
+            loadSheddingAlerts = loadSheddingAlerts
+        )
+
+        return try {
+            val response = api.updateNotificationPreferences(
+                authorization = "Bearer $token",
+                request = request
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(
+                    Exception("API returned HTTP ${response.code()}")
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
+
 }
