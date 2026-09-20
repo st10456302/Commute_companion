@@ -36,7 +36,7 @@ public class LocationsController : ControllerBase
 
         var locations = await _context.SavedLocations
             .Where(x => x.UserId == firebaseUid)
-            .OrderBy(x => x.Id)
+            .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
 
         return Ok(locations);
