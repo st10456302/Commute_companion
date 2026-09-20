@@ -88,4 +88,91 @@ class CommuteRepository(
 
         return createCurrentUser()
     }
+
+    suspend fun getSavedLocations(): Result<List<SavedLocationResponse>> {
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        return try {
+            val response = api.getLocations(
+                authorization = "Bearer $token"
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(
+                    Exception("API returned HTTP ${response.code()}")
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
+
+    suspend fun createSavedLocation(
+        label: String,
+        address: String,
+        latitude: Double?,
+        longitude: Double?
+    ): Result<SavedLocationResponse> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        val request = CreateLocationRequest(
+            label = label,
+            address = address,
+            latitude = latitude,
+            longitude = longitude
+        )
+
+        return try {
+            val response = api.createLocation(
+                authorization = "Bearer $token",
+                request = request
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(
+                    Exception("API returned HTTP ${response.code()}")
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
+
+    suspend fun deleteSavedLocation(
+        id: Int
+    ): Result<Unit> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        return try {
+            val response = api.deleteLocation(
+                authorization = "Bearer $token",
+                id = id
+            )
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(
+                    Exception("API returned HTTP ${response.code()}")
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
 }
