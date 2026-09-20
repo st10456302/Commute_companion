@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Commute Companion</string>
+
+    <!-- Loading -->
+    <string name="tagline">Uhambo lwakho, konke endaweni eyodwa.</string>
+    <string name="checking_routes">KUHLOLWA IMIZILA</string>
+
+    <!-- Welcome -->
+    <string name="welcome_heading">Uhambo lwakho,\nlulawulwa.</string>
+    <string name="welcome_sub">Hamba eNingizimu Afrika ngolwazi lwesikhathi sangempela mayelana nezimoto, ukucishwa kukagesi, nesimo sezulu.</string>
+    <string name="live_traffic_label">IZIMOTO ZESIKHATHI SANGEMPELA</string>
+    <string name="dynamic_routing_title">Ukuqondiswa Komzila Okuguqukayo</string>
+    <string name="dynamic_routing_sub">Gwema isiminyaminya nokuvalwa kwemigwaqo kungazelelwe kalula.</string>
+    <string name="eskom_alerts_title">Izaziso ze-Eskom</string>
+    <string name="eskom_alerts_sub">Izinguquko zesiteji namashejuli.</string>
+    <string name="local_weather_title">Isimo Sezulu Sendawo</string>
+    <string name="local_weather_sub">Izexwayiso zemvula neziphepho.</string>
+    <string name="get_started">Qalisa</string>
+    <string name="already_have_account">Senginayo i-akhawunti</string>
+
+    <!-- Account entry -->
+    <string name="journey_starts_here">Uhambo Lwakho Luqala Lapha</string>
+    <string name="privacy_explanation">Siyabuhlonipha ubumfihlo bakho. I-Commute Companion isebenzisa kuphela idatha yendawo yakho ukuze ikunikeze izibuyekezo zesikhathi sangempela zohambo lwakho eNingizimu Afrika.</string>
+    <string name="create_account">Dala i-akhawunti</string>
+    <string name="sign_in">Ngena ngemvume</string>
+    <string name="privacy_policy">Inqubomgomo Yobumfihlo</string>
+
+    <!-- Language -->
+    <string name="select_language">Khetha Ulimi</string>
+    <string name="select_language_sub">Khetha ulimi oluthandayo kuhlelo lokusebenza lwe-Commute Companion.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_english_greeting">Sawubona, wamukelekile ku-Commute Companion.</string>
+    <string name="lang_zulu">isiZulu</string>
+    <string name="lang_zulu_greeting">Sawubona, wamukelekile ku-Commute Companion.</string>
+    <string name="lang_afrikaans">Afrikaans</string>
+    <string name="lang_afrikaans_greeting">Sawubona, wamukelekile ku-Commute Companion.</string>
+
+    <!-- Create account -->
+    <string name="create_account_title">Dala I-akhawunti</string>
+    <string name="create_account_sub">Joyina i-Commute Companion ukuze uhambe ngobuhlakani.</string>
+    <string name="full_name">Igama Eligcwele</string>
+    <string name="full_name_hint">isib. Sipho Ndlovu</string>
+    <string name="email_address">Ikheli Le-imeyili</string>
+    <string name="email_hint">name@example.com</string>
+    <string name="password">Iphasiwedi</string>
+    <string name="min_chars">Okungenani izinhlamvu eziyi-8.</string>
+    <string name="confirm_password">Qinisekisa Iphasiwedi</string>
+    <string name="terms_agreement">Ngiyavumelana Nemigomo Yesevisi kanye Nenqubomgomo Yobumfihlo.</string>
+
+    <!-- Sign in -->
+    <string name="welcome_back">Siyakwamukela Futhi</string>
+    <string name="signin_sub">Ngena ku-Commute Companion</string>
+    <string name="email_hint_user">user@example.com</string>
+    <string name="incorrect_credentials">I-imeyili noma iphasiwedi ayilungile.</string>
+    <string name="remember_me">Ngikhumbule</string>
+    <string name="forgot_password">Ukhohlwe iphasiwedi?</string>
+    <string name="or_divider">noma</string>
+    <string name="biometric">I-Biometric</string>
+
+    <!-- Reset password -->
+    <string name="reset_password">Setha Kabusha Iphasiwedi</string>
+    <string name="reset_password_sub">Faka ikheli lakho le-imeyili futhi sizokuthumelela isixhumanisi sokusetha kabusha iphasiwedi yakho.</string>
+    <string name="send_reset_link">Thumela isixhumanisi sokusetha kabusha</string>
+    <string name="return_to_sign_in">Buyela ekungeneni ngemvume</string>
+
+    <!-- Notifications -->
+    <string name="stay_ahead">Hlala Unolwazi</string>
+    <string name="stay_ahead_sub">Vumela izaziso ukuze uthole izexwayiso zesikhathi sangempela ezihambisana nohambo lwakho eNingizimu Afrika.</string>
+    <string name="traffic_updates">Izibuyekezo Zezimoto</string>
+    <string name="traffic_updates_sub">Izingozi, ukuvinjwa kwemigwaqo, nokubambezeleka ezitobhini zamatekisi.</string>
+    <string name="load_shedding">Ukucishwa kukagesi</string>
+    <string name="load_shedding_sub">Izinguquko zesiteji namarobhothi angase angasebenzi emzileni wakho.</string>
+    <string name="weather_warnings">Izexwayiso Zesimo Sezulu</string>
+    <string name="weather_warnings_sub">Izikhukhula neziphepho ezinamandla ezizayo.</string>
+    <string name="enable_notifications">Vumela izaziso</string>
+
+    <!-- Location access -->
+    <string name="find_way_faster">Thola Indlela Yakho Ngokushesha</string>
+    <string name="find_way_faster_sub">Sisebenzisa indawo yakho ukuze sikunikeze amashejuli anembile eGautrain, sigweme ithrafikhi ebangelwa ukucishwa kukagesi eSandton Central, futhi sithole izitobhi zamatekisi eziseduze ngokushesha.</string>
+    <string name="allow_location_access">Vumela ukufinyelela kwendawo</string>
+    <string name="enter_location_manually">Faka indawo ngesandla</string>
+    <string name="not_now">Hhayi manje</string>
+
+    <!-- Biometric -->
+    <string name="fast_secure_login">Ukungena Okusheshayo Nokuphephile</string>
+    <string name="fast_secure_login_sub">Sebenzisa i-biometric yedivayisi yakho (i-Fingerprint noma i-Face ID) ukuze ungene ngokushesha nangokuphephile. Idatha yakho ye-biometric ayiphumi kudivayisi yakho.</string>
+    <string name="device_side_security">Ukuphepha kwedivayisi</string>
+    <string name="instant_access">Ukufinyelela ngokushesha</string>
+    <string name="no_passwords">Akukho maphasiwedi okumele uwakhumbule</string>
+    <string name="enable_biometric_login">Vumela ukungena nge-biometric</string>
+
+    <!-- Dashboard common -->
+    <string name="good_morning">Sawubona.</string>
+    <string name="good_morning_sipho">Sawubona, Sipho</string>
+    <string name="sandton_central_temp">Sandton Central • 18°C</string>
+    <string name="weather">Isimo Sezulu</string>
+    <string name="sandton">Sandton</string>
+    <string name="weather_desc">Isibhakabhaka sicacile namuhla. Izinga eliphezulu lingu-24°C.</string>
+    <string name="load_shedding_time">12:00 - 14:30</string>
+    <string name="next_slot">Isikhathi esilandelayo: 20:00 - 22:30</string>
+    <string name="stage_2">Isiteji 2</string>
+    <string name="traffic_to_sandton">Ithrafikhi eya eSandton</string>
+    <string name="offline_badge">Ayikho i-inthanethi</string>
+    <string name="traffic_unavailable">Ithrafikhi ayitholakali okwesikhashana</string>
+    <string name="traffic_unavailable_sub">Sinenkinga yokuxhuma kusevisi yethrafikhi. Ezinye izinsizakalo zisebenza ngokujwayelekile.</string>
+    <string name="retry_traffic">Zama ithrafikhi futhi</string>
+    <string name="gautrain_schedule">Ishejuli yeGautrain</string>
+    <string name="on_time">Ngesikhathi</string>
+
+    <!-- Offline dashboard -->
+    <string name="youre_offline">Awuxhunyiwe ku-inthanethi</string>
+    <string name="retry">Zama futhi</string>
+    <string name="traffic_cached">Ithrafikhi (Egcinwe)</string>
+    <string name="moderate">Ephakathi</string>
+    <string name="n1_delay">N1 Northbound: ukubambezeleka kwemizuzu engu-15 eduze kwaseSandton.</string>
+    <string name="offline_updated">Ayikho i-inthanethi - igcine ukubuyekezwa emizuzwini eyi-10 edlule</string>
+    <string name="next_slot_zone">Isikhathi esilandelayo: 18:00 - 20:30 (Indawo 4)</string>
+    <string name="weather_forecast">Isibikezelo Sezulu</string>
+    <string name="partly_cloudy">Kunamafu athile. Akulindelekile imvula ntambama</string>
+
+    <!-- Live dashboard -->
+    <string name="sandton_central">Sandton Central</string>
+    <string name="home_to_campus">Ekhaya ukuya eCampus</string>
+    <string name="moderate_traffic">Ithrafikhi Ephakathi</string>
+    <string name="commute_mins">25</string>
+    <string name="commute_delay">Ukubambezeleka kwemizuzu engu-5</string>
+    <string name="incidents_reported">Kubikwe izigameko ezi-2 emzileni</string>
+    <string name="start_commute">Qala uhambo</string>
+    <string name="view_traffic">Buka ithrafikhi</string>
+    <string name="power_available">Ugesi Uyatholakala</string>
+    <string name="change_in">Ushintsho emizuzwini engu-2 namahora angu-15</string>
+    <string name="next_slot_label">Isikhathi esilandelayo:</string>
+    <string name="next_slot_value">14:00 - 16:30</string>
+    <string name="view_schedule">Buka ishejuli</string>
+    <string name="temp_22">22°C</string>
+    <string name="sunny">Kunelanga</string>
+    <string name="wet_roads">Imigwaqo emanzi kulindeleke kamuva</string>
+
+    <!-- Set location -->
+    <string name="set_location">Setha Indawo</string>
+    <string name="search_address_hint">Sesha ikheli noma indawo...</string>
+    <string name="use_current_location">Sebenzisa indawo yami yamanje</string>
+    <string name="suggested">OKUPHAKANYISIWE</string>
+    <string name="sandton_central_address">Johannesburg, Gauteng</string>
+    <string name="save_as">GCINA NJENGOBA</string>
+    <string name="home">Ekhaya</string>
+    <string name="work">Emsebenzini</string>
+    <string name="campus">Campus</string>
+    <string name="custom">Ngokwezifiso</string>
+    <string name="save_location">Gcina Indawo</string>
+    <string name="map_label">SANDTON CENTRAL\nMaude St &amp; Rivonia Rd, Sandton, 2196</string>
+
+    <!-- Set route -->
+    <string name="set_up_route">Setha Umzila Wakho</string>
+    <string name="set_up_route_sub">Engeza uhambo lwakho olujwayelekile ukuze uthole izaziso ezenzelwe wena zethrafikhi nokucishwa kukagesi.</string>
+    <string name="route_name_label">Igama Lomzila (isib., Ekhaya ukuya eSandton)</string>
+    <string name="morning_commute">Uhambo Lwasekuseni</string>
+    <string name="starting_point">Indawo Yokuqala</string>
+    <string name="current_location">Indawo Yamanje</string>
+    <string name="destination">Indawo oya kuyo</string>
+    <string name="search_destination">Sesha indawo oya kuyo...</string>
+    <string name="quick_select">Khetha ngokushesha:</string>
+    <string name="office_sandton">Ihhovisi (Sandton Central)</string>
+    <string name="save_route">Gcina Umzila</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_home">Ikhaya</string>
+    <string name="nav_alerts">Izaziso</string>
+    <string name="nav_locations">Izindawo</string>
+    <string name="nav_profile">Iphrofayela</string>
+
+    <string name="profile">Iphrofayela</string>
+    <string name="profile_user">Umsebenzisi</string>
+
+    <string name="account_information">Ulwazi Lwe-akhawunti</string>
+
+
+
+    <string name="saved_commute">Uhambo Olugciniwe</string>
+
+    <string name="preferences">Okuncamelayo</string>
+
+    <string name="not_available">Akutholakali</string>
+    <string name="no_saved_location">Ayikho indawo egciniwe</string>
+    <string name="location">Indawo</string>
+
+    <string name="route">Umzila</string>
+
+    <string name="no_saved_route">Awukho umzila ogciniwe</string>
+
+    <string name="language">Ulimi</string>
+    <string name="notifications">Izaziso</string>
+    <string name="enabled">Kuvuliwe</string>
+    <string name="disabled">Kuvaliwe</string>
+    <string name="biometric_login">Ukungena nge-Biometric</string>
+
+    <string name="alerts">Izaziso</string>
+    <string name="alerts_subtitle">Hlala unolwazi ngezinto ezibalulekile ngohambo lwakho.</string>
+
+    <string name="traffic_alert">Isaziso Sethrafikhi</string>
+    <string name="traffic_alert_message">Kubikwe isiminyaminya esimaphakathi emzileni wakho ogciniwe.</string>
+
+    <string name="load_shedding_alert">Ukucishwa kukagesi</string>
+    <string name="load_shedding_alert_message">Ukucishwa kukagesi kweSigaba 2 kungase kuthinte uhambo lwakho oluhleliwe.</string>
+
+    <string name="weather_alert">Isaziso Sesimo Sezulu</string>
+    <string name="weather_alert_message">Kulindeleke izimo ezinamafu kancane namuhla.</string>
+
+    <string name="just_now">Manje</string>
+    <string name="today">Namuhla</string>
+    <string name="info">Ulwazi</string>
+
+    <!-- Settings -->
+    <string name="settings">Izilungiselelo</string>
+    <string name="settings_subtitle">Phatha izilungiselelo zakho ze-Commute Companion.</string>
+    <string name="notifications_description">Thola izaziso zethrafikhi, zesimo sezulu nezabashayeli.</string>
+    <string name="biometric_description">Sebenzisa ukuqinisekiswa kwe-biometric uma kutholakala.</string>
+    <string name="change_language">Shintsha Ulimi</string>
+    <string name="back">Emuva</string>
+
+    <string name="notifications_enabled_message">Izaziso zivuliwe.</string>
+    <string name="notifications_disabled_message">Izaziso zivaliwe.</string>
+
+</resources>

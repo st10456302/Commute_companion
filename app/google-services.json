@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1063648582087",
+    "project_id": "commute-companion-702c9",
+    "storage_bucket": "commute-companion-702c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063648582087:android:580e9e2822940e3268a1e2",
+        "android_client_info": {
+          "package_name": "com.example.commute_companion_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063648582087-f7bcn0ogkuaqbnrjou8gntd83tfuoshu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.commute_companion_app",
+            "certificate_hash": "30c52eacfaab9a93f75fdac467b05f4caa22c038"
+          }
+        },
+        {
+          "client_id": "1063648582087-iitfnf04eccfj5j3sr4kov0ekqb1pvf4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPjUGegtGils59KE3R6VicnzW9sLYAEvg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063648582087-iitfnf04eccfj5j3sr4kov0ekqb1pvf4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

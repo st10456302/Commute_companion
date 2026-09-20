@@ -1,5 +1,6 @@
 package com.example.commute_companion_app
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class HomeActivity : AppCompatActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -60,7 +66,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.navAlerts).setOnClickListener {
-            Toast.makeText(this, "Alerts — coming soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, AlertsActivity::class.java))
         }
 
         findViewById<LinearLayout>(R.id.navLocations).setOnClickListener {
@@ -68,7 +74,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.navProfile).setOnClickListener {
-            Toast.makeText(this, "Profile — coming soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 }

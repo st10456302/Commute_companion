@@ -1,0 +1,6 @@
+@CommuteCompanionApi_HostAddress = http://localhost:5067
+
+GET {{CommuteCompanionApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

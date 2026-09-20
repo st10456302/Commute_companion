@@ -1,5 +1,6 @@
 package com.example.commute_companion_app
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,10 @@ class SetLocationActivity : AppCompatActivity() {
     // Tracks which "Save As" chip is currently selected, defaults to "Work"
     // since that is the chip shown pre-highlighted in the existing UI.
     private var currentlySelectedLabel: String = "Work"
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +56,14 @@ class SetLocationActivity : AppCompatActivity() {
         }
 
         // Apply the restored/default chip selection visually on screen load
-        val initialIndex = chipLabels.indexOf(currentlySelectedLabel).let { if (it == -1) 1 else it }
+        val initialIndex =
+            chipLabels.indexOf(currentlySelectedLabel).let { if (it == -1) 1 else it }
+
         selectChip(initialIndex)
 
-        chips.forEachIndexed { i, chip -> chip.setOnClickListener { selectChip(i) } }
+        chips.forEachIndexed { i, chip ->
+            chip.setOnClickListener { selectChip(i) }
+        }
 
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
 
@@ -62,7 +71,11 @@ class SetLocationActivity : AppCompatActivity() {
             val locationText = etSearchLocation.text.toString().trim()
 
             if (locationText.isEmpty()) {
-                Toast.makeText(this, "Please enter a location before saving.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please enter a location before saving.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 

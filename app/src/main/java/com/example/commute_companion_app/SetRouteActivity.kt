@@ -1,5 +1,6 @@
 package com.example.commute_companion_app
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class SetRouteActivity : AppCompatActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_route)
@@ -25,6 +31,7 @@ class SetRouteActivity : AppCompatActivity() {
         if (prefs.savedRouteName.isNotEmpty()) {
             etRouteName.setText(prefs.savedRouteName)
         }
+
         if (prefs.savedRouteDestination.isNotEmpty()) {
             etDestination.setText(prefs.savedRouteDestination)
         }
@@ -33,6 +40,7 @@ class SetRouteActivity : AppCompatActivity() {
         chipHomeRoute.setOnClickListener {
             etDestination.setText(getString(R.string.home))
         }
+
         chipOfficeRoute.setOnClickListener {
             etDestination.setText(getString(R.string.office_sandton))
         }
@@ -41,12 +49,18 @@ class SetRouteActivity : AppCompatActivity() {
             val destination = etDestination.text.toString().trim()
 
             if (destination.isEmpty()) {
-                Toast.makeText(this, "Please enter a destination before saving.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please enter a destination before saving.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
             // Route Name is optional — fall back to a sensible default if left blank.
-            val routeName = etRouteName.text.toString().trim().ifEmpty { getString(R.string.morning_commute) }
+            val routeName = etRouteName.text.toString()
+                .trim()
+                .ifEmpty { getString(R.string.morning_commute) }
 
             prefs.savedRouteName = routeName
             prefs.savedRouteDestination = destination

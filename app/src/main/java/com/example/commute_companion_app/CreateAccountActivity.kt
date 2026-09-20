@@ -1,5 +1,8 @@
+
+
 package com.example.commute_companion_app
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +14,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class CreateAccountActivity : AppCompatActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +73,11 @@ class CreateAccountActivity : AppCompatActivity() {
             }
 
             if (!checkboxTerms.isChecked) {
-                Toast.makeText(this, "Please accept the Terms of Service and Privacy Policy.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please accept the Terms of Service and Privacy Policy.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
@@ -75,7 +86,11 @@ class CreateAccountActivity : AppCompatActivity() {
             prefs.userName = fullName
             prefs.accountEmail = email
 
-            Log.d("CommuteCompanion", "Account created — userName='${prefs.userName}', accountEmail='${prefs.accountEmail}'")
+            Log.d(
+                "CommuteCompanion",
+                "Account created — userName='${prefs.userName}', accountEmail='${prefs.accountEmail}'"
+            )
+
             // Password is intentionally NOT logged and NOT saved to AppPreferences.
 
             startActivity(Intent(this, BiometricActivity::class.java))
