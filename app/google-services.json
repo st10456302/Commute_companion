@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "66503485822",
+    "project_id": "commute-companion-1b9aa",
+    "storage_bucket": "commute-companion-1b9aa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66503485822:android:ea53aad9b4f5ca07bc6b2f",
+        "android_client_info": {
+          "package_name": "com.example.commute_companion_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1d70VEDRxJRKphkYX6313NUK39bKv5Kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

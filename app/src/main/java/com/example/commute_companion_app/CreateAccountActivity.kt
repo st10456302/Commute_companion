@@ -9,12 +9,22 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class CreateAccountActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
+
+        auth = FirebaseAuth.getInstance()
 
         val etFullName = findViewById<EditText>(R.id.etFullName)
         val etEmail = findViewById<EditText>(R.id.etEmail)
@@ -29,7 +39,6 @@ class CreateAccountActivity : AppCompatActivity() {
             val password = etPassword.text.toString()
             val confirmPassword = etConfirmPassword.text.toString()
 
-            // --- Validation ---
             if (fullName.isEmpty()) {
                 Toast.makeText(this, "Please enter your full name.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -51,7 +60,11 @@ class CreateAccountActivity : AppCompatActivity() {
             }
 
             if (password.length < 8) {
-                Toast.makeText(this, "Password must be at least 8 characters.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Password must be at least 8 characters.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
@@ -66,19 +79,70 @@ class CreateAccountActivity : AppCompatActivity() {
             }
 
             if (!checkboxTerms.isChecked) {
-                Toast.makeText(this, "Please accept the Terms of Service and Privacy Policy.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Please accept the Terms of Service and Privacy Policy.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
-            // --- Save non-sensitive info only. Password is NEVER stored or logged. ---
-            val prefs = AppPreferences(this)
-            prefs.userName = fullName
-            prefs.accountEmail = email
+            btnSubmit.isEnabled = false
 
-            Log.d("CommuteCompanion", "Account created — userName='${prefs.userName}', accountEmail='${prefs.accountEmail}'")
-            // Password is intentionally NOT logged and NOT saved to AppPreferences.
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    btnSubmit.isEnabled = true
 
-            startActivity(Intent(this, BiometricActivity::class.java))
+                    if (task.isSuccessful) {
+                        val prefs = AppPreferences(this)
+                        prefs.userName = fullName
+                        prefs.accountEmail = email
+
+                        val profileUpdate = UserProfileChangeRequest.Builder()
+                            .setDisplayName(fullName)
+                            .build()
+
+                        auth.currentUser?.updateProfile(profileUpdate)
+
+                        Log.d("CommuteCompanion", "Firebase account created")
+
+                        Toast.makeText(
+                            this,
+                            "Account created successfully.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        val intent = Intent(this, BiometricActivity::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                    } else {
+                        val message = when (task.exception) {
+                            is FirebaseAuthUserCollisionException ->
+                                "An account already exists with this email."
+
+                            is FirebaseAuthWeakPasswordException ->
+                                "Please choose a stronger password."
+
+                            is FirebaseAuthInvalidCredentialsException ->
+                                "Please enter a valid email address."
+
+                            is FirebaseNetworkException ->
+                                "Please check your internet connection and try again."
+
+                            else ->
+                                "Could not create your account. Please try again."
+                        }
+
+                        Log.e(
+                            "CommuteCompanion",
+                            "Firebase account creation failed",
+                            task.exception
+                        )
+
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    }
+                }
         }
     }
 }
