@@ -166,6 +166,17 @@
             <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" android:background="@color/border_light" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btnGoogleSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:background="@drawable/bg_button_secondary"
+            android:text="Continue with Google"
+            android:textColor="@color/text_primary"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="@dimen/text_body" />
+
         <LinearLayout
             android:id="@+id/btnBiometric"
             android:layout_width="match_parent"

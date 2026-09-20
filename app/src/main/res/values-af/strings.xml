@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Commute Companion</string>
+
+    <!-- Loading -->
+    <string name="tagline">Jou reis, alles op een plek.</string>
+    <string name="checking_routes">ROETES WORD GEKONTROLEER</string>
+
+    <!-- Welcome -->
+    <string name="welcome_heading">Jou pendelrit,\nbeheers.</string>
+    <string name="welcome_sub">Navigeer Suid-Afrika met intydse inligting oor verkeer, beurtkrag en weer.</string>
+    <string name="live_traffic_label">INTYDSE VERKEER</string>
+    <string name="dynamic_routing_title">Dinamiese Roetering</string>
+    <string name="dynamic_routing_sub">Vermy verkeersopeenhopings en skielike padsluitings moeiteloos.</string>
+    <string name="eskom_alerts_title">Eskom-waarskuwings</string>
+    <string name="eskom_alerts_sub">Faseveranderinge en skedules.</string>
+    <string name="local_weather_title">Plaaslike Weer</string>
+    <string name="local_weather_sub">Reën- en stormwaarskuwings.</string>
+    <string name="get_started">Begin</string>
+    <string name="already_have_account">Ek het reeds ’n rekening</string>
+
+    <!-- Account entry -->
+    <string name="journey_starts_here">Jou Reis Begin Hier</string>
+    <string name="privacy_explanation">Ons waardeer jou privaatheid. Commute Companion gebruik jou liggingdata slegs om intydse opdaterings vir jou Suid-Afrikaanse pendelrit te verskaf.</string>
+    <string name="create_account">Skep rekening</string>
+    <string name="sign_in">Meld aan</string>
+    <string name="privacy_policy">Privaatheidsbeleid</string>
+
+    <!-- Language -->
+    <string name="select_language">Kies Taal</string>
+    <string name="select_language_sub">Kies jou voorkeurtaal vir die Commute Companion-toepassing.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_english_greeting">Hallo, welkom by Commute Companion.</string>
+    <string name="lang_zulu">isiZulu</string>
+    <string name="lang_zulu_greeting">Hallo, welkom by Commute Companion.</string>
+    <string name="lang_afrikaans">Afrikaans</string>
+    <string name="lang_afrikaans_greeting">Hallo, welkom by Commute Companion.</string>
+
+    <!-- Create account -->
+    <string name="create_account_title">Skep Rekening</string>
+    <string name="create_account_sub">Sluit by Commute Companion aan om slimmer te navigeer.</string>
+    <string name="full_name">Volle Naam</string>
+    <string name="full_name_hint">bv. Sipho Ndlovu</string>
+    <string name="email_address">E-posadres</string>
+    <string name="email_hint">name@example.com</string>
+    <string name="password">Wagwoord</string>
+    <string name="min_chars">Minimum 8 karakters.</string>
+    <string name="confirm_password">Bevestig Wagwoord</string>
+    <string name="terms_agreement">Ek stem in tot die Diensbepalings en Privaatheidsbeleid.</string>
+
+    <!-- Sign in -->
+    <string name="welcome_back">Welkom Terug</string>
+    <string name="signin_sub">Meld aan by Commute Companion</string>
+    <string name="email_hint_user">user@example.com</string>
+    <string name="incorrect_credentials">Verkeerde e-posadres of wagwoord.</string>
+    <string name="remember_me">Onthou my</string>
+    <string name="forgot_password">Wagwoord vergeet?</string>
+    <string name="or_divider">of</string>
+    <string name="biometric">Biometries</string>
+
+    <!-- Reset password -->
+    <string name="reset_password">Stel Wagwoord Terug</string>
+    <string name="reset_password_sub">Voer jou e-posadres in en ons sal vir jou ’n skakel stuur om jou wagwoord terug te stel.</string>
+    <string name="send_reset_link">Stuur terugstelskakel</string>
+    <string name="return_to_sign_in">Keer terug na aanmelding</string>
+
+    <!-- Notifications -->
+    <string name="stay_ahead">Bly Voor die Chaos</string>
+    <string name="stay_ahead_sub">Aktiveer kennisgewings om intydse waarskuwings te kry wat vir jou Suid-Afrikaanse pendelrit aangepas is.</string>
+    <string name="traffic_updates">Verkeersopdaterings</string>
+    <string name="traffic_updates_sub">Ongelukke, padblokkades en taxistaanplek-vertragings.</string>
+    <string name="load_shedding">Beurtkrag</string>
+    <string name="load_shedding_sub">Faseveranderinge en verkeersligte wat op jou roete buite werking is.</string>
+    <string name="weather_warnings">Weerwaarskuwings</string>
+    <string name="weather_warnings_sub">Kitsvloede en swaar storms wat voorlê.</string>
+    <string name="enable_notifications">Aktiveer kennisgewings</string>
+
+    <!-- Location access -->
+    <string name="find_way_faster">Vind Jou Weg Vinniger</string>
+    <string name="find_way_faster_sub">Ons gebruik jou ligging om akkurate Gautrein-skedules te verskaf, beurtkragverkeer in Sandton Central te vermy en die naaste taxistaanplekke onmiddellik te vind.</string>
+    <string name="allow_location_access">Laat liggingtoegang toe</string>
+    <string name="enter_location_manually">Voer ’n ligging handmatig in</string>
+    <string name="not_now">Nie nou nie</string>
+
+    <!-- Biometric -->
+    <string name="fast_secure_login">Vinnige &amp; Veilige Aanmelding</string>
+    <string name="fast_secure_login_sub">Gebruik jou toestel se biometrie (Vingerafdruk of Face ID) om vinnig en veilig aan te meld. Jou biometriese data verlaat nooit jou toestel nie.</string>
+    <string name="device_side_security">Toestelsekuriteit</string>
+    <string name="instant_access">Onmiddellike toegang</string>
+    <string name="no_passwords">Geen wagwoorde om te onthou nie</string>
+    <string name="enable_biometric_login">Aktiveer biometriese aanmelding</string>
+
+    <!-- Dashboard common -->
+    <string name="good_morning">Goeie Môre.</string>
+    <string name="good_morning_sipho">Goeie Môre, Sipho</string>
+    <string name="sandton_central_temp">Sandton Central • 18°C</string>
+    <string name="weather">Weer</string>
+    <string name="sandton">Sandton</string>
+    <string name="weather_desc">Helder lug vandag. Hoogtepunt van 24°C.</string>
+    <string name="load_shedding_time">12:00 - 14:30</string>
+    <string name="next_slot">Volgende tydgleuf: 20:00 - 22:30</string>
+    <string name="stage_2">Fase 2</string>
+    <string name="traffic_to_sandton">Verkeer na Sandton</string>
+    <string name="offline_badge">Vanlyn</string>
+    <string name="traffic_unavailable">Verkeer tydelik nie beskikbaar nie</string>
+    <string name="traffic_unavailable_sub">Ons ondervind probleme om aan die verkeersdiens te koppel. Ander dienste werk normaal.</string>
+    <string name="retry_traffic">Probeer verkeer weer</string>
+    <string name="gautrain_schedule">Gautrein-skedule</string>
+    <string name="on_time">Op Tyd</string>
+
+    <!-- Offline dashboard -->
+    <string name="youre_offline">Jy is vanlyn</string>
+    <string name="retry">Probeer weer</string>
+    <string name="traffic_cached">Verkeer (Gekas)</string>
+    <string name="moderate">Matig</string>
+    <string name="n1_delay">N1 Noordwaarts: 15 min vertraging naby Sandton.</string>
+    <string name="offline_updated">Vanlyn - laas 10 minute gelede opgedateer</string>
+    <string name="next_slot_zone">Volgende tydgleuf: 18:00 - 20:30 (Sone 4)</string>
+    <string name="weather_forecast">Weervoorspelling</string>
+    <string name="partly_cloudy">Gedeeltelik bewolk. Geen reën word gedurende die middag verwag nie</string>
+
+    <!-- Live dashboard -->
+    <string name="sandton_central">Sandton Central</string>
+    <string name="home_to_campus">Huis na Kampus</string>
+    <string name="moderate_traffic">Matige Verkeer</string>
+    <string name="commute_mins">25</string>
+    <string name="commute_delay">5 min vertraging</string>
+    <string name="incidents_reported">2 voorvalle op roete aangemeld</string>
+    <string name="start_commute">Begin pendelrit</string>
+    <string name="view_traffic">Bekyk verkeer</string>
+    <string name="power_available">Krag Beskikbaar</string>
+    <string name="change_in">Verandering oor 2 uur 15 min</string>
+    <string name="next_slot_label">Volgende Tydgleuf:</string>
+    <string name="next_slot_value">14:00 - 16:30</string>
+    <string name="view_schedule">Bekyk skedule</string>
+    <string name="temp_22">22°C</string>
+    <string name="sunny">Sonnig</string>
+    <string name="wet_roads">Nat paaie word later verwag</string>
+
+    <!-- Set location -->
+    <string name="set_location">Stel Ligging</string>
+    <string name="search_address_hint">Soek vir ’n adres of area...</string>
+    <string name="use_current_location">Gebruik my huidige ligging</string>
+    <string name="suggested">VOORGESTEL</string>
+    <string name="sandton_central_address">Johannesburg, Gauteng</string>
+    <string name="save_as">STOOR AS</string>
+    <string name="home">Huis</string>
+    <string name="work">Werk</string>
+    <string name="campus">Kampus</string>
+    <string name="custom">Pasgemaak</string>
+    <string name="save_location">Stoor Ligging</string>
+    <string name="map_label">SANDTON CENTRAL\nMaude St &amp; Rivonia Rd, Sandton, 2196</string>
+
+    <!-- Set route -->
+    <string name="set_up_route">Stel Jou Roete Op</string>
+    <string name="set_up_route_sub">Voeg jou gewone pendelrit by om gepersonaliseerde verkeers- en beurtkragwaarskuwings te kry.</string>
+    <string name="route_name_label">Roetenaam (bv. Huis na Sandton)</string>
+    <string name="morning_commute">Oggendpendelrit</string>
+    <string name="starting_point">Beginpunt</string>
+    <string name="current_location">Huidige Ligging</string>
+    <string name="destination">Bestemming</string>
+    <string name="search_destination">Soek bestemming...</string>
+    <string name="quick_select">Vinnige keuse:</string>
+    <string name="office_sandton">Kantoor (Sandton Central)</string>
+    <string name="save_route">Stoor Roete</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_home">Tuis</string>
+    <string name="nav_alerts">Waarskuwings</string>
+    <string name="nav_locations">Liggings</string>
+    <string name="nav_profile">Profiel</string>
+
+    <string name="profile">Profiel</string>
+    <string name="profile_user">Gebruiker</string>
+
+    <string name="account_information">Rekeninginligting</string>
+
+    <string name="saved_commute">Gestoorde Pendelrit</string>
+
+    <string name="preferences">Voorkeure</string>
+
+    <string name="not_available">Nie beskikbaar nie</string>
+    <string name="no_saved_location">Geen gestoorde ligging</string>
+    <string name="location">Ligging</string>
+
+    <string name="route">Roete</string>
+
+    <string name="no_saved_route">Geen gestoorde roete</string>
+
+    <string name="language">Taal</string>
+    <string name="notifications">Kennisgewings</string>
+    <string name="enabled">Geaktiveer</string>
+    <string name="disabled">Gedeaktiveer</string>
+    <string name="biometric_login">Biometriese Aanmelding</string>
+
+    <string name="alerts">Kennisgewings</string>
+    <string name="alerts_subtitle">Bly op hoogte van belangrike inligting oor jou pendelrit.</string>
+
+    <string name="traffic_alert">Verkeerskennisgewing</string>
+    <string name="traffic_alert_message">Matige verkeer is op jou gestoorde roete aangemeld.</string>
+
+    <string name="load_shedding_alert">Beurtkrag</string>
+    <string name="load_shedding_alert_message">Fase 2-beurtkrag kan jou beplande pendelrit beïnvloed.</string>
+
+    <string name="weather_alert">Weerkennisgewing</string>
+    <string name="weather_alert_message">Gedeeltelik bewolkte toestande word vandag verwag.</string>
+
+    <string name="just_now">Net nou</string>
+    <string name="today">Vandag</string>
+    <string name="info">Inligting</string>
+
+    <!-- Settings -->
+    <string name="settings">Instellings</string>
+    <string name="settings_subtitle">Bestuur jou Commute Companion-voorkeure.</string>
+    <string name="notifications_description">Ontvang verkeers-, weer- en pendelaarwaarskuwings.</string>
+    <string name="biometric_description">Gebruik biometriese verifikasie wanneer dit beskikbaar is.</string>
+    <string name="change_language">Verander Taal</string>
+    <string name="back">Terug</string>
+
+    <string name="notifications_enabled_message">Kennisgewings geaktiveer.</string>
+    <string name="notifications_disabled_message">Kennisgewings gedeaktiveer.</string>
+
+</resources>

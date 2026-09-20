@@ -164,9 +164,64 @@
     <string name="office_sandton">Office (Sandton Central)</string>
     <string name="save_route">Save Route</string>
 
+
+
     <!-- Bottom nav -->
     <string name="nav_home">Home</string>
     <string name="nav_alerts">Alerts</string>
     <string name="nav_locations">Locations</string>
     <string name="nav_profile">Profile</string>
+
+    <string name="alerts">Alerts</string>
+    <string name="alerts_subtitle">Stay updated with important information about your commute.</string>
+
+    <string name="traffic_alert">Traffic Alert</string>
+    <string name="traffic_alert_message">Moderate traffic has been reported along your saved route.</string>
+
+    <string name="load_shedding_alert">Load Shedding</string>
+    <string name="load_shedding_alert_message">Stage 2 load shedding may affect your planned commute.</string>
+
+    <string name="weather_alert">Weather Alert</string>
+    <string name="weather_alert_message">Partly cloudy conditions are expected today.</string>
+
+    <string name="just_now">Just now</string>
+    <string name="today">Today</string>
+    <string name="info">Info</string>
+
+    <string name="profile">Profile</string>
+    <string name="profile_user">User</string>
+
+    <string name="account_information">Account Information</string>
+
+
+
+    <string name="saved_commute">Saved Commute</string>
+
+    <string name="preferences">Preferences</string>
+
+    <string name="not_available">Not available</string>
+    <string name="no_saved_location">No saved location</string>
+    <string name="location">Location</string>
+
+    <string name="route">Route</string>
+
+    <string name="no_saved_route">No saved route</string>
+
+    <string name="language">Language</string>
+    <string name="notifications">Notifications</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="biometric_login">Biometric Login</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="settings_subtitle">Manage your Commute Companion preferences.</string>
+    <string name="notifications_description">Receive traffic, weather and commuter alerts.</string>
+    <string name="biometric_description">Use biometric authentication when available.</string>
+    <string name="change_language">Change Language</string>
+    <string name="back">Back</string>
+
+    <string name="notifications_enabled_message">Notifications enabled.</string>
+    <string name="notifications_disabled_message">Notifications disabled.</string>
+
 </resources>
