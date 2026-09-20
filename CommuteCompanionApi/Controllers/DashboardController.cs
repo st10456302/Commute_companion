@@ -1,5 +1,6 @@
 using CommuteCompanionApi.Data;
 using CommuteCompanionApi.Models;
+using CommuteCompanionApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,14 @@ namespace CommuteCompanionApi.Controllers;
 public class DashboardController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly WeatherService _weatherService;
 
-    public DashboardController(AppDbContext context)
+    public DashboardController(
+        AppDbContext context,
+        WeatherService weatherService)
     {
         _context = context;
+        _weatherService = weatherService;
     }
 
     [HttpGet]
@@ -51,9 +56,58 @@ public class DashboardController : ControllerBase
             });
         }
 
-        // Temporary dashboard data.
-        // These values will later be replaced by live
-        // TomTom, EskomSePush and OpenWeather data.
+        if (location.Latitude == null ||
+            location.Longitude == null)
+        {
+            return BadRequest(new
+            {
+                error =
+                    "The saved location does not have valid coordinates."
+            });
+        }
+
+        WeatherResult? weather;
+
+        try
+        {
+            weather =
+                await _weatherService.GetCurrentWeatherAsync(
+                    location.Latitude.Value,
+                    location.Longitude.Value);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error = exception.Message
+                });
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The weather service is currently unavailable."
+                });
+        }
+
+        if (weather == null)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "Weather data could not be retrieved."
+                });
+        }
+
+        // Traffic and load-shedding values remain temporary
+        // until their respective live API integrations are added.
         var dashboard = new DashboardResponse
         {
             LocationId = location.Id,
@@ -78,10 +132,19 @@ public class DashboardController : ControllerBase
 
             Weather = new WeatherDashboardData
             {
-                TemperatureCelsius = 22,
-                Condition = "Sunny",
-                WetRoads = false,
-                AlertMessage = "No weather alerts"
+                TemperatureCelsius =
+                    weather.TemperatureCelsius,
+
+                Condition =
+                    weather.Condition,
+
+                WetRoads =
+                    weather.WetRoads,
+
+                AlertMessage =
+                    weather.WetRoads
+                        ? "Wet road conditions"
+                        : "No weather alerts"
             },
 
             RetrievedAt = DateTime.UtcNow

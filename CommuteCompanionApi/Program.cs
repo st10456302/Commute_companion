@@ -13,6 +13,9 @@ builder.Services.AddControllers();
 // Register OpenWeather geocoding service.
 builder.Services.AddHttpClient<OpenWeatherGeocodingService>();
 
+// Register OpenWeather weather service.
+builder.Services.AddHttpClient<WeatherService>();
+
 // Register Entity Framework Core with SQLite.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(
