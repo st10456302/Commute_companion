@@ -1,5 +1,6 @@
 using CommuteCompanionApi.Data;
 using CommuteCompanionApi.Models;
+using CommuteCompanionApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,16 +11,16 @@ namespace CommuteCompanionApi.Controllers;
 public class LocationsController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly OpenWeatherGeocodingService _geocodingService;
 
-    public LocationsController(AppDbContext context)
+    public LocationsController(
+        AppDbContext context,
+        OpenWeatherGeocodingService geocodingService)
     {
         _context = context;
+        _geocodingService = geocodingService;
     }
 
-    // GET: /api/locations
-    //
-    // Returns only locations belonging to the
-    // currently authenticated Firebase user.
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SavedLocation>>> GetLocations()
     {
@@ -41,10 +42,6 @@ public class LocationsController : ControllerBase
         return Ok(locations);
     }
 
-    // GET: /api/locations/{id}
-    //
-    // Returns the requested location only if
-    // it belongs to the authenticated Firebase user.
     [HttpGet("{id:int}")]
     public async Task<ActionResult<SavedLocation>> GetLocation(int id)
     {
@@ -71,10 +68,6 @@ public class LocationsController : ControllerBase
         return Ok(location);
     }
 
-    // POST: /api/locations
-    //
-    // Creates a location for the currently authenticated
-    // Firebase user. The client does not provide the UserId.
     [HttpPost]
     public async Task<ActionResult<SavedLocation>> CreateLocation(
         [FromBody] SavedLocation location)
@@ -89,24 +82,68 @@ public class LocationsController : ControllerBase
             });
         }
 
-        location.Id = 0;
-        location.UserId = firebaseUid;
-        location.CreatedAt = DateTime.UtcNow;
+        if (string.IsNullOrWhiteSpace(location.Address))
+        {
+            return BadRequest(new
+            {
+                error = "A location address is required."
+            });
+        }
 
-        _context.SavedLocations.Add(location);
+        try
+        {
+            // Convert the user's address into coordinates.
+            var coordinates =
+                await _geocodingService.GeocodeAddressAsync(
+                    location.Address);
 
-        await _context.SaveChangesAsync();
+            if (coordinates == null)
+            {
+                return BadRequest(new
+                {
+                    error =
+                        "The location could not be found. " +
+                        "Please enter a more specific address."
+                });
+            }
 
-        return CreatedAtAction(
-            nameof(GetLocation),
-            new { id = location.Id },
-            location);
+            location.Id = 0;
+            location.UserId = firebaseUid;
+            location.Latitude = coordinates.Latitude;
+            location.Longitude = coordinates.Longitude;
+            location.CreatedAt = DateTime.UtcNow;
+
+            _context.SavedLocations.Add(location);
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetLocation),
+                new { id = location.Id },
+                location);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error = exception.Message
+                });
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The location geocoding service " +
+                        "is currently unavailable."
+                });
+        }
     }
 
-    // DELETE: /api/locations/{id}
-    //
-    // Deletes the location only if it belongs to
-    // the currently authenticated Firebase user.
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteLocation(int id)
     {

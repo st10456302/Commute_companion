@@ -3,11 +3,15 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using CommuteCompanionApi.Middleware;
+using CommuteCompanionApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add controller support.
 builder.Services.AddControllers();
+
+// Register OpenWeather geocoding service.
+builder.Services.AddHttpClient<OpenWeatherGeocodingService>();
 
 // Register Entity Framework Core with SQLite.
 builder.Services.AddDbContext<AppDbContext>(options =>
