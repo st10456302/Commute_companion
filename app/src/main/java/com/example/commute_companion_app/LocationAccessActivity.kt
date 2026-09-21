@@ -20,7 +20,13 @@ class LocationAccessActivity : AppCompatActivity() {
         setContentView(R.layout.activity_location_access)
 
         val goToSetLocation = {
-            startActivity(Intent(this, SetLocationActivity::class.java))
+            val intent = Intent(this, SetLocationActivity::class.java)
+
+            // This screen is only reached during first-time onboarding.
+            intent.putExtra("firstTimeSetup", true)
+
+            startActivity(intent)
+            finish()
         }
 
         // "Allow location access"
@@ -35,7 +41,7 @@ class LocationAccessActivity : AppCompatActivity() {
             goToSetLocation()
         }
 
-        // "Enter a location manually" — unchanged, already correct.
+        // "Enter a location manually"
         findViewById<Button>(R.id.btnManualLocation).setOnClickListener {
             Log.d(
                 "CommuteCompanion",

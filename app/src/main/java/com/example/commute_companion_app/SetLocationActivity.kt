@@ -1,8 +1,5 @@
 package com.example.commute_companion_app
 
-import com.example.commute_companion_app.AppPreferences
-import com.example.commute_companion_app.LanguageManager
-import com.example.commute_companion_app.SetRouteActivity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -30,6 +27,11 @@ class SetLocationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_location)
+
+        // Determine whether this screen is being used as part of
+        // first-time account setup.
+        val firstTimeSetup =
+            intent.getBooleanExtra("firstTimeSetup", false)
 
         val etSearchLocation =
             findViewById<EditText>(R.id.etSearchLocation)
@@ -189,11 +191,18 @@ class SetLocationActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
+                        // Continue to Set Route and preserve whether
+                        // this is first-time setup.
                         startActivity(
                             Intent(
                                 this@SetLocationActivity,
                                 SetRouteActivity::class.java
-                            )
+                            ).apply {
+                                putExtra(
+                                    "firstTimeSetup",
+                                    firstTimeSetup
+                                )
+                            }
                         )
 
                         finish()

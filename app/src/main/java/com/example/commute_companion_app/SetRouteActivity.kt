@@ -40,6 +40,10 @@ class SetRouteActivity : AppCompatActivity() {
 
         val prefs = AppPreferences(this)
 
+        // Restore whether this route setup came from first-time onboarding.
+        val firstTimeSetup =
+            intent.getBooleanExtra("firstTimeSetup", false)
+
         // Restore the previously saved route.
         if (prefs.savedRouteName.isNotEmpty()) {
             etRouteName.setText(
@@ -172,11 +176,25 @@ class SetRouteActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
+                        // Route setup is now complete.
+                        // Notification permission is handled earlier
+                        // during first-time onboarding, so do not send
+                        // the user through that screen again.
+                        Log.d(
+                            "CommuteCompanion",
+                            "Route setup complete — returning to Live Dashboard. " +
+                                    "firstTimeSetup=$firstTimeSetup"
+                        )
+
                         startActivity(
                             Intent(
                                 this@SetRouteActivity,
-                                NotificationPermissionActivity::class.java
-                            )
+                                HomeActivity::class.java
+                            ).apply {
+                                flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            }
                         )
 
                         finish()
