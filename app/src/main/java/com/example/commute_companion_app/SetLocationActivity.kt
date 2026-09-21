@@ -3,37 +3,58 @@ package com.example.commute_companion_app
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class SetLocationActivity : AppCompatActivity() {
 
-    // Tracks which "Save As" chip is currently selected, defaults to "Work"
-    // since that is the chip shown pre-highlighted in the existing UI.
+    private lateinit var prefs: AppPreferences
+    private lateinit var etSearchLocation: EditText
+    private lateinit var savedLocationCard: LinearLayout
+    private lateinit var tvSavedLocationLabel: TextView
+    private lateinit var tvSavedLocationAddress: TextView
+
     private var currentlySelectedLabel: String = "Work"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_location)
 
-        val etSearchLocation = findViewById<EditText>(R.id.etSearchLocation)
+        prefs = AppPreferences(this)
+
+        etSearchLocation = findViewById(R.id.etSearchLocation)
+        savedLocationCard = findViewById(R.id.savedLocationCard)
+        tvSavedLocationLabel = findViewById(R.id.tvSavedLocationLabel)
+        tvSavedLocationAddress = findViewById(R.id.tvSavedLocationAddress)
+
         val chipHome = findViewById<TextView>(R.id.chipHome)
         val chipWork = findViewById<TextView>(R.id.chipWork)
         val chipCampus = findViewById<TextView>(R.id.chipCampus)
         val chipCustom = findViewById<TextView>(R.id.chipCustom)
 
-        val chips = listOf(chipHome, chipWork, chipCampus, chipCustom)
-        val chipLabels = listOf("Home", "Work", "Campus", "Custom")
+        val chips = listOf(
+            chipHome,
+            chipWork,
+            chipCampus,
+            chipCustom
+        )
 
-        val prefs = AppPreferences(this)
+        val chipLabels = listOf(
+            "Home",
+            "Work",
+            "Campus",
+            "Custom"
+        )
 
-        // Restore whatever was previously saved (if this screen is revisited)
         currentlySelectedLabel = prefs.savedLocationLabel
-        if (prefs.savedLocationAddress.isNotEmpty()) {
+
+        if (prefs.savedLocationAddress.isNotBlank()) {
             etSearchLocation.setText(prefs.savedLocationAddress)
         }
 
@@ -47,34 +68,141 @@ class SetLocationActivity : AppCompatActivity() {
                     chip.setTextColor(getColor(R.color.text_primary))
                 }
             }
+
             currentlySelectedLabel = chipLabels[index]
         }
 
-        // Apply the restored/default chip selection visually on screen load
-        val initialIndex = chipLabels.indexOf(currentlySelectedLabel).let { if (it == -1) 1 else it }
+        val initialIndex =
+            chipLabels.indexOf(currentlySelectedLabel)
+                .let { index ->
+                    if (index == -1) 1 else index
+                }
+
         selectChip(initialIndex)
 
-        chips.forEachIndexed { i, chip -> chip.setOnClickListener { selectChip(i) } }
+        chips.forEachIndexed { index, chip ->
+            chip.setOnClickListener {
+                selectChip(index)
+            }
+        }
 
-        findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
 
-        findViewById<Button>(R.id.btnSaveLocation).setOnClickListener {
-            val locationText = etSearchLocation.text.toString().trim()
+        findViewById<LinearLayout>(
+            R.id.suggestedLocationCard
+        ).setOnClickListener {
 
-            if (locationText.isEmpty()) {
-                Toast.makeText(this, "Please enter a location before saving.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            val suggestedLocation =
+                "${getString(R.string.sandton_central)}, " +
+                        getString(R.string.sandton_central_address)
+
+            etSearchLocation.setText(suggestedLocation)
+        }
+
+        findViewById<Button>(R.id.btnSaveLocation)
+            .setOnClickListener {
+
+                saveLocation()
             }
 
-            prefs.savedLocationAddress = locationText
-            prefs.savedLocationLabel = currentlySelectedLabel
+        findViewById<Button>(R.id.btnDeleteLocation)
+            .setOnClickListener {
 
-            Log.d(
-                "CommuteCompanion",
-                "Location saved — address='${prefs.savedLocationAddress}', label='${prefs.savedLocationLabel}'"
+                deleteLocation()
+            }
+
+        refreshSavedLocation()
+    }
+
+    private fun saveLocation() {
+        val location =
+            etSearchLocation.text.toString().trim()
+
+        if (location.isEmpty()) {
+            Toast.makeText(
+                this,
+                "Please enter a location before saving.",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            return
+        }
+
+        prefs.savedLocationAddress = location
+        prefs.savedLocationLabel = currentlySelectedLabel
+
+        Log.d(
+            "CommuteCompanion",
+            "Location saved successfully"
+        )
+
+        refreshSavedLocation()
+
+        Toast.makeText(
+            this,
+            "$currentlySelectedLabel location saved.",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        if (prefs.onboardingComplete) {
+            finish()
+        } else {
+            startActivity(
+                Intent(
+                    this,
+                    SetRouteActivity::class.java
+                )
             )
+        }
+    }
 
-            startActivity(Intent(this, SetRouteActivity::class.java))
+    private fun deleteLocation() {
+        if (prefs.savedLocationAddress.isBlank()) {
+            Toast.makeText(
+                this,
+                "There is no saved location to delete.",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            return
+        }
+
+        prefs.savedLocationAddress = ""
+        prefs.savedLocationLabel = "Work"
+
+        currentlySelectedLabel = "Work"
+        etSearchLocation.text.clear()
+
+        Log.d(
+            "CommuteCompanion",
+            "Saved location deleted"
+        )
+
+        refreshSavedLocation()
+
+        Toast.makeText(
+            this,
+            "Saved location deleted.",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun refreshSavedLocation() {
+        val address =
+            prefs.savedLocationAddress.trim()
+
+        if (address.isEmpty()) {
+            savedLocationCard.visibility = View.GONE
+        } else {
+            savedLocationCard.visibility = View.VISIBLE
+
+            tvSavedLocationLabel.text =
+                prefs.savedLocationLabel
+
+            tvSavedLocationAddress.text =
+                address
         }
     }
 }
