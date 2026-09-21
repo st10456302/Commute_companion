@@ -15,6 +15,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
@@ -29,9 +31,15 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var prefs: AppPreferences
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
-    private lateinit var swNotifications: SwitchCompat
 
-    private var updatingNotificationSwitch = false
+    private lateinit var swNotifications: SwitchCompat
+    private lateinit var swBiometric: SwitchCompat
+
+    private var updatingNotificationSwitch =
+        false
+
+    private var updatingBiometricSwitch =
+        false
 
     private val notificationPermissionLauncher =
         registerForActivityResult(
@@ -41,9 +49,14 @@ class SettingsActivity : AppCompatActivity() {
             prefs.notificationsEnabled =
                 granted
 
-            updatingNotificationSwitch = true
-            swNotifications.isChecked = granted
-            updatingNotificationSwitch = false
+            updatingNotificationSwitch =
+                true
+
+            swNotifications.isChecked =
+                granted
+
+            updatingNotificationSwitch =
+                false
 
             if (granted) {
 
@@ -72,10 +85,16 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
-        prefs = AppPreferences(this)
-        auth = FirebaseAuth.getInstance()
+        setContentView(
+            R.layout.activity_settings
+        )
+
+        prefs =
+            AppPreferences(this)
+
+        auth =
+            FirebaseAuth.getInstance()
 
         credentialManager =
             CredentialManager.create(this)
@@ -168,11 +187,6 @@ class SettingsActivity : AppCompatActivity() {
                         else ->
                             "English"
                     }
-
-                Log.d(
-                    "CommuteCompanion",
-                    "Language preference updated"
-                )
             }
     }
 
@@ -183,7 +197,7 @@ class SettingsActivity : AppCompatActivity() {
                 R.id.swNotifications
             )
 
-        val systemPermissionGranted =
+        val permissionGranted =
             if (
                 Build.VERSION.SDK_INT >=
                 Build.VERSION_CODES.TIRAMISU
@@ -199,33 +213,35 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
 
-        if (!systemPermissionGranted) {
-            prefs.notificationsEnabled = false
+        if (!permissionGranted) {
+            prefs.notificationsEnabled =
+                false
         }
 
-        updatingNotificationSwitch = true
+        updatingNotificationSwitch =
+            true
 
         swNotifications.isChecked =
             prefs.notificationsEnabled &&
-                    systemPermissionGranted
+                    permissionGranted
 
-        updatingNotificationSwitch = false
+        updatingNotificationSwitch =
+            false
 
         swNotifications
             .setOnCheckedChangeListener {
                     _,
                     enabled ->
 
-                if (updatingNotificationSwitch) {
+                if (
+                    updatingNotificationSwitch
+                ) {
                     return@setOnCheckedChangeListener
                 }
 
                 if (enabled) {
-
                     enableNotifications()
-
                 } else {
-
                     disableNotifications()
                 }
             }
@@ -254,7 +270,8 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        prefs.notificationsEnabled = true
+        prefs.notificationsEnabled =
+            true
 
         NotificationHelper.showNotification(
             this,
@@ -262,16 +279,12 @@ class SettingsActivity : AppCompatActivity() {
             "Traffic, weather and commute alerts are enabled.",
             1000
         )
-
-        Log.d(
-            "CommuteCompanion",
-            "Notifications enabled"
-        )
     }
 
     private fun disableNotifications() {
 
-        prefs.notificationsEnabled = false
+        prefs.notificationsEnabled =
+            false
 
         NotificationHelper
             .cancelNotifications(this)
@@ -281,36 +294,210 @@ class SettingsActivity : AppCompatActivity() {
             "Notifications disabled.",
             Toast.LENGTH_SHORT
         ).show()
-
-        Log.d(
-            "CommuteCompanion",
-            "Notifications disabled"
-        )
     }
 
     private fun setupBiometricPreference() {
 
-        val swBiometric =
-            findViewById<SwitchCompat>(
+        swBiometric =
+            findViewById(
                 R.id.swBiometric
             )
 
+        updatingBiometricSwitch =
+            true
+
         swBiometric.isChecked =
             prefs.biometricEnabled
+
+        updatingBiometricSwitch =
+            false
 
         swBiometric
             .setOnCheckedChangeListener {
                     _,
                     enabled ->
 
-                prefs.biometricEnabled =
-                    enabled
+                if (
+                    updatingBiometricSwitch
+                ) {
+                    return@setOnCheckedChangeListener
+                }
 
-                Log.d(
-                    "CommuteCompanion",
-                    "Biometric preference updated"
-                )
+                if (enabled) {
+
+                    enableBiometricLogin()
+
+                } else {
+
+                    prefs.biometricEnabled =
+                        false
+
+                    Log.d(
+                        "CommuteCompanion",
+                        "Biometric login disabled"
+                    )
+                }
             }
+    }
+
+    private fun enableBiometricLogin() {
+
+        val biometricManager =
+            BiometricManager.from(this)
+
+        val result =
+            biometricManager.canAuthenticate(
+                BiometricManager.Authenticators.BIOMETRIC_WEAK
+            )
+
+        when (result) {
+
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                showBiometricPrompt()
+            }
+
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+
+                resetBiometricSwitch()
+
+                Toast.makeText(
+                    this,
+                    "Set up a fingerprint or face on your device first.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+
+                resetBiometricSwitch()
+
+                Toast.makeText(
+                    this,
+                    "This device does not support biometric authentication.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
+
+                resetBiometricSwitch()
+
+                Toast.makeText(
+                    this,
+                    "Biometric authentication is currently unavailable.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            else -> {
+
+                resetBiometricSwitch()
+
+                Toast.makeText(
+                    this,
+                    "Biometric authentication is unavailable.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun showBiometricPrompt() {
+
+        val executor =
+            ContextCompat.getMainExecutor(this)
+
+        val biometricPrompt =
+            BiometricPrompt(
+                this,
+                executor,
+                object :
+                    BiometricPrompt.AuthenticationCallback() {
+
+                    override fun onAuthenticationSucceeded(
+                        result: BiometricPrompt.AuthenticationResult
+                    ) {
+                        super.onAuthenticationSucceeded(
+                            result
+                        )
+
+                        prefs.biometricEnabled =
+                            true
+
+                        updatingBiometricSwitch =
+                            true
+
+                        swBiometric.isChecked =
+                            true
+
+                        updatingBiometricSwitch =
+                            false
+
+                        Toast.makeText(
+                            this@SettingsActivity,
+                            "Biometric login enabled.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onAuthenticationFailed() {
+                        super.onAuthenticationFailed()
+
+                        Toast.makeText(
+                            this@SettingsActivity,
+                            "Biometric not recognised.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onAuthenticationError(
+                        errorCode: Int,
+                        errString: CharSequence
+                    ) {
+                        super.onAuthenticationError(
+                            errorCode,
+                            errString
+                        )
+
+                        resetBiometricSwitch()
+                    }
+                }
+            )
+
+        val promptInfo =
+            BiometricPrompt.PromptInfo.Builder()
+                .setTitle(
+                    "Enable Biometric Login"
+                )
+                .setSubtitle(
+                    "Verify your fingerprint or face"
+                )
+                .setAllowedAuthenticators(
+                    BiometricManager.Authenticators.BIOMETRIC_WEAK
+                )
+                .setNegativeButtonText(
+                    "Cancel"
+                )
+                .build()
+
+        biometricPrompt.authenticate(
+            promptInfo
+        )
+    }
+
+    private fun resetBiometricSwitch() {
+
+        prefs.biometricEnabled =
+            false
+
+        updatingBiometricSwitch =
+            true
+
+        swBiometric.isChecked =
+            false
+
+        updatingBiometricSwitch =
+            false
     }
 
     private fun showSignOutDialog() {
@@ -323,7 +510,6 @@ class SettingsActivity : AppCompatActivity() {
             .setPositiveButton(
                 "Sign Out"
             ) { _, _ ->
-
                 signOut()
             }
             .setNegativeButton(
@@ -352,11 +538,6 @@ class SettingsActivity : AppCompatActivity() {
                     .clearCredentialState(
                         ClearCredentialStateRequest()
                     )
-
-                Log.d(
-                    "CommuteCompanion",
-                    "User signed out from settings"
-                )
 
             } catch (
                 e: ClearCredentialException

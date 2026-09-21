@@ -32,117 +32,238 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-        auth = FirebaseAuth.getInstance()
-        credentialManager = CredentialManager.create(this)
+        auth =
+            FirebaseAuth.getInstance()
 
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val btnSignIn = findViewById<Button>(R.id.btnSignInSubmit)
+        credentialManager =
+            CredentialManager.create(this)
 
-        findViewById<TextView>(R.id.tvForgotPassword).setOnClickListener {
-            startActivity(Intent(this, ResetPasswordActivity::class.java))
+        val etEmail =
+            findViewById<EditText>(
+                R.id.etEmail
+            )
+
+        val etPassword =
+            findViewById<EditText>(
+                R.id.etPassword
+            )
+
+        val btnSignIn =
+            findViewById<Button>(
+                R.id.btnSignInSubmit
+            )
+
+        findViewById<TextView>(
+            R.id.tvForgotPassword
+        ).setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    ResetPasswordActivity::class.java
+                )
+            )
         }
 
         btnSignIn.setOnClickListener {
-            val email = etEmail.text.toString().trim()
-            val password = etPassword.text.toString()
+
+            val email =
+                etEmail.text
+                    .toString()
+                    .trim()
+
+            val password =
+                etPassword.text
+                    .toString()
 
             if (email.isEmpty()) {
+
                 Toast.makeText(
                     this,
                     "Please enter your email address.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            if (
+                !Patterns.EMAIL_ADDRESS
+                    .matcher(email)
+                    .matches()
+            ) {
+
                 Toast.makeText(
                     this,
                     "Please enter a valid email address.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
             if (password.isEmpty()) {
+
                 Toast.makeText(
                     this,
                     "Please enter your password.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
-            btnSignIn.isEnabled = false
+            btnSignIn.isEnabled =
+                false
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    btnSignIn.isEnabled = true
+            auth.signInWithEmailAndPassword(
+                email,
+                password
+            ).addOnCompleteListener { task ->
 
-                    if (task.isSuccessful) {
-                        saveUserDetails()
-                        openNextScreen()
-                    } else {
-                        val message =
-                            if (task.exception is FirebaseNetworkException) {
-                                "Please check your internet connection and try again."
-                            } else {
-                                "Incorrect email or password."
-                            }
+                btnSignIn.isEnabled =
+                    true
 
-                        Log.e(
-                            "CommuteCompanion",
-                            "Firebase sign in failed",
-                            task.exception
-                        )
+                if (task.isSuccessful) {
 
-                        Toast.makeText(
-                            this,
-                            message,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                    saveUserDetails()
+                    openNextScreen()
+
+                } else {
+
+                    val message =
+                        if (
+                            task.exception is
+                                    FirebaseNetworkException
+                        ) {
+                            "Please check your internet connection and try again."
+                        } else {
+                            "Incorrect email or password."
+                        }
+
+                    Log.e(
+                        "CommuteCompanion",
+                        "Firebase sign in failed",
+                        task.exception
+                    )
+
+                    Toast.makeText(
+                        this,
+                        message,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
+            }
         }
 
-        findViewById<Button>(R.id.btnGoogleSignIn).setOnClickListener {
+        findViewById<Button>(
+            R.id.btnGoogleSignIn
+        ).setOnClickListener {
+
             signInWithGoogle()
         }
 
-        findViewById<LinearLayout>(R.id.btnBiometric).setOnClickListener {
-            startActivity(Intent(this, BiometricActivity::class.java))
+        findViewById<LinearLayout>(
+            R.id.btnBiometric
+        ).setOnClickListener {
+
+            openBiometricLogin()
         }
     }
 
+    private fun openBiometricLogin() {
+
+        val prefs =
+            AppPreferences(this)
+
+        if (!prefs.biometricEnabled) {
+
+            Toast.makeText(
+                this,
+                "Biometric login has not been enabled yet.",
+                Toast.LENGTH_LONG
+            ).show()
+
+            return
+        }
+
+        if (auth.currentUser == null) {
+
+            Toast.makeText(
+                this,
+                "Sign in with your password or Google first to restore your session.",
+                Toast.LENGTH_LONG
+            ).show()
+
+            return
+        }
+
+        val intent =
+            Intent(
+                this,
+                BiometricActivity::class.java
+            )
+
+        intent.putExtra(
+            BiometricActivity.EXTRA_MODE,
+            BiometricActivity.MODE_AUTHENTICATE
+        )
+
+        startActivity(intent)
+    }
+
     private fun signInWithGoogle() {
-        val googleOption = GetSignInWithGoogleOption.Builder(
-            getString(R.string.default_web_client_id)
-        ).build()
 
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleOption)
-            .build()
-
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val result = credentialManager.getCredential(
-                    context = this@SignInActivity,
-                    request = request
+        val googleOption =
+            GetSignInWithGoogleOption.Builder(
+                getString(
+                    R.string.default_web_client_id
                 )
+            ).build()
 
-                val credential = result.credential
+        val request =
+            GetCredentialRequest.Builder()
+                .addCredentialOption(
+                    googleOption
+                )
+                .build()
+
+        CoroutineScope(
+            Dispatchers.Main
+        ).launch {
+
+            try {
+
+                val result =
+                    credentialManager.getCredential(
+                        context =
+                            this@SignInActivity,
+                        request =
+                            request
+                    )
+
+                val credential =
+                    result.credential
 
                 if (
                     credential is CustomCredential &&
                     credential.type ==
-                    GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+                    GoogleIdTokenCredential
+                        .TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
                 ) {
-                    val googleCredential =
-                        GoogleIdTokenCredential.createFrom(credential.data)
 
-                    authenticateGoogleUser(googleCredential.idToken)
+                    val googleCredential =
+                        GoogleIdTokenCredential
+                            .createFrom(
+                                credential.data
+                            )
+
+                    authenticateGoogleUser(
+                        googleCredential.idToken
+                    )
+
                 } else {
+
                     Toast.makeText(
                         this@SignInActivity,
                         "Google sign in could not be completed.",
@@ -150,7 +271,10 @@ class SignInActivity : AppCompatActivity() {
                     ).show()
                 }
 
-            } catch (e: GetCredentialException) {
+            } catch (
+                e: GetCredentialException
+            ) {
+
                 Log.e(
                     "CommuteCompanion",
                     "Google sign in cancelled or unavailable",
@@ -166,57 +290,99 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun authenticateGoogleUser(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
+    private fun authenticateGoogleUser(
+        idToken: String
+    ) {
 
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(
-                        "CommuteCompanion",
-                        "Google sign in successful"
-                    )
+        val credential =
+            GoogleAuthProvider
+                .getCredential(
+                    idToken,
+                    null
+                )
 
-                    saveUserDetails()
-                    openNextScreen()
-                } else {
-                    Log.e(
-                        "CommuteCompanion",
-                        "Google Firebase sign in failed",
-                        task.exception
-                    )
+        auth.signInWithCredential(
+            credential
+        ).addOnCompleteListener { task ->
 
-                    Toast.makeText(
-                        this,
-                        "Google sign in failed. Please try again.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+            if (task.isSuccessful) {
+
+                Log.d(
+                    "CommuteCompanion",
+                    "Google sign in successful"
+                )
+
+                saveUserDetails()
+                openNextScreen()
+
+            } else {
+
+                Log.e(
+                    "CommuteCompanion",
+                    "Google Firebase sign in failed",
+                    task.exception
+                )
+
+                Toast.makeText(
+                    this,
+                    "Google sign in failed. Please try again.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
+        }
     }
 
     private fun saveUserDetails() {
-        val user = auth.currentUser ?: return
-        val prefs = AppPreferences(this)
 
-        prefs.accountEmail = user.email ?: ""
+        val user =
+            auth.currentUser
+                ?: return
 
-        if (!user.displayName.isNullOrBlank()) {
-            prefs.userName = user.displayName ?: ""
+        val prefs =
+            AppPreferences(this)
+
+        prefs.accountEmail =
+            user.email ?: ""
+
+        if (
+            !user.displayName
+                .isNullOrBlank()
+        ) {
+
+            prefs.userName =
+                user.displayName ?: ""
         }
     }
 
     private fun openNextScreen() {
-        val prefs = AppPreferences(this)
 
-        val destination =
-            if (prefs.onboardingComplete) {
-                HomeActivity::class.java
+        val prefs =
+            AppPreferences(this)
+
+        val intent =
+            if (
+                prefs.onboardingComplete
+            ) {
+
+                Intent(
+                    this,
+                    HomeActivity::class.java
+                )
+
             } else {
-                BiometricActivity::class.java
+
+                Intent(
+                    this,
+                    BiometricActivity::class.java
+                ).apply {
+
+                    putExtra(
+                        BiometricActivity.EXTRA_MODE,
+                        BiometricActivity.MODE_SETUP
+                    )
+                }
             }
 
-        val intent = Intent(this, destination)
         intent.flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or
                     Intent.FLAG_ACTIVITY_CLEAR_TASK
