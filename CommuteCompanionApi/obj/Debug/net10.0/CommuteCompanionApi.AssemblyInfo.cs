@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommuteCompanionApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00117cc07a6f04a053ec90bb7f2794d781929eb5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+05b9f3213b58ee538667e20ce9bb19f195d1e300")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommuteCompanionApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommuteCompanionApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

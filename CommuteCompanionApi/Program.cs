@@ -16,6 +16,9 @@ builder.Services.AddHttpClient<OpenWeatherGeocodingService>();
 // Register OpenWeather weather service.
 builder.Services.AddHttpClient<WeatherService>();
 
+// Register TomTom traffic service.
+builder.Services.AddHttpClient<TomTomTrafficService>();
+
 // Register Entity Framework Core with SQLite.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(

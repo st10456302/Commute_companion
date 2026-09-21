@@ -340,8 +340,15 @@ class CommuteRepository(
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
+                val errorMessage =
+                    response.errorBody()?.string()
+                        ?.takeIf { it.isNotBlank() }
+                        ?: "API returned HTTP ${response.code()}"
+
                 Result.failure(
-                    Exception("API returned HTTP ${response.code()}")
+                    Exception(
+                        "API returned HTTP ${response.code()}: $errorMessage"
+                    )
                 )
             }
         } catch (exception: Exception) {

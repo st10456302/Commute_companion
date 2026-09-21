@@ -12,13 +12,16 @@ public class DashboardController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly WeatherService _weatherService;
+    private readonly TomTomTrafficService _trafficService;
 
     public DashboardController(
         AppDbContext context,
-        WeatherService weatherService)
+        WeatherService weatherService,
+        TomTomTrafficService trafficService)
     {
         _context = context;
         _weatherService = weatherService;
+        _trafficService = trafficService;
     }
 
     [HttpGet]
@@ -66,6 +69,10 @@ public class DashboardController : ControllerBase
             });
         }
 
+        // ---------------------------------------------------------
+        // WEATHER
+        // ---------------------------------------------------------
+
         WeatherResult? weather;
 
         try
@@ -106,24 +113,108 @@ public class DashboardController : ControllerBase
                 });
         }
 
-        // Traffic and load-shedding values remain temporary
-        // until their respective live API integrations are added.
+        // ---------------------------------------------------------
+        // TRAFFIC
+        // ---------------------------------------------------------
+
+        TomTomTrafficResult? traffic;
+
+        try
+        {
+            traffic =
+                await _trafficService.GetTrafficAsync(
+                    location.Latitude.Value,
+                    location.Longitude.Value);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error = exception.Message
+                });
+        }
+        catch (HttpRequestException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The traffic service is currently unavailable.",
+                    details = exception.Message
+                });
+        }
+
+        if (traffic == null)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "Traffic data could not be retrieved."
+                });
+        }
+
+        int incidentCount;
+
+        try
+        {
+            incidentCount =
+                await _trafficService.GetIncidentCountAsync(
+                    location.Latitude.Value,
+                    location.Longitude.Value);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error = exception.Message
+                });
+        }
+        catch (HttpRequestException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The traffic incident service is currently unavailable.",
+                    details = exception.Message
+                });
+        }
+
+        // ---------------------------------------------------------
+        // DASHBOARD RESPONSE
+        // ---------------------------------------------------------
+
         var dashboard = new DashboardResponse
         {
             LocationId = location.Id,
-            LocationLabel = location.Label,
-            LocationAddress = location.Address,
 
-            Traffic = new TrafficDashboardData
-            {
-                Status = "Moderate",
-                CommuteMinutes = 32,
-                DelayMinutes = 5,
-                IncidentCount = 2
-            },
+            LocationLabel =
+                location.Label,
+
+            LocationAddress =
+                location.Address,
+
+
+Traffic = new TrafficDashboardData
+{
+    Status = traffic.Status,
+    CommuteMinutes = 0,
+    DelayMinutes = traffic.DelayMinutes,
+    IncidentCount = incidentCount
+},
 
             LoadShedding = new LoadSheddingDashboardData
             {
+                // Temporary values until the EskomSePush
+                // integration is implemented.
                 Stage = 2,
                 PowerAvailable = true,
                 ChangeIn = "2 hours",
@@ -147,11 +238,14 @@ public class DashboardController : ControllerBase
                         : "No weather alerts"
             },
 
-            RetrievedAt = DateTime.UtcNow
+            RetrievedAt =
+                DateTime.UtcNow
         };
 
         return Ok(dashboard);
     }
+
+
 
     private string? GetFirebaseUid()
     {
