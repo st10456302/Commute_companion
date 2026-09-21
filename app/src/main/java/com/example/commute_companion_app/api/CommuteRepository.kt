@@ -156,6 +156,46 @@ class CommuteRepository(
         }
     }
 
+    suspend fun createSavedRoute(
+        name: String,
+        destination: String
+    ): Result<SavedRouteResponse> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        val request = CreateRouteRequest(
+            name = name,
+            destination = destination
+        )
+
+        return try {
+            val response = api.createRoute(
+                authorization = "Bearer $token",
+                request = request
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                val errorMessage =
+                    response.errorBody()?.string()
+                        ?.takeIf { it.isNotBlank() }
+                        ?: "API returned HTTP ${response.code()}"
+
+                Result.failure(
+                    Exception(
+                        "API returned HTTP ${response.code()}: $errorMessage"
+                    )
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
+
     suspend fun deleteSavedLocation(
         id: Int
     ): Result<Unit> {

@@ -65,6 +65,17 @@ interface CommuteApiService {
         @Header("Authorization") authorization: String,
         @Query("locationId") locationId: Int
     ): Response<DashboardResponse>
+
+    @GET("api/routes")
+    suspend fun getRoutes(
+        @Header("Authorization") authorization: String
+    ): Response<List<SavedRouteResponse>>
+
+    @POST("api/routes")
+    suspend fun createRoute(
+        @Header("Authorization") authorization: String,
+        @Body request: CreateRouteRequest
+    ): Response<SavedRouteResponse>
 }
 
 data class HealthResponse(
@@ -152,4 +163,19 @@ data class WeatherDashboardData(
     val condition: String,
     val wetRoads: Boolean,
     val alertMessage: String
+)
+
+data class SavedRouteResponse(
+    val id: Int,
+    val userId: String,
+    val name: String,
+    val destination: String,
+    val destinationLatitude: Double?,
+    val destinationLongitude: Double?,
+    val createdAt: String
+)
+
+data class CreateRouteRequest(
+    val name: String,
+    val destination: String
 )
