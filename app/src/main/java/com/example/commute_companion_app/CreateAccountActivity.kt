@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import android.view.View
 
 class CreateAccountActivity : AppCompatActivity() {
 
@@ -40,6 +41,7 @@ class CreateAccountActivity : AppCompatActivity() {
         val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
         val checkboxTerms = findViewById<CheckBox>(R.id.checkboxTerms)
         val btnSubmit = findViewById<Button>(R.id.btnCreateAccountSubmit)
+        val ivEmailError = findViewById<android.widget.ImageView>(R.id.ivEmailError)
 
         btnSubmit.setOnClickListener {
 
@@ -55,6 +57,8 @@ class CreateAccountActivity : AppCompatActivity() {
             val confirmPassword =
                 etConfirmPassword.text.toString()
 
+            ivEmailError.visibility = View.GONE
+
             // --- Validation ---
 
             if (fullName.isEmpty()) {
@@ -67,20 +71,26 @@ class CreateAccountActivity : AppCompatActivity() {
             }
 
             if (email.isEmpty()) {
+                ivEmailError.visibility = View.VISIBLE
+
                 Toast.makeText(
                     this,
                     "Please enter your email address.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                ivEmailError.visibility = View.VISIBLE
+
                 Toast.makeText(
                     this,
                     "Please enter a valid email address.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
