@@ -41,7 +41,7 @@
             android:paddingEnd="@dimen/spacing_sm"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:text="3"
+            android:text="0"
             android:textColor="@color/teal_dark"
             android:textSize="@dimen/text_tiny" />
 
@@ -69,6 +69,7 @@
 
             <!-- Traffic Alert -->
             <LinearLayout
+                android:id="@+id/cardTrafficAlert"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
@@ -97,6 +98,7 @@
                         style="@style/Text.Heading" />
 
                     <TextView
+                        android:id="@+id/tvTrafficAlertStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_orange"
@@ -111,6 +113,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvTrafficAlertMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
@@ -119,6 +122,7 @@
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    android:id="@+id/tvTrafficAlertTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -129,6 +133,7 @@
 
             <!-- Load Shedding Alert -->
             <LinearLayout
+                android:id="@+id/cardLoadSheddingAlert"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
@@ -157,6 +162,7 @@
                         style="@style/Text.Heading" />
 
                     <TextView
+                        android:id="@+id/tvLoadSheddingAlertStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_orange"
@@ -171,6 +177,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvLoadSheddingAlertMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
@@ -179,6 +186,7 @@
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    android:id="@+id/tvLoadSheddingAlertTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -189,6 +197,7 @@
 
             <!-- Weather Alert -->
             <LinearLayout
+                android:id="@+id/cardWeatherAlert"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
@@ -217,6 +226,7 @@
                         style="@style/Text.Heading" />
 
                     <TextView
+                        android:id="@+id/tvWeatherAlertStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_teal"
@@ -231,6 +241,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvWeatherAlertMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
@@ -239,6 +250,7 @@
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    android:id="@+id/tvWeatherAlertTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
