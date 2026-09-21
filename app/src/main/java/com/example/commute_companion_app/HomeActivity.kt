@@ -27,30 +27,41 @@ class HomeActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_home)
 
-        repository = CommuteRepository(
-            AppPreferences(this)
-        )
+        repository =
+            CommuteRepository(
+                AppPreferences(this)
+            )
 
-        //loadHomeData()
         setupNavigation()
+
+        BottomNavigationHelper.setSelectedTab(
+            findViewById(android.R.id.content),
+            BottomNavigationHelper.Tab.HOME
+        )
     }
 
     override fun onResume() {
         super.onResume()
 
         if (::repository.isInitialized) {
+            BottomNavigationHelper.setSelectedTab(
+                findViewById(android.R.id.content),
+                BottomNavigationHelper.Tab.HOME
+            )
+
             loadHomeData()
         }
     }
 
     private fun loadHomeData() {
 
-        val prefs = AppPreferences(this)
-
-        // --- Populate real onboarding data ---
+        val prefs =
+            AppPreferences(this)
 
         val tvGreeting =
-            findViewById<TextView>(R.id.tvGreeting)
+            findViewById<TextView>(
+                R.id.tvGreeting
+            )
 
         val userName =
             prefs.userName.trim()
@@ -59,42 +70,36 @@ class HomeActivity : AppCompatActivity() {
             if (userName.isNotEmpty()) {
                 "Good Morning, $userName."
             } else {
-                getString(R.string.good_morning)
+                getString(
+                    R.string.good_morning
+                )
             }
 
         val locationDisplay =
-            prefs.savedLocationAddress.trim().ifEmpty {
-                getString(R.string.sandton_central)
-            }
+            prefs.savedLocationAddress
+                .trim()
+                .ifEmpty {
+                    getString(
+                        R.string.sandton_central
+                    )
+                }
 
-        val tvLocationSubtitle =
-            findViewById<TextView>(
-                R.id.tvLocationSubtitle
-            )
-
-        // Temperature is still displayed as the existing
-        // Home fallback. Live weather is available on the
-        // Live Dashboard.
-        tvLocationSubtitle.text =
+        findViewById<TextView>(
+            R.id.tvLocationSubtitle
+        ).text =
             "$locationDisplay • 18°C"
 
-        val tvWeatherLocationTag =
-            findViewById<TextView>(
-                R.id.tvWeatherLocationTag
-            )
-
-        tvWeatherLocationTag.text =
+        findViewById<TextView>(
+            R.id.tvWeatherLocationTag
+        ).text =
             locationDisplay
 
         val routeDestination =
             prefs.savedRouteDestination.trim()
 
-        val tvTrafficHeading =
-            findViewById<TextView>(
-                R.id.tvTrafficHeading
-            )
-
-        tvTrafficHeading.text =
+        findViewById<TextView>(
+            R.id.tvTrafficHeading
+        ).text =
             if (routeDestination.isNotEmpty()) {
                 "Traffic to $routeDestination"
             } else {
@@ -107,14 +112,10 @@ class HomeActivity : AppCompatActivity() {
             "CommuteCompanion",
             "Home Dashboard loaded — " +
                     "userName='${prefs.userName}', " +
-                    "savedLocationAddress=" +
-                    "'${prefs.savedLocationAddress}', " +
-                    "savedLocationLabel=" +
-                    "'${prefs.savedLocationLabel}', " +
-                    "savedRouteName=" +
-                    "'${prefs.savedRouteName}', " +
-                    "savedRouteDestination=" +
-                    "'${prefs.savedRouteDestination}'"
+                    "savedLocationAddress='${prefs.savedLocationAddress}', " +
+                    "savedLocationLabel='${prefs.savedLocationLabel}', " +
+                    "savedRouteName='${prefs.savedRouteName}', " +
+                    "savedRouteDestination='${prefs.savedRouteDestination}'"
         )
 
         loadCommuteScore()
@@ -122,7 +123,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun loadCommuteScore() {
 
-        val prefs = AppPreferences(this)
+        val prefs =
+            AppPreferences(this)
 
         lifecycleScope.launch {
 
@@ -144,12 +146,14 @@ class HomeActivity : AppCompatActivity() {
                     )
 
                     showCommuteScoreUnavailable()
+
                     return@onSuccess
                 }
 
                 val selectedLocation =
                     locations.firstOrNull {
-                        it.label == prefs.savedLocationLabel
+                        it.label ==
+                                prefs.savedLocationLabel
                     } ?: locations.first()
 
                 Log.d(
@@ -190,7 +194,9 @@ class HomeActivity : AppCompatActivity() {
             )
 
             val result =
-                repository.getDashboard(locationId)
+                repository.getDashboard(
+                    locationId
+                )
 
             result.onSuccess { dashboard ->
 
@@ -199,9 +205,7 @@ class HomeActivity : AppCompatActivity() {
                         dashboard
                     )
 
-                updateCommuteScore(
-                    score
-                )
+                updateCommuteScore(score)
 
                 Log.d(
                     "CommuteCompanionAPI",
@@ -210,8 +214,7 @@ class HomeActivity : AppCompatActivity() {
                             "traffic='${dashboard.traffic.status}', " +
                             "delay=${dashboard.traffic.delayMinutes}, " +
                             "incidents=${dashboard.traffic.incidentCount}, " +
-                            "loadSheddingStage=" +
-                            "${dashboard.loadShedding.stage}, " +
+                            "loadSheddingStage=${dashboard.loadShedding.stage}, " +
                             "wetRoads=${dashboard.weather.wetRoads}"
                 )
             }
@@ -233,20 +236,14 @@ class HomeActivity : AppCompatActivity() {
         score: Int
     ) {
 
-        val tvScore =
-            findViewById<TextView>(
-                R.id.tvCommuteScore
-            )
-
-        val tvStatus =
-            findViewById<TextView>(
-                R.id.tvCommuteScoreStatus
-            )
-
-        tvScore.text =
+        findViewById<TextView>(
+            R.id.tvCommuteScore
+        ).text =
             "$score/100"
 
-        tvStatus.text =
+        findViewById<TextView>(
+            R.id.tvCommuteScoreStatus
+        ).text =
             when {
                 score >= 80 ->
                     getString(
@@ -279,7 +276,8 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<TextView>(
             R.id.tvCommuteScore
-        ).text = "--/100"
+        ).text =
+            "--/100"
 
         findViewById<TextView>(
             R.id.tvCommuteScoreStatus
@@ -295,8 +293,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-
-        // --- Open Live Dashboard from Traffic card ---
 
         findViewById<LinearLayout>(
             R.id.cardTraffic
@@ -315,11 +311,10 @@ class HomeActivity : AppCompatActivity() {
             )
         }
 
-        // --- Bottom navigation ---
-
         findViewById<LinearLayout>(
             R.id.navHome
         ).setOnClickListener {
+
             // Already on Home.
         }
 
