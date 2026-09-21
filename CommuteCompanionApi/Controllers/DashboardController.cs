@@ -177,7 +177,7 @@ public class DashboardController : ControllerBase
                 });
         }
 
-        // LOAD SHEDDING
+        // LOAD SHEDDING STATUS
         EskomStatusResult? loadShedding;
 
         try
@@ -215,7 +215,183 @@ public class DashboardController : ControllerBase
         }
 
         Console.WriteLine(
-            $"EskomSePush — stage={loadShedding.Stage}");
+            $"EskomSePush — national stage={loadShedding.Stage}");
+
+        // LOAD SHEDDING AREA
+        EskomAreaResult? nearbyArea;
+
+        try
+        {
+            nearbyArea =
+                await _eskomSePushService.GetNearbyAreaAsync(
+                    location.Latitude.Value,
+                    location.Longitude.Value);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new { error = exception.Message });
+        }
+        catch (HttpRequestException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The load-shedding area service is currently unavailable.",
+                    details = exception.Message
+                });
+        }
+
+        if (nearbyArea == null)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "A load-shedding area could not be found for the saved location."
+                });
+        }
+
+        Console.WriteLine(
+            $"EskomSePush area — " +
+            $"id='{nearbyArea.Id}', " +
+            $"name='{nearbyArea.Name}', " +
+            $"municipality='{nearbyArea.Municipality}'");
+
+        // LOAD SHEDDING AREA INFORMATION
+        EskomAreaInfoResult? areaInfo;
+
+        try
+        {
+            areaInfo =
+                await _eskomSePushService.GetAreaInfoAsync(
+                    nearbyArea.Id);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new { error = exception.Message });
+        }
+        catch (HttpRequestException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The load-shedding area information service is currently unavailable.",
+                    details = exception.Message
+                });
+        }
+
+        if (areaInfo == null)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "Load-shedding area information could not be retrieved."
+                });
+        }
+
+        // SELECT THE LOADSHEDDING SCHEDULE
+        var loadSheddingSchedule =
+            areaInfo.Schedules
+                .FirstOrDefault(schedule =>
+                    schedule.Type.Equals(
+                        "loadshedding",
+                        StringComparison.OrdinalIgnoreCase));
+
+        string nextLoadSheddingSlot =
+            "No upcoming load-shedding event";
+
+        string loadSheddingChange =
+            $"Area: {areaInfo.Name}";
+
+        if (loadSheddingSchedule != null)
+        {
+            Console.WriteLine(
+                $"EskomSePush schedule — " +
+                $"id='{loadSheddingSchedule.Id}', " +
+                $"type='{loadSheddingSchedule.Type}'");
+
+            // LOAD SHEDDING SCHEDULE
+            EskomScheduleResult? schedule;
+
+            try
+            {
+                schedule =
+                    await _eskomSePushService.GetScheduleAsync(
+                        loadSheddingSchedule.Id);
+            }
+            catch (InvalidOperationException exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status503ServiceUnavailable,
+                    new { error = exception.Message });
+            }
+            catch (HttpRequestException exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status503ServiceUnavailable,
+                    new
+                    {
+                        error =
+                            "The load-shedding schedule service is currently unavailable.",
+                        details = exception.Message
+                    });
+            }
+
+            if (schedule != null)
+            {
+                var upcomingEvent =
+                    schedule.Events
+                        .Select(eventItem => new
+                        {
+                            Event = eventItem,
+                            Start = ParseDateTime(eventItem.Start)
+                        })
+                        .Where(x => x.Start.HasValue)
+                        .OrderBy(x => x.Start)
+                        .FirstOrDefault();
+
+                if (upcomingEvent != null)
+                {
+                    var start =
+                        upcomingEvent.Start!.Value.ToLocalTime();
+
+                    var end =
+                        ParseDateTime(
+                            upcomingEvent.Event.End)
+                        ?.ToLocalTime();
+
+                    nextLoadSheddingSlot =
+                        end.HasValue
+                            ? $"{start:dd MMM HH:mm} - {end:HH:mm}"
+                            : $"{start:dd MMM HH:mm}";
+
+                    loadSheddingChange =
+                        upcomingEvent.Event.Note;
+                }
+                else
+                {
+                    loadSheddingChange =
+                        $"Area: {areaInfo.Name}";
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine(
+                $"EskomSePush — no loadshedding schedule " +
+                $"was found for area '{areaInfo.Name}'.");
+        }
 
         // DASHBOARD RESPONSE
         var dashboard = new DashboardResponse
@@ -236,8 +412,8 @@ public class DashboardController : ControllerBase
             {
                 Stage = loadShedding.Stage,
                 PowerAvailable = loadShedding.Stage == 0,
-                ChangeIn = "Live EskomSePush data",
-                NextSlot = "See current load-shedding schedule"
+                ChangeIn = loadSheddingChange,
+                NextSlot = nextLoadSheddingSlot
             },
 
             Weather = new WeatherDashboardData
@@ -254,7 +430,29 @@ public class DashboardController : ControllerBase
             RetrievedAt = DateTime.UtcNow
         };
 
+        Console.WriteLine(
+            $"Dashboard assembled — " +
+            $"location='{location.Label}', " +
+            $"traffic='{traffic.Status}', " +
+            $"incidents={incidentCount}, " +
+            $"loadSheddingStage={loadShedding.Stage}, " +
+            $"nextSlot='{nextLoadSheddingSlot}', " +
+            $"temperature={weather.TemperatureCelsius}");
+
         return Ok(dashboard);
+    }
+
+    private static DateTimeOffset? ParseDateTime(
+        string value)
+    {
+        if (DateTimeOffset.TryParse(
+                value,
+                out var parsed))
+        {
+            return parsed;
+        }
+
+        return null;
     }
 
     private string? GetFirebaseUid()
