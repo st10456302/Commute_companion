@@ -112,6 +112,40 @@ class CommuteRepository(
         }
     }
 
+    suspend fun geocodeLocation(
+        address: String
+    ): Result<GeocodeLocationResponse> {
+
+        val token = tokenProvider.getIdToken()
+            ?: return Result.failure(
+                Exception("No Firebase ID token available.")
+            )
+
+        return try {
+            val response = api.geocodeLocation(
+                authorization = "Bearer $token",
+                address = address
+            )
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                val errorMessage =
+                    response.errorBody()?.string()
+                        ?.takeIf { it.isNotBlank() }
+                        ?: "API returned HTTP ${response.code()}"
+
+                Result.failure(
+                    Exception(
+                        "Geocoding failed — HTTP ${response.code()}: $errorMessage"
+                    )
+                )
+            }
+        } catch (exception: Exception) {
+            Result.failure(exception)
+        }
+    }
+
     suspend fun createSavedLocation(
         label: String,
         address: String,

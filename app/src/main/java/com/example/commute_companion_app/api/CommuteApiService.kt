@@ -31,6 +31,12 @@ interface CommuteApiService {
         @Header("Authorization") authorization: String
     ): Response<List<SavedLocationResponse>>
 
+    @GET("api/locations/geocode")
+    suspend fun geocodeLocation(
+        @Header("Authorization") authorization: String,
+        @Query("address") address: String
+    ): Response<GeocodeLocationResponse>
+
     @POST("api/locations")
     suspend fun createLocation(
         @Header("Authorization") authorization: String,
@@ -178,4 +184,9 @@ data class SavedRouteResponse(
 data class CreateRouteRequest(
     val name: String,
     val destination: String
+)
+
+data class GeocodeLocationResponse(
+    val latitude: Double,
+    val longitude: Double
 )

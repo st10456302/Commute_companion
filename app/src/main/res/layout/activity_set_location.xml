@@ -17,7 +17,6 @@
             android:orientation="vertical"
             android:padding="@dimen/spacing_md">
 
-            <!-- Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +40,6 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
-            <!-- Search location -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
@@ -66,36 +64,10 @@
                     android:background="@null"
                     android:hint="@string/search_address_hint"
                     android:textColorHint="@color/text_hint"
-                    android:textSize="@dimen/text_body" />
+                    android:textSize="@dimen/text_body"
+                    android:singleLine="true" />
             </LinearLayout>
 
-            <!-- Use current location -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:background="@drawable/bg_card_light_blue"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/spacing_md">
-
-                <ImageView
-                    android:layout_width="@dimen/icon_size_sm"
-                    android:layout_height="@dimen/icon_size_sm"
-                    android:src="@drawable/ic_my_location"
-                    app:tint="@color/blue_info" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_sm"
-                    android:text="@string/use_current_location"
-                    android:textColor="@color/teal_dark"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="@dimen/text_body" />
-            </LinearLayout>
-
-            <!-- Suggested -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,44 +77,9 @@
                 android:letterSpacing="0.05"
                 android:textColor="@color/text_secondary" />
 
-            <!-- Suggested location -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:background="@drawable/bg_card_white"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/icon_size_sm"
-                    android:layout_height="@dimen/icon_size_sm"
-                    android:src="@drawable/ic_location_pin"
-                    app:tint="@color/text_secondary" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="@dimen/spacing_sm"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sandton_central"
-                        style="@style/Text.Heading"
-                        android:textSize="@dimen/text_body" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sandton_central_address"
-                        style="@style/Text.Small" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Map preview -->
+            <!-- Live OpenStreetMap preview -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
@@ -151,32 +88,42 @@
                 android:clipChildren="true"
                 android:clipToOutline="true">
 
-                <ImageView
+                <com.mapbox.maps.MapView
+                    android:id="@+id/locationMap"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/bg_mock_map" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="14dp"
-                    android:src="@drawable/ic_location_pin"
-                    app:tint="@color/teal_primary" />
+                    android:layout_height="220dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvMapStatus"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:background="#B3000000"
-                    android:padding="@dimen/spacing_sm"
-                    android:text="@string/map_label"
-                    android:textColor="@color/white"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="@dimen/spacing_sm"
+                    android:background="#CCFFFFFF"
+                    android:paddingStart="@dimen/spacing_sm"
+                    android:paddingEnd="@dimen/spacing_sm"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="Enter an address to locate it"
+                    android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_tiny" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="4dp"
+                    android:background="#CCFFFFFF"
+                    android:padding="3dp"
+                    android:text="© OpenStreetMap contributors"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="9sp" />
+
             </FrameLayout>
 
-            <!-- Save as -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,7 +133,6 @@
                 android:letterSpacing="0.05"
                 android:textColor="@color/text_secondary" />
 
-            <!-- Location chips -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -245,7 +191,6 @@
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_small" />
 
-            <!-- Save -->
             <Button
                 android:id="@+id/btnSaveLocation"
                 android:layout_width="match_parent"
@@ -258,8 +203,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Main app navigation.
-         Hidden during first-time setup by SetLocationActivity. -->
     <include
         android:id="@+id/bottomNavBar"
         layout="@layout/bottom_nav_bar" />

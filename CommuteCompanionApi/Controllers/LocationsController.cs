@@ -42,6 +42,78 @@ public class LocationsController : ControllerBase
         return Ok(locations);
     }
 
+    // -------------------------------------------------------------
+    // Geocoding preview
+    // -------------------------------------------------------------
+    // Converts an address into coordinates without saving it.
+    // This is used by the Android Set Location screen so that
+    // the mini-map can update before the user presses Save.
+    [HttpGet("geocode")]
+    public async Task<IActionResult> GeocodeLocation(
+        [FromQuery] string address)
+    {
+        var firebaseUid = GetFirebaseUid();
+
+        if (firebaseUid == null)
+        {
+            return Unauthorized(new
+            {
+                error = "Authenticated Firebase user was not found."
+            });
+        }
+
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            return BadRequest(new
+            {
+                error = "An address is required."
+            });
+        }
+
+        try
+        {
+            var coordinates =
+                await _geocodingService.GeocodeAddressAsync(
+                    address);
+
+            if (coordinates == null)
+            {
+                return NotFound(new
+                {
+                    error =
+                        "The location could not be found. " +
+                        "Please enter a more specific address."
+                });
+            }
+
+            return Ok(new
+            {
+                latitude = coordinates.Latitude,
+                longitude = coordinates.Longitude
+            });
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error = exception.Message
+                });
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The location geocoding service " +
+                        "is currently unavailable."
+                });
+        }
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<SavedLocation>> GetLocation(int id)
     {
