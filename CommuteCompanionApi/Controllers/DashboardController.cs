@@ -13,15 +13,18 @@ public class DashboardController : ControllerBase
     private readonly AppDbContext _context;
     private readonly WeatherService _weatherService;
     private readonly TomTomTrafficService _trafficService;
+    private readonly EskomSePushService _eskomSePushService;
 
     public DashboardController(
         AppDbContext context,
         WeatherService weatherService,
-        TomTomTrafficService trafficService)
+        TomTomTrafficService trafficService,
+        EskomSePushService eskomSePushService)
     {
         _context = context;
         _weatherService = weatherService;
         _trafficService = trafficService;
+        _eskomSePushService = eskomSePushService;
     }
 
     [HttpGet]
@@ -69,10 +72,7 @@ public class DashboardController : ControllerBase
             });
         }
 
-        // ---------------------------------------------------------
         // WEATHER
-        // ---------------------------------------------------------
-
         WeatherResult? weather;
 
         try
@@ -86,10 +86,7 @@ public class DashboardController : ControllerBase
         {
             return StatusCode(
                 StatusCodes.Status503ServiceUnavailable,
-                new
-                {
-                    error = exception.Message
-                });
+                new { error = exception.Message });
         }
         catch (HttpRequestException)
         {
@@ -113,10 +110,7 @@ public class DashboardController : ControllerBase
                 });
         }
 
-        // ---------------------------------------------------------
         // TRAFFIC
-        // ---------------------------------------------------------
-
         TomTomTrafficResult? traffic;
 
         try
@@ -130,10 +124,7 @@ public class DashboardController : ControllerBase
         {
             return StatusCode(
                 StatusCodes.Status503ServiceUnavailable,
-                new
-                {
-                    error = exception.Message
-                });
+                new { error = exception.Message });
         }
         catch (HttpRequestException exception)
         {
@@ -158,6 +149,7 @@ public class DashboardController : ControllerBase
                 });
         }
 
+        // TRAFFIC INCIDENTS
         int incidentCount;
 
         try
@@ -171,10 +163,7 @@ public class DashboardController : ControllerBase
         {
             return StatusCode(
                 StatusCodes.Status503ServiceUnavailable,
-                new
-                {
-                    error = exception.Message
-                });
+                new { error = exception.Message });
         }
         catch (HttpRequestException exception)
         {
@@ -188,64 +177,85 @@ public class DashboardController : ControllerBase
                 });
         }
 
-        // ---------------------------------------------------------
-        // DASHBOARD RESPONSE
-        // ---------------------------------------------------------
+        // LOAD SHEDDING
+        EskomStatusResult? loadShedding;
 
+        try
+        {
+            loadShedding =
+                await _eskomSePushService.GetStatusAsync();
+        }
+        catch (InvalidOperationException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new { error = exception.Message });
+        }
+        catch (HttpRequestException exception)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "The load-shedding service is currently unavailable.",
+                    details = exception.Message
+                });
+        }
+
+        if (loadShedding == null)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    error =
+                        "Load-shedding data could not be retrieved."
+                });
+        }
+
+        Console.WriteLine(
+            $"EskomSePush — stage={loadShedding.Stage}");
+
+        // DASHBOARD RESPONSE
         var dashboard = new DashboardResponse
         {
             LocationId = location.Id,
+            LocationLabel = location.Label,
+            LocationAddress = location.Address,
 
-            LocationLabel =
-                location.Label,
-
-            LocationAddress =
-                location.Address,
-
-
-Traffic = new TrafficDashboardData
-{
-    Status = traffic.Status,
-    CommuteMinutes = 0,
-    DelayMinutes = traffic.DelayMinutes,
-    IncidentCount = incidentCount
-},
+            Traffic = new TrafficDashboardData
+            {
+                Status = traffic.Status,
+                CommuteMinutes = 0,
+                DelayMinutes = traffic.DelayMinutes,
+                IncidentCount = incidentCount
+            },
 
             LoadShedding = new LoadSheddingDashboardData
             {
-                // Temporary values until the EskomSePush
-                // integration is implemented.
-                Stage = 2,
-                PowerAvailable = true,
-                ChangeIn = "2 hours",
-                NextSlot = "18:00 - 20:30"
+                Stage = loadShedding.Stage,
+                PowerAvailable = loadShedding.Stage == 0,
+                ChangeIn = "Live EskomSePush data",
+                NextSlot = "See current load-shedding schedule"
             },
 
             Weather = new WeatherDashboardData
             {
-                TemperatureCelsius =
-                    weather.TemperatureCelsius,
-
-                Condition =
-                    weather.Condition,
-
-                WetRoads =
-                    weather.WetRoads,
-
+                TemperatureCelsius = weather.TemperatureCelsius,
+                Condition = weather.Condition,
+                WetRoads = weather.WetRoads,
                 AlertMessage =
                     weather.WetRoads
                         ? "Wet road conditions"
                         : "No weather alerts"
             },
 
-            RetrievedAt =
-                DateTime.UtcNow
+            RetrievedAt = DateTime.UtcNow
         };
 
         return Ok(dashboard);
     }
-
-
 
     private string? GetFirebaseUid()
     {

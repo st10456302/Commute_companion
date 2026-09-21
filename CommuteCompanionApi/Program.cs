@@ -19,6 +19,9 @@ builder.Services.AddHttpClient<WeatherService>();
 // Register TomTom traffic service.
 builder.Services.AddHttpClient<TomTomTrafficService>();
 
+//eskom loadshedding service
+builder.Services.AddHttpClient<EskomSePushService>();
+
 // Register Entity Framework Core with SQLite.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(
