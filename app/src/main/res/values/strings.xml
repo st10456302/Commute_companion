@@ -241,4 +241,29 @@
     <string name="commute_score_good">Good commute conditions</string>
     <string name="commute_score_moderate">Moderate commute conditions</string>
     <string name="commute_score_difficult">Difficult commute conditions</string>
+
+    <!-- Home Hub -->
+    <string name="home_welcome">Welcome to Commute Companion</string>
+    <string name="home_welcome_user">Welcome, %1$s</string>
+    <string name="home_location_not_set">No saved location</string>
+
+    <string name="home_quick_access">Quick Access</string>
+
+    <string name="home_live_dashboard">Live Dashboard</string>
+    <string name="home_live_dashboard_description">Traffic, weather and load shedding</string>
+
+    <string name="home_alerts">Alerts</string>
+    <string name="home_alerts_description">View your commute alerts</string>
+
+    <string name="home_set_location">Set Location</string>
+    <string name="home_set_location_description">Manage your saved locations</string>
+
+    <string name="home_routes">Routes</string>
+    <string name="home_routes_description">Manage your commute routes</string>
+
+    <string name="home_profile">Profile</string>
+    <string name="home_profile_description">Account and app settings</string>
+
+    <string name="home_current_route">Current Route</string>
+    <string name="home_no_route">No route has been saved yet.</string>
 </resources>

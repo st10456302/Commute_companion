@@ -6,15 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.example.commute_companion_app.api.CommuteRepository
-import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
-
-    private lateinit var repository: CommuteRepository
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(
@@ -27,280 +21,106 @@ class HomeActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_home)
 
-        repository =
-            CommuteRepository(
-                AppPreferences(this)
-            )
-
         setupNavigation()
 
         BottomNavigationHelper.setSelectedTab(
             findViewById(android.R.id.content),
             BottomNavigationHelper.Tab.HOME
         )
+
+        loadHomeContent()
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (::repository.isInitialized) {
-            BottomNavigationHelper.setSelectedTab(
-                findViewById(android.R.id.content),
-                BottomNavigationHelper.Tab.HOME
-            )
+        BottomNavigationHelper.setSelectedTab(
+            findViewById(android.R.id.content),
+            BottomNavigationHelper.Tab.HOME
+        )
 
-            loadHomeData()
-        }
+        loadHomeContent()
     }
 
-    private fun loadHomeData() {
+    private fun loadHomeContent() {
 
-        val prefs =
-            AppPreferences(this)
+        val prefs = AppPreferences(this)
 
-        val tvGreeting =
-            findViewById<TextView>(
-                R.id.tvGreeting
-            )
+        val userName = prefs.userName.trim()
 
-        val userName =
-            prefs.userName.trim()
+        val greeting = findViewById<TextView>(
+            R.id.tvGreeting
+        )
 
-        tvGreeting.text =
+        greeting.text =
             if (userName.isNotEmpty()) {
-                "Good Morning, $userName."
+                getString(
+                    R.string.home_welcome_user,
+                    userName
+                )
             } else {
                 getString(
-                    R.string.good_morning
+                    R.string.home_welcome
                 )
             }
 
-        val locationDisplay =
-            prefs.savedLocationAddress
-                .trim()
-                .ifEmpty {
-                    getString(
-                        R.string.sandton_central
-                    )
-                }
+        val location = prefs.savedLocationAddress
+            .trim()
 
         findViewById<TextView>(
             R.id.tvLocationSubtitle
         ).text =
-            "$locationDisplay • 18°C"
+            if (location.isNotEmpty()) {
+                location
+            } else {
+                getString(
+                    R.string.home_location_not_set
+                )
+            }
 
-        findViewById<TextView>(
-            R.id.tvWeatherLocationTag
-        ).text =
-            locationDisplay
+        val routeName =
+            prefs.savedRouteName.trim()
 
         val routeDestination =
             prefs.savedRouteDestination.trim()
 
         findViewById<TextView>(
-            R.id.tvTrafficHeading
-        ).text =
-            if (routeDestination.isNotEmpty()) {
-                "Traffic to $routeDestination"
-            } else {
-                getString(
-                    R.string.traffic_to_sandton
-                )
-            }
-
-        Log.d(
-            "CommuteCompanion",
-            "Home Dashboard loaded — " +
-                    "userName='${prefs.userName}', " +
-                    "savedLocationAddress='${prefs.savedLocationAddress}', " +
-                    "savedLocationLabel='${prefs.savedLocationLabel}', " +
-                    "savedRouteName='${prefs.savedRouteName}', " +
-                    "savedRouteDestination='${prefs.savedRouteDestination}'"
-        )
-
-        loadCommuteScore()
-    }
-
-    private fun loadCommuteScore() {
-
-        val prefs =
-            AppPreferences(this)
-
-        lifecycleScope.launch {
-
-            Log.d(
-                "CommuteCompanionAPI",
-                "Loading saved locations for Commute Score..."
-            )
-
-            val locationsResult =
-                repository.getSavedLocations()
-
-            locationsResult.onSuccess { locations ->
-
-                if (locations.isEmpty()) {
-
-                    Log.d(
-                        "CommuteCompanionAPI",
-                        "No saved locations found for Commute Score."
-                    )
-
-                    showCommuteScoreUnavailable()
-
-                    return@onSuccess
-                }
-
-                val selectedLocation =
-                    locations.firstOrNull {
-                        it.label ==
-                                prefs.savedLocationLabel
-                    } ?: locations.first()
-
-                Log.d(
-                    "CommuteCompanionAPI",
-                    "Commute Score location selected — " +
-                            "id='${selectedLocation.id}', " +
-                            "label='${selectedLocation.label}'"
-                )
-
-                loadCommuteScoreDashboard(
-                    selectedLocation.id
-                )
-            }
-
-            locationsResult.onFailure { exception ->
-
-                Log.e(
-                    "CommuteCompanionAPI",
-                    "Failed to load saved locations for Commute Score.",
-                    exception
-                )
-
-                showCommuteScoreUnavailable()
-            }
-        }
-    }
-
-    private fun loadCommuteScoreDashboard(
-        locationId: Int
-    ) {
-
-        lifecycleScope.launch {
-
-            Log.d(
-                "CommuteCompanionAPI",
-                "Requesting dashboard data for Commute Score — " +
-                        "locationId='$locationId'"
-            )
-
-            val result =
-                repository.getDashboard(
-                    locationId
-                )
-
-            result.onSuccess { dashboard ->
-
-                val score =
-                    CommuteScoreCalculator.calculate(
-                        dashboard
-                    )
-
-                updateCommuteScore(score)
-
-                Log.d(
-                    "CommuteCompanionAPI",
-                    "Commute Score calculated — " +
-                            "score=$score, " +
-                            "traffic='${dashboard.traffic.status}', " +
-                            "delay=${dashboard.traffic.delayMinutes}, " +
-                            "incidents=${dashboard.traffic.incidentCount}, " +
-                            "loadSheddingStage=${dashboard.loadShedding.stage}, " +
-                            "wetRoads=${dashboard.weather.wetRoads}"
-                )
-            }
-
-            result.onFailure { exception ->
-
-                Log.e(
-                    "CommuteCompanionAPI",
-                    "Failed to load dashboard data for Commute Score.",
-                    exception
-                )
-
-                showCommuteScoreUnavailable()
-            }
-        }
-    }
-
-    private fun updateCommuteScore(
-        score: Int
-    ) {
-
-        findViewById<TextView>(
-            R.id.tvCommuteScore
-        ).text =
-            "$score/100"
-
-        findViewById<TextView>(
-            R.id.tvCommuteScoreStatus
+            R.id.tvHomeRoute
         ).text =
             when {
-                score >= 80 ->
-                    getString(
-                        R.string.commute_score_excellent
-                    )
+                routeName.isNotEmpty() &&
+                        routeDestination.isNotEmpty() ->
+                    "$routeName • $routeDestination"
 
-                score >= 60 ->
-                    getString(
-                        R.string.commute_score_good
-                    )
-
-                score >= 40 ->
-                    getString(
-                        R.string.commute_score_moderate
-                    )
+                routeDestination.isNotEmpty() ->
+                    routeDestination
 
                 else ->
                     getString(
-                        R.string.commute_score_difficult
+                        R.string.home_no_route
                     )
             }
 
         Log.d(
             "CommuteCompanion",
-            "Commute Score UI updated — score=$score"
-        )
-    }
-
-    private fun showCommuteScoreUnavailable() {
-
-        findViewById<TextView>(
-            R.id.tvCommuteScore
-        ).text =
-            "--/100"
-
-        findViewById<TextView>(
-            R.id.tvCommuteScoreStatus
-        ).text =
-            getString(
-                R.string.commute_score_loading
-            )
-
-        Log.d(
-            "CommuteCompanion",
-            "Commute Score unavailable."
+            "Home hub loaded — " +
+                    "userName='${prefs.userName}', " +
+                    "savedLocationAddress='${prefs.savedLocationAddress}', " +
+                    "savedRouteName='${prefs.savedRouteName}', " +
+                    "savedRouteDestination='${prefs.savedRouteDestination}'"
         )
     }
 
     private fun setupNavigation() {
 
+        // Live Dashboard
         findViewById<LinearLayout>(
-            R.id.cardTraffic
+            R.id.cardLiveDashboard
         ).setOnClickListener {
 
             Log.d(
                 "CommuteCompanion",
-                "Opening Live Dashboard from Home."
+                "Opening Live Dashboard from Home hub."
             )
 
             startActivity(
@@ -311,6 +131,80 @@ class HomeActivity : AppCompatActivity() {
             )
         }
 
+        // Alerts
+        findViewById<LinearLayout>(
+            R.id.cardAlerts
+        ).setOnClickListener {
+
+            Log.d(
+                "CommuteCompanion",
+                "Opening Alerts from Home hub."
+            )
+
+            startActivity(
+                Intent(
+                    this,
+                    AlertsActivity::class.java
+                )
+            )
+        }
+
+        // Set Location
+        findViewById<LinearLayout>(
+            R.id.cardLocation
+        ).setOnClickListener {
+
+            Log.d(
+                "CommuteCompanion",
+                "Opening Set Location from Home hub."
+            )
+
+            startActivity(
+                Intent(
+                    this,
+                    SetLocationActivity::class.java
+                )
+            )
+        }
+
+        // Routes
+        findViewById<LinearLayout>(
+            R.id.cardRoutes
+        ).setOnClickListener {
+
+            Log.d(
+                "CommuteCompanion",
+                "Opening Set Route from Home hub."
+            )
+
+            startActivity(
+                Intent(
+                    this,
+                    SetRouteActivity::class.java
+                )
+            )
+        }
+
+        // Profile
+        findViewById<LinearLayout>(
+            R.id.cardProfile
+        ).setOnClickListener {
+
+            Log.d(
+                "CommuteCompanion",
+                "Opening Profile from Home hub."
+            )
+
+            startActivity(
+                Intent(
+                    this,
+                    ProfileActivity::class.java
+                )
+            )
+
+        }
+
+        // Bottom navigation
         findViewById<LinearLayout>(
             R.id.navHome
         ).setOnClickListener {

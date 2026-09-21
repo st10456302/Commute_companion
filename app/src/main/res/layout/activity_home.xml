@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_light_blue"
     android:orientation="vertical">
 
@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="@dimen/spacing_md">
 
         <ImageView
@@ -24,24 +24,27 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="@dimen/spacing_sm"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
             android:text="@string/app_name"
             android:textColor="@color/teal_dark"
-            android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_heading" />
 
         <ImageView
+            android:id="@+id/ivHomeNotifications"
             android:layout_width="@dimen/icon_size_md"
             android:layout_height="@dimen/icon_size_md"
             android:src="@drawable/ic_notifications"
             app:tint="@color/text_primary" />
+
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,312 +52,286 @@
             android:orientation="vertical"
             android:padding="@dimen/spacing_md">
 
+            <!-- Welcome -->
             <TextView
                 android:id="@+id/tvGreeting"
+                style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/good_morning"
-                style="@style/Text.Title"
-                android:textSize="20sp" />
+                android:text="@string/home_welcome"
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/tvLocationSubtitle"
+                style="@style/Text.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sandton_central_temp"
-                style="@style/Text.Small" />
+                android:layout_marginTop="4dp"
+                android:text="@string/home_location_not_set" />
 
-            <!-- Commute Score Card -->
+            <!-- Section title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:text="@string/home_quick_access"
+                style="@style/Text.Heading" />
+
+            <!-- Live Dashboard -->
             <LinearLayout
-                android:id="@+id/cardCommuteScore"
+                android:id="@+id/cardLiveDashboard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
                 android:background="@drawable/bg_card_white"
-                android:orientation="vertical">
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="88dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_md">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                <FrameLayout
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:background="@drawable/bg_badge_teal"
+                    android:gravity="center">
 
                     <ImageView
-                        android:layout_width="@dimen/icon_size_sm"
-                        android:layout_height="@dimen/icon_size_sm"
+                        android:layout_width="@dimen/icon_size_md"
+                        android:layout_height="@dimen/icon_size_md"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_directions_car"
+                        app:tint="@color/teal_dark" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_md"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Text.Heading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_live_dashboard" />
+
+                    <TextView
+                        style="@style/Text.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/home_live_dashboard_description" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/icon_size_sm"
+                    android:layout_height="@dimen/icon_size_sm"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:tint="@color/text_secondary" />
+
+            </LinearLayout>
+
+            <!-- Two-column navigation cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:orientation="horizontal">
+
+                <!-- Alerts -->
+                <LinearLayout
+                    android:id="@+id/cardAlerts"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="@dimen/spacing_xs"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_sm">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_md"
+                        android:layout_height="@dimen/icon_size_md"
+                        android:src="@drawable/ic_notifications"
+                        app:tint="@color/teal_primary" />
+
+                    <TextView
+                        style="@style/Text.Heading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        android:text="@string/home_alerts" />
+
+                    <TextView
+                        style="@style/Text.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center"
+                        android:text="@string/home_alerts_description" />
+
+                </LinearLayout>
+
+                <!-- Location -->
+                <LinearLayout
+                    android:id="@+id/cardLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="@dimen/spacing_xs"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_sm">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_md"
+                        android:layout_height="@dimen/icon_size_md"
+                        android:src="@drawable/ic_location_pin"
+                        app:tint="@color/teal_primary" />
+
+                    <TextView
+                        style="@style/Text.Heading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        android:text="@string/home_set_location" />
+
+                    <TextView
+                        style="@style/Text.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center"
+                        android:text="@string/home_set_location_description" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Routes and Profile -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:orientation="horizontal">
+
+                <!-- Routes -->
+                <LinearLayout
+                    android:id="@+id/cardRoutes"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="@dimen/spacing_xs"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_sm">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_md"
+                        android:layout_height="@dimen/icon_size_md"
                         android:src="@drawable/ic_directions_car"
                         app:tint="@color/teal_primary" />
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_xs"
-                        android:text="@string/commute_score"
-                        style="@style/Text.Heading" />
-
-                    <TextView
-                        android:id="@+id/tvCommuteScore"
+                        style="@style/Text.Heading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="--/100"
-                        android:textSize="22sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textColor="@color/teal_dark" />
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        android:text="@string/home_routes" />
+
+                    <TextView
+                        style="@style/Text.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center"
+                        android:text="@string/home_routes_description" />
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvCommuteScoreStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm"
-                    android:text="@string/commute_score_loading"
-                    style="@style/Text.Body" />
-
-                <TextView
-                    android:id="@+id/tvCommuteScoreDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/commute_score_description"
-                    style="@style/Text.Small" />
-
-            </LinearLayout>
-
-            <!-- Weather Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:background="@drawable/bg_card_white"
-                android:orientation="vertical">
-
+                <!-- Profile -->
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:id="@+id/cardProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="@dimen/spacing_xs"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_sm">
+
                     <ImageView
-                        android:layout_width="@dimen/icon_size_sm"
-                        android:layout_height="@dimen/icon_size_sm"
-                        android:src="@drawable/ic_wb_sunny"
-                        app:tint="@color/orange_stage" />
+                        android:layout_width="@dimen/icon_size_md"
+                        android:layout_height="@dimen/icon_size_md"
+                        android:src="@drawable/ic_person"
+                        app:tint="@color/teal_primary" />
+
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_xs"
-                        android:text="@string/weather"
-                        style="@style/Text.Heading" />
-                    <TextView
-                        android:id="@+id/tvWeatherLocationTag"
+                        style="@style/Text.Heading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sandton"
-                        style="@style/Text.Small" />
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        android:text="@string/home_profile" />
+
+                    <TextView
+                        style="@style/Text.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center"
+                        android:text="@string/home_profile_description" />
+
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="18°"
-                        android:textSize="32sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textColor="@color/text_primary" />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_sm"
-                        android:text="@string/weather_desc"
-                        style="@style/Text.Small" />
-                </LinearLayout>
             </LinearLayout>
 
-            <!-- Load shedding card -->
+            <!-- Current route information -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:background="@drawable/bg_card_white"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_sm"
-                        android:layout_height="@dimen/icon_size_sm"
-                        android:src="@drawable/ic_bolt"
-                        app:tint="@color/blue_info" />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_xs"
-                        android:text="@string/load_shedding"
-                        style="@style/Text.Heading" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_teal"
-                        android:paddingStart="@dimen/spacing_sm"
-                        android:paddingEnd="@dimen/spacing_sm"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="@string/stage_2"
-                        android:textSize="@dimen/text_tiny"
-                        android:textColor="@color/teal_dark" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm"
-                    android:text="@string/load_shedding_time"
-                    style="@style/Text.Heading"
-                    android:textSize="@dimen/text_body" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/next_slot"
-                    style="@style/Text.Small" />
-            </LinearLayout>
-
-            <!-- Traffic (offline) card -->
-            <LinearLayout
-                android:id="@+id/cardTraffic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
                 android:background="@drawable/bg_card_white"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_sm"
-                        android:layout_height="@dimen/icon_size_sm"
-                        android:src="@drawable/ic_directions_car"
-                        app:tint="@color/text_secondary" />
-                    <TextView
-                        android:id="@+id/tvTrafficHeading"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_xs"
-                        android:text="@string/traffic_to_sandton"
-                        style="@style/Text.Heading" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_gray"
-                        android:paddingStart="@dimen/spacing_sm"
-                        android:paddingEnd="@dimen/spacing_sm"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="@string/offline_badge"
-                        android:textSize="@dimen/text_tiny"
-                        android:textColor="@color/text_secondary" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:src="@drawable/ic_wifi_off"
-                    app:tint="@color/text_hint" />
+                android:padding="@dimen/spacing_md">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm"
-                    android:text="@string/traffic_unavailable"
                     style="@style/Text.Heading"
-                    android:textSize="@dimen/text_body" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_current_route" />
 
                 <TextView
+                    android:id="@+id/tvHomeRoute"
+                    style="@style/Text.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:text="@string/traffic_unavailable_sub"
-                    style="@style/Text.Small" />
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/home_no_route" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:background="@drawable/bg_button_primary"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingStart="@dimen/spacing_md"
-                    android:paddingEnd="@dimen/spacing_md">
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_refresh"
-                        app:tint="@color/white" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@string/retry_traffic"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_small" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Gautrain -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
-                android:background="@drawable/bg_card_white"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-                <ImageView
-                    android:layout_width="@dimen/icon_size_sm"
-                    android:layout_height="@dimen/icon_size_sm"
-                    android:src="@drawable/ic_train"
-                    app:tint="@color/teal_primary" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="@dimen/spacing_xs"
-                    android:text="@string/gautrain_schedule"
-                    style="@style/Text.Heading" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_badge_green"
-                    android:paddingStart="@dimen/spacing_sm"
-                    android:paddingEnd="@dimen/spacing_sm"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:text="@string/on_time"
-                    android:textSize="@dimen/text_tiny"
-                    android:textColor="@color/green_ok" />
             </LinearLayout>
 
         </LinearLayout>
+
     </ScrollView>
 
+    <!-- Main application navigation -->
     <include layout="@layout/bottom_nav_bar" />
 
 </LinearLayout>
