@@ -15,9 +15,13 @@ class LiveDashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_live_dashboard)
 
-        prefs = AppPreferences(this)
+        setContentView(
+            R.layout.activity_live_dashboard
+        )
+
+        prefs =
+            AppPreferences(this)
 
         findViewById<LinearLayout>(
             R.id.locationSelector
@@ -100,6 +104,7 @@ class LiveDashboardActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         loadDashboard()
     }
 
@@ -114,11 +119,14 @@ class LiveDashboardActivity : AppCompatActivity() {
             if (name.isNotEmpty()) {
                 "Good Morning, $name."
             } else {
-                getString(R.string.good_morning)
+                getString(
+                    R.string.good_morning
+                )
             }
 
         val location =
-            prefs.savedLocationAddress.trim()
+            prefs.savedLocationAddress
+                .trim()
                 .ifEmpty {
                     getString(
                         R.string.sandton_central
@@ -131,7 +139,8 @@ class LiveDashboardActivity : AppCompatActivity() {
             location
 
         val routeName =
-            prefs.savedRouteName.trim()
+            prefs.savedRouteName
+                .trim()
                 .ifEmpty {
                     getString(
                         R.string.morning_commute
@@ -144,7 +153,8 @@ class LiveDashboardActivity : AppCompatActivity() {
             routeName
 
         val destination =
-            prefs.savedRouteDestination.trim()
+            prefs.savedRouteDestination
+                .trim()
 
         findViewById<TextView>(
             R.id.tvLiveDestination
@@ -159,7 +169,8 @@ class LiveDashboardActivity : AppCompatActivity() {
     private fun startCommute() {
 
         val destination =
-            prefs.savedRouteDestination.trim()
+            prefs.savedRouteDestination
+                .trim()
 
         if (destination.isEmpty()) {
 
@@ -177,35 +188,59 @@ class LiveDashboardActivity : AppCompatActivity() {
             "Commute started to $destination",
             Toast.LENGTH_LONG
         ).show()
+
+        if (prefs.notificationsEnabled) {
+
+            NotificationHelper.showNotification(
+                this,
+                "Traffic Update",
+                "Moderate traffic towards $destination. Estimated commute: 25 minutes.",
+                2001
+            )
+        }
     }
 
     private fun showTrafficDetails() {
 
         val destination =
-            prefs.savedRouteDestination.trim()
+            prefs.savedRouteDestination
+                .trim()
 
         val message =
             if (destination.isNotEmpty()) {
+
                 "Moderate traffic towards $destination. Estimated commute: 25 minutes with a 5 minute delay."
+
             } else {
+
                 "Save a route to view personalised traffic information."
             }
 
         AlertDialog.Builder(this)
-            .setTitle("Traffic Information")
+            .setTitle(
+                "Traffic Information"
+            )
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(
+                "OK",
+                null
+            )
             .show()
     }
 
     private fun showLoadSheddingSchedule() {
 
         AlertDialog.Builder(this)
-            .setTitle("Load-shedding Schedule")
+            .setTitle(
+                "Load-shedding Schedule"
+            )
             .setMessage(
                 "Current status: Stage 2\n\nNext slot: 14:00 - 16:30"
             )
-            .setPositiveButton("OK", null)
+            .setPositiveButton(
+                "OK",
+                null
+            )
             .show()
     }
 

@@ -31,14 +31,37 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var credentialManager: CredentialManager
     private lateinit var swNotifications: SwitchCompat
 
+    private var updatingNotificationSwitch = false
+
     private val notificationPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted ->
-            prefs.notificationsEnabled = granted
-            swNotifications.isChecked = granted
 
-            if (!granted) {
+            prefs.notificationsEnabled =
+                granted
+
+            updatingNotificationSwitch = true
+            swNotifications.isChecked = granted
+            updatingNotificationSwitch = false
+
+            if (granted) {
+
+                NotificationHelper.showNotification(
+                    this,
+                    "Notifications Enabled",
+                    "Commute alerts are now enabled.",
+                    1000
+                )
+
+                Toast.makeText(
+                    this,
+                    "Notifications enabled.",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            } else {
+
                 Toast.makeText(
                     this,
                     "Notification permission was not granted.",
@@ -53,9 +76,16 @@ class SettingsActivity : AppCompatActivity() {
 
         prefs = AppPreferences(this)
         auth = FirebaseAuth.getInstance()
-        credentialManager = CredentialManager.create(this)
 
-        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+        credentialManager =
+            CredentialManager.create(this)
+
+        NotificationHelper
+            .createNotificationChannel(this)
+
+        findViewById<ImageButton>(
+            R.id.btnBack
+        ).setOnClickListener {
             finish()
         }
 
@@ -64,73 +94,149 @@ class SettingsActivity : AppCompatActivity() {
         setupNotificationPreference()
         setupBiometricPreference()
 
-        findViewById<Button>(R.id.btnSignOut).setOnClickListener {
+        findViewById<Button>(
+            R.id.btnSignOut
+        ).setOnClickListener {
             showSignOutDialog()
         }
     }
 
     private fun loadAccountDetails() {
-        val user = auth.currentUser
 
-        val name = prefs.userName.ifBlank {
-            user?.displayName ?: "Commute Companion User"
-        }
+        val user =
+            auth.currentUser
 
-        val email = prefs.accountEmail.ifBlank {
-            user?.email ?: ""
-        }
+        val name =
+            prefs.userName.ifBlank {
+                user?.displayName
+                    ?: "Commute Companion User"
+            }
 
-        findViewById<TextView>(R.id.tvSettingsName).text = name
-        findViewById<TextView>(R.id.tvSettingsEmail).text = email
+        val email =
+            prefs.accountEmail.ifBlank {
+                user?.email ?: ""
+            }
+
+        findViewById<TextView>(
+            R.id.tvSettingsName
+        ).text = name
+
+        findViewById<TextView>(
+            R.id.tvSettingsEmail
+        ).text = email
     }
 
     private fun setupLanguagePreference() {
+
         val languageGroup =
-            findViewById<RadioGroup>(R.id.rgLanguage)
+            findViewById<RadioGroup>(
+                R.id.rgLanguage
+            )
 
         when (prefs.selectedLanguage) {
-            "isiZulu" -> languageGroup.check(R.id.radioSettingsZulu)
-            "Afrikaans" -> languageGroup.check(R.id.radioSettingsAfrikaans)
-            else -> languageGroup.check(R.id.radioSettingsEnglish)
+
+            "isiZulu" ->
+                languageGroup.check(
+                    R.id.radioSettingsZulu
+                )
+
+            "Afrikaans" ->
+                languageGroup.check(
+                    R.id.radioSettingsAfrikaans
+                )
+
+            else ->
+                languageGroup.check(
+                    R.id.radioSettingsEnglish
+                )
         }
 
-        languageGroup.setOnCheckedChangeListener { _, checkedId ->
-            prefs.selectedLanguage = when (checkedId) {
-                R.id.radioSettingsZulu -> "isiZulu"
-                R.id.radioSettingsAfrikaans -> "Afrikaans"
-                else -> "English"
-            }
+        languageGroup
+            .setOnCheckedChangeListener {
+                    _,
+                    checkedId ->
 
-            Log.d(
-                "CommuteCompanion",
-                "Language preference updated"
-            )
-        }
-    }
+                prefs.selectedLanguage =
+                    when (checkedId) {
 
-    private fun setupNotificationPreference() {
-        swNotifications =
-            findViewById(R.id.swNotifications)
+                        R.id.radioSettingsZulu ->
+                            "isiZulu"
 
-        swNotifications.isChecked =
-            prefs.notificationsEnabled
+                        R.id.radioSettingsAfrikaans ->
+                            "Afrikaans"
 
-        swNotifications.setOnCheckedChangeListener { _, enabled ->
-            if (enabled) {
-                enableNotifications()
-            } else {
-                prefs.notificationsEnabled = false
+                        else ->
+                            "English"
+                    }
 
                 Log.d(
                     "CommuteCompanion",
-                    "Notifications disabled in settings"
+                    "Language preference updated"
                 )
             }
+    }
+
+    private fun setupNotificationPreference() {
+
+        swNotifications =
+            findViewById(
+                R.id.swNotifications
+            )
+
+        val systemPermissionGranted =
+            if (
+                Build.VERSION.SDK_INT >=
+                Build.VERSION_CODES.TIRAMISU
+            ) {
+
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+
+            } else {
+
+                true
+            }
+
+        if (!systemPermissionGranted) {
+            prefs.notificationsEnabled = false
         }
+
+        updatingNotificationSwitch = true
+
+        swNotifications.isChecked =
+            prefs.notificationsEnabled &&
+                    systemPermissionGranted
+
+        updatingNotificationSwitch = false
+
+        swNotifications
+            .setOnCheckedChangeListener {
+                    _,
+                    enabled ->
+
+                if (updatingNotificationSwitch) {
+                    return@setOnCheckedChangeListener
+                }
+
+                if (enabled) {
+
+                    enableNotifications()
+
+                } else {
+
+                    disableNotifications()
+                }
+            }
     }
 
     private fun enableNotifications() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+        if (
+            Build.VERSION.SDK_INT >=
+            Build.VERSION_CODES.TIRAMISU
+        ) {
 
             val granted =
                 ContextCompat.checkSelfPermission(
@@ -138,67 +244,124 @@ class SettingsActivity : AppCompatActivity() {
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
 
-            if (granted) {
-                prefs.notificationsEnabled = true
-            } else {
+            if (!granted) {
+
                 notificationPermissionLauncher.launch(
                     Manifest.permission.POST_NOTIFICATIONS
                 )
-            }
 
-        } else {
-            prefs.notificationsEnabled = true
+                return
+            }
         }
+
+        prefs.notificationsEnabled = true
+
+        NotificationHelper.showNotification(
+            this,
+            "Notifications Enabled",
+            "Traffic, weather and commute alerts are enabled.",
+            1000
+        )
 
         Log.d(
             "CommuteCompanion",
-            "Notification preference updated"
+            "Notifications enabled"
+        )
+    }
+
+    private fun disableNotifications() {
+
+        prefs.notificationsEnabled = false
+
+        NotificationHelper
+            .cancelNotifications(this)
+
+        Toast.makeText(
+            this,
+            "Notifications disabled.",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        Log.d(
+            "CommuteCompanion",
+            "Notifications disabled"
         )
     }
 
     private fun setupBiometricPreference() {
+
         val swBiometric =
-            findViewById<SwitchCompat>(R.id.swBiometric)
+            findViewById<SwitchCompat>(
+                R.id.swBiometric
+            )
 
         swBiometric.isChecked =
             prefs.biometricEnabled
 
-        swBiometric.setOnCheckedChangeListener { _, enabled ->
-            prefs.biometricEnabled = enabled
+        swBiometric
+            .setOnCheckedChangeListener {
+                    _,
+                    enabled ->
 
-            Log.d(
-                "CommuteCompanion",
-                "Biometric preference updated"
-            )
-        }
+                prefs.biometricEnabled =
+                    enabled
+
+                Log.d(
+                    "CommuteCompanion",
+                    "Biometric preference updated"
+                )
+            }
     }
 
     private fun showSignOutDialog() {
+
         AlertDialog.Builder(this)
             .setTitle("Sign Out")
-            .setMessage("Are you sure you want to sign out?")
-            .setPositiveButton("Sign Out") { _, _ ->
+            .setMessage(
+                "Are you sure you want to sign out?"
+            )
+            .setPositiveButton(
+                "Sign Out"
+            ) { _, _ ->
+
                 signOut()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(
+                "Cancel",
+                null
+            )
             .show()
     }
 
     private fun signOut() {
+
         auth.signOut()
+
+        NotificationHelper
+            .cancelNotifications(this)
+
         prefs.clearUserData()
 
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(
+            Dispatchers.Main
+        ).launch {
+
             try {
-                credentialManager.clearCredentialState(
-                    ClearCredentialStateRequest()
-                )
+
+                credentialManager
+                    .clearCredentialState(
+                        ClearCredentialStateRequest()
+                    )
 
                 Log.d(
                     "CommuteCompanion",
                     "User signed out from settings"
                 )
-            } catch (e: ClearCredentialException) {
+
+            } catch (
+                e: ClearCredentialException
+            ) {
+
                 Log.e(
                     "CommuteCompanion",
                     "Credential cleanup failed",
@@ -211,8 +374,12 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun openAccountEntry() {
+
         val intent =
-            Intent(this, AccountEntryActivity::class.java)
+            Intent(
+                this,
+                AccountEntryActivity::class.java
+            )
 
         intent.flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or
