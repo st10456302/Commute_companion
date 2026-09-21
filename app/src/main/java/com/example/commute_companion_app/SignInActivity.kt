@@ -14,15 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.lifecycle.lifecycleScope
 import com.example.commute_companion_app.api.CommuteRepository
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class SignInActivity : AppCompatActivity() {
 
@@ -30,32 +30,51 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var credentialManager: CredentialManager
 
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+        super.attachBaseContext(
+            LanguageManager.applyLanguage(newBase)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_sign_in)
 
-        // Firebase Authentication instance.
         auth = FirebaseAuth.getInstance()
 
-        // Credential Manager handles the Google SSO account selection.
-        credentialManager = CredentialManager.create(this)
+        credentialManager =
+            CredentialManager.create(this)
 
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val etEmail =
+            findViewById<EditText>(R.id.etEmail)
 
-        findViewById<TextView>(R.id.tvForgotPassword).setOnClickListener {
-            startActivity(Intent(this, ResetPasswordActivity::class.java))
+        val etPassword =
+            findViewById<EditText>(R.id.etPassword)
+
+        findViewById<TextView>(
+            R.id.tvForgotPassword
+        ).setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    ResetPasswordActivity::class.java
+                )
+            )
         }
 
-        // Existing email/password prototype sign-in.
-        findViewById<Button>(R.id.btnSignInSubmit).setOnClickListener {
-            val email = etEmail.text.toString().trim()
-            val password = etPassword.text.toString()
+        // Email/password Firebase sign-in.
+        findViewById<Button>(
+            R.id.btnSignInSubmit
+        ).setOnClickListener {
+
+            val email =
+                etEmail.text.toString().trim()
+
+            val password =
+                etPassword.text.toString()
 
             // --- Validation ---
+
             if (email.isEmpty()) {
                 Toast.makeText(
                     this,
@@ -83,27 +102,96 @@ class SignInActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Prototype email/password sign-in.
-            // Password is intentionally NEVER stored or logged.
-            val prefs = AppPreferences(this)
-            prefs.accountEmail = email
-
-            Log.d(
-                "CommuteCompanion",
-                "Email sign in successful — accountEmail='${prefs.accountEmail}'"
+            signInWithEmailPassword(
+                email = email,
+                password = password
             )
-
-            startActivity(Intent(this, BiometricActivity::class.java))
         }
 
         // Google SSO.
-        findViewById<Button>(R.id.btnGoogleSignIn).setOnClickListener {
+        findViewById<Button>(
+            R.id.btnGoogleSignIn
+        ).setOnClickListener {
             startGoogleSignIn()
         }
 
         // Existing biometric sign-in.
-        findViewById<LinearLayout>(R.id.btnBiometric).setOnClickListener {
-            startActivity(Intent(this, BiometricActivity::class.java))
+        findViewById<LinearLayout>(
+            R.id.btnBiometric
+        ).setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    BiometricActivity::class.java
+                )
+            )
+        }
+    }
+
+    /**
+     * Signs an existing user into Firebase using
+     * their registered email address and password.
+     */
+    private fun signInWithEmailPassword(
+        email: String,
+        password: String
+    ) {
+
+        lifecycleScope.launch {
+
+            try {
+
+                Log.d(
+                    "CommuteCompanion",
+                    "Signing in with Firebase email/password..."
+                )
+
+                val result =
+                    auth.signInWithEmailAndPassword(
+                        email,
+                        password
+                    ).await()
+
+                val user =
+                    result.user
+                        ?: throw Exception(
+                            "Firebase sign-in succeeded but no user was returned."
+                        )
+
+                val prefs =
+                    AppPreferences(this@SignInActivity)
+
+                prefs.accountEmail =
+                    user.email ?: email
+
+                user.displayName?.let { name ->
+                    prefs.userName = name
+                }
+
+                Log.d(
+                    "CommuteCompanion",
+                    "Firebase email/password sign-in successful — " +
+                            "uid='${user.uid}', " +
+                            "email='${user.email}', " +
+                            "displayName='${user.displayName}'"
+                )
+
+                syncUserWithApi()
+
+            } catch (exception: Exception) {
+
+                Log.e(
+                    "CommuteCompanion",
+                    "Firebase email/password sign-in failed.",
+                    exception
+                )
+
+                Toast.makeText(
+                    this@SignInActivity,
+                    "Incorrect email or password.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
@@ -112,24 +200,35 @@ class SignInActivity : AppCompatActivity() {
      */
     private fun startGoogleSignIn() {
 
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(getString(R.string.default_web_client_id))
-            .setAutoSelectEnabled(false)
-            .build()
-
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val result = credentialManager.getCredential(
-                    context = this@SignInActivity,
-                    request = request
+        val googleIdOption =
+            GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(false)
+                .setServerClientId(
+                    getString(
+                        R.string.default_web_client_id
+                    )
                 )
+                .setAutoSelectEnabled(false)
+                .build()
 
-                handleGoogleCredential(result.credential)
+        val request =
+            GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build()
+
+        lifecycleScope.launch {
+
+            try {
+
+                val result =
+                    credentialManager.getCredential(
+                        context = this@SignInActivity,
+                        request = request
+                    )
+
+                handleGoogleCredential(
+                    result.credential
+                )
 
             } catch (exception: Exception) {
 
@@ -161,16 +260,21 @@ class SignInActivity : AppCompatActivity() {
             credential.type ==
             GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
         ) {
+
             try {
 
                 val googleIdTokenCredential =
-                    GoogleIdTokenCredential.createFrom(credential.data)
+                    GoogleIdTokenCredential.createFrom(
+                        credential.data
+                    )
 
                 firebaseAuthWithGoogle(
                     googleIdTokenCredential.idToken
                 )
 
-            } catch (exception: GoogleIdTokenParsingException) {
+            } catch (
+                exception: GoogleIdTokenParsingException
+            ) {
 
                 Log.e(
                     "CommuteCompanion",
@@ -204,53 +308,60 @@ class SignInActivity : AppCompatActivity() {
      * Exchanges the Google ID token for a Firebase credential,
      * then synchronizes the authenticated user with the REST API.
      */
-    private fun firebaseAuthWithGoogle(idToken: String) {
+    private fun firebaseAuthWithGoogle(
+        idToken: String
+    ) {
 
         val firebaseCredential =
-            GoogleAuthProvider.getCredential(idToken, null)
+            GoogleAuthProvider.getCredential(
+                idToken,
+                null
+            )
 
-        auth.signInWithCredential(firebaseCredential)
-            .addOnCompleteListener(this) { task ->
+        auth.signInWithCredential(
+            firebaseCredential
+        ).addOnCompleteListener(this) { task ->
 
-                if (task.isSuccessful) {
+            if (task.isSuccessful) {
 
-                    val user = auth.currentUser
-                    val prefs = AppPreferences(this)
+                val user =
+                    auth.currentUser
 
-                    user?.displayName?.let { name ->
-                        prefs.userName = name
-                    }
+                val prefs =
+                    AppPreferences(this)
 
-                    user?.email?.let { email ->
-                        prefs.accountEmail = email
-                    }
-
-                    Log.d(
-                        "CommuteCompanion",
-                        "Google SSO successful — " +
-                                "uid='${user?.uid}', " +
-                                "email='${user?.email}'"
-                    )
-
-                    // Synchronize the authenticated Firebase user
-                    // with the Commute Companion REST API.
-                    syncUserWithApi()
-
-                } else {
-
-                    Log.e(
-                        "CommuteCompanion",
-                        "Firebase Google authentication failed",
-                        task.exception
-                    )
-
-                    Toast.makeText(
-                        this,
-                        "Google sign-in failed. Please try again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                user?.displayName?.let { name ->
+                    prefs.userName = name
                 }
+
+                user?.email?.let { email ->
+                    prefs.accountEmail = email
+                }
+
+                Log.d(
+                    "CommuteCompanion",
+                    "Google SSO successful — " +
+                            "uid='${user?.uid}', " +
+                            "email='${user?.email}'"
+                )
+
+                syncUserWithApi()
+
+            } else {
+
+                Log.e(
+                    "CommuteCompanion",
+                    "Firebase Google authentication failed",
+                    task.exception
+                )
+
+                Toast.makeText(
+                    this,
+                    "Google sign-in failed. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+        }
     }
 
     /**
@@ -259,13 +370,15 @@ class SignInActivity : AppCompatActivity() {
      */
     private fun syncUserWithApi() {
 
-        val repository = CommuteRepository(
-            AppPreferences(this)
-        )
+        val repository =
+            CommuteRepository(
+                AppPreferences(this)
+            )
 
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
 
-            val result = repository.syncCurrentUser()
+            val result =
+                repository.syncCurrentUser()
 
             result.onSuccess { userProfile ->
 
@@ -273,17 +386,18 @@ class SignInActivity : AppCompatActivity() {
                     "CommuteCompanionAPI",
                     "User synchronized successfully — " +
                             "databaseId='${userProfile.id}', " +
+                            "firebaseUid='${userProfile.firebaseUid}', " +
                             "name='${userProfile.displayName}', " +
+                            "email='${userProfile.email}', " +
                             "language='${userProfile.preferredLanguage}'"
                 )
 
                 Toast.makeText(
                     this@SignInActivity,
-                    "Google sign-in successful.",
+                    "Sign-in successful.",
                     Toast.LENGTH_SHORT
                 ).show()
 
-                // Continue through the existing authentication flow.
                 startActivity(
                     Intent(
                         this@SignInActivity,
