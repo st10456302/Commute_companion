@@ -16,4 +16,7 @@ public class AppDbContext : DbContext
 
     public DbSet<NotificationPreferences> NotificationPreferences =>
         Set<NotificationPreferences>();
+
+        public DbSet<SavedRoute> SavedRoutes =>
+            Set<SavedRoute>();
 }
