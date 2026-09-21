@@ -223,4 +223,13 @@
     <string name="notifications_enabled_message">Izaziso zivuliwe.</string>
     <string name="notifications_disabled_message">Izaziso zivaliwe.</string>
 
+    <!-- Notification category settings -->
+    <string name="traffic_alerts_setting">Izaziso Zethrafikhi</string>
+    <string name="traffic_alerts_setting_description">Izingozi, izigameko nokubambezeleka emzileni wakho.</string>
+
+    <string name="weather_alerts_setting">Izaziso Zesimo Sezulu</string>
+    <string name="weather_alerts_setting_description">Imvula, imigwaqo emanzi nezimo zezulu ezinzima.</string>
+
+    <string name="load_shedding_alerts_setting">Izaziso Zokucishwa Kukagesi</string>
+    <string name="load_shedding_alerts_setting_description">Izinguquko zesiteji nokuphazamiseka kukagesi okuzayo.</string>
 </resources>

@@ -1,4 +1,3 @@
-
 package com.example.commute_companion_app
 
 import android.content.Context
@@ -19,18 +18,24 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var prefs: AppPreferences
 
     private lateinit var switchNotifications: Switch
+    private lateinit var switchTrafficAlerts: Switch
+    private lateinit var switchWeatherAlerts: Switch
+    private lateinit var switchLoadSheddingAlerts: Switch
     private lateinit var switchBiometric: Switch
 
-    // Prevents the notification listener from running while
-    // the switch is being updated from API data.
+    // Prevents listeners from running while
+    // preferences are being loaded from the API.
     private var isLoadingNotificationPreference = false
 
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+        super.attachBaseContext(
+            LanguageManager.applyLanguage(newBase)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_settings)
 
         prefs = AppPreferences(this)
@@ -38,14 +43,22 @@ class SettingsActivity : AppCompatActivity() {
         switchNotifications =
             findViewById(R.id.switchNotifications)
 
+        switchTrafficAlerts =
+            findViewById(R.id.switchTrafficAlerts)
+
+        switchWeatherAlerts =
+            findViewById(R.id.switchWeatherAlerts)
+
+        switchLoadSheddingAlerts =
+            findViewById(R.id.switchLoadSheddingAlerts)
+
         switchBiometric =
             findViewById(R.id.switchBiometric)
 
         val tvLanguage =
             findViewById<TextView>(R.id.tvSelectedLanguage)
 
-        // Load the existing local preferences immediately
-        // so the screen remains responsive.
+        // Load local preferences immediately.
         switchNotifications.isChecked =
             prefs.notificationsEnabled
 
@@ -55,10 +68,20 @@ class SettingsActivity : AppCompatActivity() {
         tvLanguage.text =
             prefs.selectedLanguage
 
+        // The category switches default to enabled locally.
+        // They will be replaced with the backend values
+        // when loadNotificationPreferences() completes.
+        switchTrafficAlerts.isChecked = true
+        switchWeatherAlerts.isChecked = true
+        switchLoadSheddingAlerts.isChecked = true
+
         // Load notification preferences from the REST API.
         loadNotificationPreferences()
 
-        // Notification preference.
+        // -------------------------------------------------
+        // MASTER NOTIFICATIONS SWITCH
+        // -------------------------------------------------
+
         switchNotifications.setOnCheckedChangeListener { _, enabled ->
 
             if (isLoadingNotificationPreference) {
@@ -86,10 +109,67 @@ class SettingsActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
 
-            updateNotificationPreference(enabled)
+            updateNotificationPreferences()
         }
 
-        // Biometric preference remains local for now.
+        // -------------------------------------------------
+        // TRAFFIC ALERT SWITCH
+        // -------------------------------------------------
+
+        switchTrafficAlerts.setOnCheckedChangeListener { _, enabled ->
+
+            if (isLoadingNotificationPreference) {
+                return@setOnCheckedChangeListener
+            }
+
+            Log.d(
+                "CommuteCompanion",
+                "Traffic alerts setting changed: $enabled"
+            )
+
+            updateNotificationPreferences()
+        }
+
+        // -------------------------------------------------
+        // WEATHER ALERT SWITCH
+        // -------------------------------------------------
+
+        switchWeatherAlerts.setOnCheckedChangeListener { _, enabled ->
+
+            if (isLoadingNotificationPreference) {
+                return@setOnCheckedChangeListener
+            }
+
+            Log.d(
+                "CommuteCompanion",
+                "Weather alerts setting changed: $enabled"
+            )
+
+            updateNotificationPreferences()
+        }
+
+        // -------------------------------------------------
+        // LOAD-SHEDDING ALERT SWITCH
+        // -------------------------------------------------
+
+        switchLoadSheddingAlerts.setOnCheckedChangeListener { _, enabled ->
+
+            if (isLoadingNotificationPreference) {
+                return@setOnCheckedChangeListener
+            }
+
+            Log.d(
+                "CommuteCompanion",
+                "Load-shedding alerts setting changed: $enabled"
+            )
+
+            updateNotificationPreferences()
+        }
+
+        // -------------------------------------------------
+        // BIOMETRIC
+        // -------------------------------------------------
+
         switchBiometric.setOnCheckedChangeListener { _, enabled ->
 
             prefs.biometricEnabled = enabled
@@ -100,7 +180,10 @@ class SettingsActivity : AppCompatActivity() {
             )
         }
 
-        // Language selection.
+        // -------------------------------------------------
+        // LANGUAGE
+        // -------------------------------------------------
+
         findViewById<Button>(R.id.btnLanguage)
             .setOnClickListener {
 
@@ -117,7 +200,10 @@ class SettingsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-        // Back button.
+        // -------------------------------------------------
+        // BACK
+        // -------------------------------------------------
+
         findViewById<Button>(R.id.btnSettingsBack)
             .setOnClickListener {
                 finish()
@@ -148,10 +234,18 @@ class SettingsActivity : AppCompatActivity() {
                 switchNotifications.isChecked =
                     preferences.notificationsEnabled
 
+                switchTrafficAlerts.isChecked =
+                    preferences.trafficAlerts
+
+                switchWeatherAlerts.isChecked =
+                    preferences.weatherAlerts
+
+                switchLoadSheddingAlerts.isChecked =
+                    preferences.loadSheddingAlerts
+
                 isLoadingNotificationPreference = false
 
-                // Keep the local preference synchronized
-                // with the backend.
+                // Keep the master setting synchronized locally.
                 prefs.notificationsEnabled =
                     preferences.notificationsEnabled
 
@@ -202,6 +296,22 @@ class SettingsActivity : AppCompatActivity() {
 
             result.onSuccess { preferences ->
 
+                isLoadingNotificationPreference = true
+
+                switchNotifications.isChecked =
+                    preferences.notificationsEnabled
+
+                switchTrafficAlerts.isChecked =
+                    preferences.trafficAlerts
+
+                switchWeatherAlerts.isChecked =
+                    preferences.weatherAlerts
+
+                switchLoadSheddingAlerts.isChecked =
+                    preferences.loadSheddingAlerts
+
+                isLoadingNotificationPreference = false
+
                 Log.d(
                     "CommuteCompanionAPI",
                     "Default notification preferences created — " +
@@ -220,9 +330,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateNotificationPreference(
-        enabled: Boolean
-    ) {
+    private fun updateNotificationPreferences() {
 
         lifecycleScope.launch {
 
@@ -231,21 +339,37 @@ class SettingsActivity : AppCompatActivity() {
                     AppPreferences(this@SettingsActivity)
                 )
 
+            val notificationsEnabled =
+                switchNotifications.isChecked
+
+            val trafficAlerts =
+                switchTrafficAlerts.isChecked
+
+            val weatherAlerts =
+                switchWeatherAlerts.isChecked
+
+            val loadSheddingAlerts =
+                switchLoadSheddingAlerts.isChecked
+
             Log.d(
                 "CommuteCompanionAPI",
-                "Updating notification preference — " +
-                        "notificationsEnabled=$enabled"
+                "Updating notification preferences — " +
+                        "notificationsEnabled=$notificationsEnabled, " +
+                        "trafficAlerts=$trafficAlerts, " +
+                        "weatherAlerts=$weatherAlerts, " +
+                        "loadSheddingAlerts=$loadSheddingAlerts"
             )
 
-            // The current backend stores the three alert
-            // categories separately. Until their individual
-            // UI controls are added, keep them enabled.
             val result =
                 repository.updateNotificationPreferences(
-                    notificationsEnabled = enabled,
-                    trafficAlerts = true,
-                    weatherAlerts = true,
-                    loadSheddingAlerts = true
+                    notificationsEnabled =
+                        notificationsEnabled,
+                    trafficAlerts =
+                        trafficAlerts,
+                    weatherAlerts =
+                        weatherAlerts,
+                    loadSheddingAlerts =
+                        loadSheddingAlerts
                 )
 
             result.onSuccess { preferences ->
@@ -255,7 +379,13 @@ class SettingsActivity : AppCompatActivity() {
                     "Notification preferences updated successfully — " +
                             "databaseId='${preferences.id}', " +
                             "notificationsEnabled=" +
-                            "${preferences.notificationsEnabled}"
+                            "${preferences.notificationsEnabled}, " +
+                            "trafficAlerts=" +
+                            "${preferences.trafficAlerts}, " +
+                            "weatherAlerts=" +
+                            "${preferences.weatherAlerts}, " +
+                            "loadSheddingAlerts=" +
+                            "${preferences.loadSheddingAlerts}"
                 )
             }
 
@@ -279,12 +409,10 @@ class SettingsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        // Refresh language text when returning from
-        // LanguageSelectionActivity.
         val tvLanguage =
             findViewById<TextView>(R.id.tvSelectedLanguage)
 
-        tvLanguage?.text =
+        tvLanguage.text =
             AppPreferences(this).selectedLanguage
     }
 }

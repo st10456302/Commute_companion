@@ -221,4 +221,16 @@
     <string name="notifications_enabled_message">Kennisgewings geaktiveer.</string>
     <string name="notifications_disabled_message">Kennisgewings gedeaktiveer.</string>
 
+    <!-- Notification category settings -->
+    <string name="traffic_alerts_setting">Verkeerswaarskuwings</string>
+    <string name="traffic_alerts_setting_description">Ongelukke, voorvalle en vertragings op jou roete.</string>
+
+    <string name="weather_alerts_setting">Weerwaarskuwings</string>
+    <string name="weather_alerts_setting_description">Reën, nat paaie en erge weerstoestande.</string>
+
+    <string name="load_shedding_alerts_setting">Beurtkragwaarskuwings</string>
+    <string name="load_shedding_alerts_setting_description">Faseveranderinge en komende kragonderbrekings.</string>
+
+
+
 </resources>

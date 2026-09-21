@@ -224,4 +224,13 @@
     <string name="notifications_enabled_message">Notifications enabled.</string>
     <string name="notifications_disabled_message">Notifications disabled.</string>
 
+    <!-- Notification category settings -->
+    <string name="traffic_alerts_setting">Traffic Alerts</string>
+    <string name="traffic_alerts_setting_description">Accidents, incidents and delays on your route.</string>
+
+    <string name="weather_alerts_setting">Weather Alerts</string>
+    <string name="weather_alerts_setting_description">Rain, wet roads and severe weather conditions.</string>
+
+    <string name="load_shedding_alerts_setting">Load-shedding Alerts</string>
+    <string name="load_shedding_alerts_setting_description">Stage changes and upcoming power interruptions.</string>
 </resources>
