@@ -233,4 +233,12 @@
 
     <string name="load_shedding_alerts_setting">Load-shedding Alerts</string>
     <string name="load_shedding_alerts_setting_description">Stage changes and upcoming power interruptions.</string>
+
+    <string name="commute_score">Commute Score</string>
+    <string name="commute_score_loading">Calculating your commute...</string>
+    <string name="commute_score_description">Based on current traffic, delays, incidents, power and weather conditions.</string>
+    <string name="commute_score_excellent">Excellent commute conditions</string>
+    <string name="commute_score_good">Good commute conditions</string>
+    <string name="commute_score_moderate">Moderate commute conditions</string>
+    <string name="commute_score_difficult">Difficult commute conditions</string>
 </resources>

@@ -231,6 +231,12 @@
     <string name="load_shedding_alerts_setting">Beurtkragwaarskuwings</string>
     <string name="load_shedding_alerts_setting_description">Faseveranderinge en komende kragonderbrekings.</string>
 
-
+    <string name="commute_score">Pendeltelling</string>
+    <string name="commute_score_loading">Jou pendelrit word bereken...</string>
+    <string name="commute_score_description">Gebaseer op huidige verkeer, vertragings, voorvalle, krag en weerstoestande.</string>
+    <string name="commute_score_excellent">Uitstekende pendeltoestande</string>
+    <string name="commute_score_good">Goeie pendeltoestande</string>
+    <string name="commute_score_moderate">Gematigde pendeltoestande</string>
+    <string name="commute_score_difficult">Moeilike pendeltoestande</string>
 
 </resources>

@@ -232,4 +232,13 @@
 
     <string name="load_shedding_alerts_setting">Izaziso Zokucishwa Kukagesi</string>
     <string name="load_shedding_alerts_setting_description">Izinguquko zesiteji nokuphazamiseka kukagesi okuzayo.</string>
+
+    <string name="commute_score">Isikolo Sohambo</string>
+    <string name="commute_score_loading">Kubalwa uhambo lwakho...</string>
+    <string name="commute_score_description">Kususelwa kuthrafikhi yamanje, ukubambezeleka, izigameko, ugesi nesimo sezulu.</string>
+    <string name="commute_score_excellent">Izimo ezinhle kakhulu zohambo</string>
+    <string name="commute_score_good">Izimo ezinhle zohambo</string>
+    <string name="commute_score_moderate">Izimo ezimaphakathi zohambo</string>
+    <string name="commute_score_difficult">Izimo ezinzima zohambo</string>
+
 </resources>
