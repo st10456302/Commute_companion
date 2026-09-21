@@ -348,43 +348,90 @@ public class DashboardController : ControllerBase
                     });
             }
 
-            if (schedule != null)
+if (schedule != null)
+{
+    var now = DateTimeOffset.Now;
+
+    var parsedEvents =
+        schedule.Events
+            .Select(eventItem => new
             {
-                var upcomingEvent =
-                    schedule.Events
-                        .Select(eventItem => new
-                        {
-                            Event = eventItem,
-                            Start = ParseDateTime(eventItem.Start)
-                        })
-                        .Where(x => x.Start.HasValue)
-                        .OrderBy(x => x.Start)
-                        .FirstOrDefault();
+                Event = eventItem,
+                Start = ParseDateTime(eventItem.Start),
+                End = ParseDateTime(eventItem.End)
+            })
+            .Where(x =>
+                x.Start.HasValue &&
+                x.End.HasValue)
+            .ToList();
 
-                if (upcomingEvent != null)
-                {
-                    var start =
-                        upcomingEvent.Start!.Value.ToLocalTime();
+    var currentEvent =
+        parsedEvents
+            .FirstOrDefault(x =>
+                x.Start!.Value <= now &&
+                x.End!.Value > now);
 
-                    var end =
-                        ParseDateTime(
-                            upcomingEvent.Event.End)
-                        ?.ToLocalTime();
+    var upcomingEvent =
+        parsedEvents
+            .Where(x =>
+                x.Start!.Value > now)
+            .OrderBy(x => x.Start!.Value)
+            .FirstOrDefault();
 
-                    nextLoadSheddingSlot =
-                        end.HasValue
-                            ? $"{start:dd MMM HH:mm} - {end:HH:mm}"
-                            : $"{start:dd MMM HH:mm}";
+    if (currentEvent != null)
+    {
+        var end =
+            currentEvent.End!.Value.ToLocalTime();
 
-                    loadSheddingChange =
-                        upcomingEvent.Event.Note;
-                }
-                else
-                {
-                    loadSheddingChange =
-                        $"Area: {areaInfo.Name}";
-                }
-            }
+        nextLoadSheddingSlot =
+            $"Currently off until {end:HH:mm}";
+
+        loadSheddingChange =
+            string.IsNullOrWhiteSpace(currentEvent.Event.Note)
+                ? "Load shedding is currently active"
+                : currentEvent.Event.Note;
+
+        Console.WriteLine(
+            $"EskomSePush current event — " +
+            $"start='{currentEvent.Start}', " +
+            $"end='{currentEvent.End}', " +
+            $"note='{currentEvent.Event.Note}'");
+    }
+    else if (upcomingEvent != null)
+    {
+        var start =
+            upcomingEvent.Start!.Value.ToLocalTime();
+
+        var end =
+            upcomingEvent.End!.Value.ToLocalTime();
+
+        nextLoadSheddingSlot =
+            $"{start:dd MMM HH:mm} - {end:HH:mm}";
+
+        loadSheddingChange =
+            string.IsNullOrWhiteSpace(upcomingEvent.Event.Note)
+                ? "Upcoming load shedding"
+                : upcomingEvent.Event.Note;
+
+        Console.WriteLine(
+            $"EskomSePush upcoming event — " +
+            $"start='{upcomingEvent.Start}', " +
+            $"end='{upcomingEvent.End}', " +
+            $"note='{upcomingEvent.Event.Note}'");
+    }
+    else
+    {
+        loadSheddingChange =
+            $"Area: {areaInfo.Name}";
+
+        nextLoadSheddingSlot =
+            "No upcoming load-shedding event";
+
+        Console.WriteLine(
+            $"EskomSePush — no current or upcoming " +
+            $"load-shedding event for area '{areaInfo.Name}'.");
+    }
+}
         }
         else
         {
