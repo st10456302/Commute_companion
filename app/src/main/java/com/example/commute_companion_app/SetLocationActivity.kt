@@ -68,6 +68,11 @@ class SetLocationActivity : AppCompatActivity() {
 
         if (!firstTimeSetup) {
             setupNavigation()
+
+            BottomNavigationHelper.setSelectedTab(
+                findViewById(android.R.id.content),
+                BottomNavigationHelper.Tab.LOCATIONS
+            )
         }
 
         setupMap()

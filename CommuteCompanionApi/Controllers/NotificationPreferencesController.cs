@@ -20,6 +20,9 @@ public class NotificationPreferencesController : ControllerBase
     //
     // Returns notification preferences for the
     // currently authenticated Firebase user.
+    //
+    // If the user does not have preferences yet,
+    // default preferences are created automatically.
     [HttpGet]
     public async Task<ActionResult<NotificationPreferences>>
         GetPreferences()
@@ -37,9 +40,23 @@ public class NotificationPreferencesController : ControllerBase
         var preferences = await _context.NotificationPreferences
             .FirstOrDefaultAsync(x => x.UserId == firebaseUid);
 
+        // First-time users do not have a notification
+        // preference record yet, so create the defaults.
         if (preferences == null)
         {
-            return NotFound();
+            preferences = new NotificationPreferences
+            {
+                UserId = firebaseUid,
+                NotificationsEnabled = true,
+                TrafficAlerts = true,
+                WeatherAlerts = true,
+                LoadSheddingAlerts = true,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.NotificationPreferences.Add(preferences);
+
+            await _context.SaveChangesAsync();
         }
 
         return Ok(preferences);

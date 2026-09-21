@@ -34,12 +34,23 @@ class AlertsActivity : AppCompatActivity() {
         )
 
         setupBottomNavigation()
+
+        BottomNavigationHelper.setSelectedTab(
+            findViewById(android.R.id.content),
+            BottomNavigationHelper.Tab.ALERTS
+        )
     }
 
     override fun onResume() {
         super.onResume()
 
         if (::repository.isInitialized) {
+
+            BottomNavigationHelper.setSelectedTab(
+                findViewById(android.R.id.content),
+                BottomNavigationHelper.Tab.ALERTS
+            )
+
             loadAlerts()
         }
     }
@@ -49,31 +60,47 @@ class AlertsActivity : AppCompatActivity() {
         findViewById<LinearLayout>(
             R.id.navHome
         ).setOnClickListener {
+
             startActivity(
-                Intent(this, HomeActivity::class.java)
+                Intent(
+                    this,
+                    HomeActivity::class.java
+                ).apply {
+                    flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
             )
-            finish()
         }
 
         findViewById<LinearLayout>(
             R.id.navAlerts
         ).setOnClickListener {
+
             // Already on Alerts.
         }
 
         findViewById<LinearLayout>(
             R.id.navLocations
         ).setOnClickListener {
+
             startActivity(
-                Intent(this, SetLocationActivity::class.java)
+                Intent(
+                    this,
+                    SetLocationActivity::class.java
+                )
             )
         }
 
         findViewById<LinearLayout>(
             R.id.navProfile
         ).setOnClickListener {
+
             startActivity(
-                Intent(this, ProfileActivity::class.java)
+                Intent(
+                    this,
+                    ProfileActivity::class.java
+                )
             )
         }
     }
@@ -294,12 +321,6 @@ class AlertsActivity : AppCompatActivity() {
                 R.id.cardWeatherAlert
             )
 
-        /*
-         * Traffic Alerts
-         *
-         * The category is visible only when the user has enabled
-         * Traffic Alerts in Settings.
-         */
         if (trafficAlertsEnabled) {
 
             trafficCard.visibility = View.VISIBLE
@@ -348,12 +369,6 @@ class AlertsActivity : AppCompatActivity() {
             )
         }
 
-        /*
-         * Load-shedding Alerts
-         *
-         * The category is visible only when the user has enabled
-         * Load-shedding Alerts in Settings.
-         */
         if (loadSheddingAlertsEnabled) {
 
             loadSheddingCard.visibility = View.VISIBLE
@@ -400,12 +415,6 @@ class AlertsActivity : AppCompatActivity() {
             )
         }
 
-        /*
-         * Weather Alerts
-         *
-         * The category is visible only when the user has enabled
-         * Weather Alerts in Settings.
-         */
         if (weatherAlertsEnabled) {
 
             weatherCard.visibility = View.VISIBLE
@@ -447,12 +456,6 @@ class AlertsActivity : AppCompatActivity() {
             )
         }
 
-        /*
-         * Alert badge
-         *
-         * Only enabled categories with an actual alert contribute
-         * to the notification count.
-         */
         var alertCount = 0
 
         if (
