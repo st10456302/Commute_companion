@@ -154,6 +154,89 @@ public class TomTomTrafficService
         return count;
     }
 
+    public async Task<TomTomRouteResult?> GetRouteAsync(
+        double originLatitude,
+        double originLongitude,
+        double destinationLatitude,
+        double destinationLongitude)
+    {
+        var apiKey =
+            Environment.GetEnvironmentVariable("TOMTOM_API_KEY");
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new InvalidOperationException(
+                "TOMTOM_API_KEY is not configured.");
+        }
+
+        var origin =
+            $"{originLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+            $"{originLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
+
+        var destination =
+            $"{destinationLatitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
+            $"{destinationLongitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
+
+        var locations =
+            $"{origin}:{destination}";
+
+        var url =
+            "https://api.tomtom.com/routing/1/calculateRoute/" +
+            $"{locations}/json" +
+            $"?key={apiKey}" +
+            "&traffic=true" +
+            "&travelMode=car";
+
+        var response =
+            await _httpClient.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody =
+                await response.Content.ReadAsStringAsync();
+
+            throw new HttpRequestException(
+                $"TomTom routing API returned " +
+                $"HTTP {(int)response.StatusCode}: " +
+                errorBody);
+        }
+
+        var routeResponse =
+            await response.Content.ReadFromJsonAsync<
+                TomTomRouteResponse>();
+
+        var route =
+            routeResponse?.Routes?.FirstOrDefault();
+
+        if (route?.Summary == null)
+        {
+            return null;
+        }
+
+        var summary = route.Summary;
+
+        var travelTimeMinutes =
+            (int)Math.Ceiling(
+                summary.TravelTimeInSeconds / 60.0);
+
+        var trafficDelayMinutes =
+            (int)Math.Round(
+                summary.TrafficDelayInSeconds / 60.0);
+
+        Console.WriteLine(
+            $"TomTom route — " +
+            $"travelTime={travelTimeMinutes} min, " +
+            $"trafficDelay={trafficDelayMinutes} min, " +
+            $"length={summary.LengthInMeters} m");
+
+        return new TomTomRouteResult
+        {
+            TravelTimeMinutes = travelTimeMinutes,
+            TrafficDelayMinutes = trafficDelayMinutes,
+            LengthInMeters = summary.LengthInMeters
+        };
+    }
+
     private static string DetermineTrafficStatus(
         double currentSpeed)
     {
@@ -215,6 +298,37 @@ public class TomTomTrafficResult
     public double FreeFlowSpeedKph { get; set; }
     public int DelayMinutes { get; set; }
     public double Confidence { get; set; }
+}
+
+public class TomTomRouteResult
+{
+    public int TravelTimeMinutes { get; set; }
+    public int TrafficDelayMinutes { get; set; }
+    public double LengthInMeters { get; set; }
+}
+
+public class TomTomRouteResponse
+{
+    [JsonPropertyName("routes")]
+    public List<TomTomRoute>? Routes { get; set; }
+}
+
+public class TomTomRoute
+{
+    [JsonPropertyName("summary")]
+    public TomTomRouteSummary? Summary { get; set; }
+}
+
+public class TomTomRouteSummary
+{
+    [JsonPropertyName("lengthInMeters")]
+    public double LengthInMeters { get; set; }
+
+    [JsonPropertyName("travelTimeInSeconds")]
+    public int TravelTimeInSeconds { get; set; }
+
+    [JsonPropertyName("trafficDelayInSeconds")]
+    public int TrafficDelayInSeconds { get; set; }
 }
 
 public class TomTomIncidentResponse

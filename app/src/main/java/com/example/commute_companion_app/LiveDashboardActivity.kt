@@ -43,8 +43,6 @@ class LiveDashboardActivity : AppCompatActivity() {
                 )
             )
         }
-
-
     }
 
     override fun onResume() {
@@ -225,12 +223,20 @@ class LiveDashboardActivity : AppCompatActivity() {
         findViewById<TextView>(
             R.id.tvTrafficDelay
         ).text =
-            "↑ ${dashboard.traffic.delayMinutes} delay"
+            if (dashboard.traffic.delayMinutes > 0) {
+                "↑ ${dashboard.traffic.delayMinutes} min delay"
+            } else {
+                "No delay"
+            }
 
         findViewById<TextView>(
             R.id.tvTrafficIncidents
         ).text =
-            "${dashboard.traffic.incidentCount} incidents"
+            if (dashboard.traffic.incidentCount == 1) {
+                "1 incident"
+            } else {
+                "${dashboard.traffic.incidentCount} incidents"
+            }
 
 
         // -------------------------
@@ -254,7 +260,7 @@ class LiveDashboardActivity : AppCompatActivity() {
         findViewById<TextView>(
             R.id.tvLoadSheddingChange
         ).text =
-            "Change in ${dashboard.loadShedding.changeIn}"
+            dashboard.loadShedding.changeIn
 
         findViewById<TextView>(
             R.id.tvNextLoadSheddingSlot
