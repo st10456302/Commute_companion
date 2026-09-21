@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -31,6 +32,29 @@ class ProfileActivity : AppCompatActivity() {
                     SettingsActivity::class.java
                 )
             )
+        }
+
+        // Sign Out
+        findViewById<Button>(
+            R.id.btnSignOut
+        ).setOnClickListener {
+
+            FirebaseAuth.getInstance().signOut()
+
+            AppPreferences(this).clearSession()
+
+            startActivity(
+                Intent(
+                    this,
+                    SignInActivity::class.java
+                ).apply {
+                    flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            )
+
+            finish()
         }
 
         // Bottom navigation

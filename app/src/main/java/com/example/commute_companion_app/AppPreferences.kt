@@ -106,6 +106,28 @@ class AppPreferences(context: Context) {
         get() = prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, value).apply()
 
+    /**
+     * Clears locally stored account/session data when the user signs out.
+     *
+     * The selected language is intentionally preserved so that the Sign In
+     * screen can continue using the user's chosen language.
+     *
+     * Passwords are never stored here and therefore require no clearing.
+     */
+    fun clearSession() {
+        prefs.edit()
+            .remove(KEY_ONBOARDING_COMPLETE)
+            .remove(KEY_USER_NAME)
+            .remove(KEY_ACCOUNT_EMAIL)
+            .remove(KEY_BIOMETRIC_ENABLED)
+            .remove(KEY_SAVED_LOCATION_ADDRESS)
+            .remove(KEY_SAVED_LOCATION_LABEL)
+            .remove(KEY_SAVED_ROUTE_NAME)
+            .remove(KEY_SAVED_ROUTE_DESTINATION)
+            .remove(KEY_NOTIFICATIONS_ENABLED)
+            .apply()
+    }
+
     companion object {
         private const val PREFS_NAME = "commute_companion_prefs"
         private const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
