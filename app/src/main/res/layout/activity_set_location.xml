@@ -22,8 +22,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@null"
-                android:src="@drawable/ic_arrow_back"
                 android:contentDescription="Back"
+                android:src="@drawable/ic_arrow_back"
                 app:tint="@color/text_primary" />
 
             <TextView
@@ -58,10 +58,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_sm"
+                android:fontFamily="sans-serif-medium"
                 android:text="Work"
                 android:textColor="@color/teal_dark"
-                android:textSize="@dimen/text_heading"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="@dimen/text_heading" />
 
             <TextView
                 android:id="@+id/tvSavedLocationAddress"
@@ -113,10 +113,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/btnUseCurrentLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_sm"
             android:background="@drawable/bg_card_light_blue"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="@dimen/spacing_md">
@@ -131,10 +134,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_sm"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/use_current_location"
                 android:textColor="@color/teal_dark"
-                android:textSize="@dimen/text_body"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="@dimen/text_body" />
 
         </LinearLayout>
 
