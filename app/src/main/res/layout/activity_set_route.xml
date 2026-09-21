@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_lighter">
 
     <LinearLayout
@@ -11,20 +11,84 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_lg">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/set_up_route"
-            style="@style/Text.Title"
-            android:textColor="@color/teal_dark"
-            android:textSize="24sp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:contentDescription="Back"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_primary" />
+
+            <TextView
+                style="@style/Text.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_sm"
+                android:text="@string/set_up_route"
+                android:textColor="@color/teal_dark"
+                android:textSize="24sp" />
+
+        </LinearLayout>
 
         <TextView
+            style="@style/Text.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/set_up_route_sub"
-            style="@style/Text.Body" />
+            android:text="@string/set_up_route_sub" />
+
+        <LinearLayout
+            android:id="@+id/savedRouteCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:background="@drawable/bg_card_light_blue"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SAVED ROUTE"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_tiny" />
+
+            <TextView
+                android:id="@+id/tvSavedRouteName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:fontFamily="sans-serif-medium"
+                android:text="Morning Commute"
+                android:textColor="@color/teal_dark"
+                android:textSize="@dimen/text_heading" />
+
+            <TextView
+                android:id="@+id/tvSavedRouteDestination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Destination"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_body" />
+
+            <Button
+                android:id="@+id/btnDeleteRoute"
+                style="@style/Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:text="Delete Saved Route" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,10 +98,10 @@
             android:orientation="vertical">
 
             <TextView
+                style="@style/Text.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/route_name_label"
-                style="@style/Text.Label" />
+                android:text="@string/route_name_label" />
 
             <EditText
                 android:id="@+id/etRouteName"
@@ -45,41 +109,46 @@
                 android:layout_height="@dimen/input_height"
                 android:layout_marginTop="@dimen/spacing_xs"
                 android:background="@drawable/bg_input_field"
+                android:hint="@string/morning_commute"
+                android:inputType="textCapWords"
                 android:paddingStart="@dimen/spacing_md"
                 android:paddingEnd="@dimen/spacing_md"
-                android:hint="@string/morning_commute"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_hint"
                 android:textSize="@dimen/text_body" />
 
             <TextView
+                style="@style/Text.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
-                android:text="@string/starting_point"
-                style="@style/Text.Label" />
+                android:text="@string/starting_point" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
                 android:layout_marginTop="@dimen/spacing_xs"
                 android:background="@drawable/bg_input_field"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingStart="@dimen/spacing_md"
                 android:paddingEnd="@dimen/spacing_md">
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_sm"
                     android:layout_height="@dimen/icon_size_sm"
                     android:src="@drawable/ic_my_location"
                     app:tint="@color/text_secondary" />
+
                 <TextView
+                    android:id="@+id/tvStartingPointValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_sm"
                     android:text="@string/current_location"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_body" />
+
             </LinearLayout>
 
             <FrameLayout
@@ -88,6 +157,7 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="-8dp"
                 android:layout_marginBottom="-8dp">
+
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -96,29 +166,32 @@
                     android:padding="6dp"
                     android:src="@drawable/ic_swap_vert"
                     app:tint="@color/teal_dark" />
+
             </FrameLayout>
 
             <TextView
+                style="@style/Text.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
-                android:text="@string/destination"
-                style="@style/Text.Label" />
+                android:text="@string/destination" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/input_height"
                 android:layout_marginTop="@dimen/spacing_xs"
                 android:background="@drawable/bg_input_field"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingStart="@dimen/spacing_md"
                 android:paddingEnd="@dimen/spacing_md">
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_sm"
                     android:layout_height="@dimen/icon_size_sm"
                     android:src="@drawable/ic_location_pin"
                     app:tint="@color/teal_primary" />
+
                 <EditText
                     android:id="@+id/etDestination"
                     android:layout_width="match_parent"
@@ -126,9 +199,11 @@
                     android:layout_marginStart="@dimen/spacing_sm"
                     android:background="@null"
                     android:hint="@string/search_destination"
+                    android:inputType="textPostalAddress"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_hint"
                     android:textSize="@dimen/text_body" />
+
             </LinearLayout>
 
             <View
@@ -138,11 +213,11 @@
                 android:background="@color/divider" />
 
             <TextView
+                style="@style/Text.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_md"
-                android:text="@string/quick_select"
-                style="@style/Text.Small" />
+                android:text="@string/quick_select" />
 
             <LinearLayout
                 android:id="@+id/chipHomeRoute"
@@ -150,15 +225,17 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="@dimen/spacing_sm"
                 android:background="@drawable/bg_card_light_blue"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingStart="@dimen/spacing_md"
                 android:paddingEnd="@dimen/spacing_md">
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_home"
                     app:tint="@color/teal_dark" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,6 +243,7 @@
                     android:text="@string/home"
                     android:textColor="@color/teal_dark"
                     android:textSize="@dimen/text_small" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -174,15 +252,17 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="@dimen/spacing_sm"
                 android:background="@drawable/bg_card_light_blue"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingStart="@dimen/spacing_md"
                 android:paddingEnd="@dimen/spacing_md">
+
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_work"
                     app:tint="@color/teal_dark" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -190,17 +270,19 @@
                     android:text="@string/office_sandton"
                     android:textColor="@color/teal_dark"
                     android:textSize="@dimen/text_small" />
+
             </LinearLayout>
 
         </LinearLayout>
 
         <Button
             android:id="@+id/btnSaveRoute"
+            style="@style/Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_lg"
-            android:text="@string/save_route"
-            style="@style/Button.Primary" />
+            android:text="@string/save_route" />
 
     </LinearLayout>
+
 </ScrollView>
