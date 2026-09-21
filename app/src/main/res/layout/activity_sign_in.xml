@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_lighter">
 
     <LinearLayout
@@ -16,6 +16,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/bg_rounded_square_navy">
+
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -48,19 +49,23 @@
             style="@style/Text.Label" />
 
         <LinearLayout
+            android:id="@+id/emailInputContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/input_height"
             android:layout_marginTop="@dimen/spacing_xs"
-            android:background="@drawable/bg_input_error"
+            android:background="@drawable/bg_input_field"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/spacing_md"
             android:paddingEnd="@dimen/spacing_md">
+
             <ImageView
+                android:id="@+id/ivEmailIcon"
                 android:layout_width="@dimen/icon_size_sm"
                 android:layout_height="@dimen/icon_size_sm"
                 android:src="@drawable/ic_mail"
                 app:tint="@color/text_secondary" />
+
             <EditText
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
@@ -76,27 +81,31 @@
 
         <!-- Password -->
         <TextView
+            android:id="@+id/tvPasswordLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_md"
             android:text="@string/password"
-            android:textColor="@color/red_error"
             style="@style/Text.Label" />
 
         <LinearLayout
+            android:id="@+id/passwordInputContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/input_height"
             android:layout_marginTop="@dimen/spacing_xs"
-            android:background="@drawable/bg_input_error"
+            android:background="@drawable/bg_input_field"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/spacing_md"
             android:paddingEnd="@dimen/spacing_md">
+
             <ImageView
+                android:id="@+id/ivPasswordIcon"
                 android:layout_width="@dimen/icon_size_sm"
                 android:layout_height="@dimen/icon_size_sm"
                 android:src="@drawable/ic_lock"
-                app:tint="@color/red_error" />
+                app:tint="@color/text_secondary" />
+
             <EditText
                 android:id="@+id/etPassword"
                 android:layout_width="0dp"
@@ -107,6 +116,7 @@
                 android:inputType="textPassword"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_body" />
+
             <ImageView
                 android:layout_width="@dimen/icon_size_sm"
                 android:layout_height="@dimen/icon_size_sm"
@@ -130,15 +140,18 @@
                 android:textColor="@color/text_secondary"
                 android:buttonTint="@color/text_hint" />
 
-            <Space android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/tvForgotPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/forgot_password"
                 android:textColor="@color/teal_primary"
-                android:textSize="@dimen/text_small"
-                android:id="@+id/tvForgotPassword" />
+                android:textSize="@dimen/text_small" />
         </LinearLayout>
 
         <Button
@@ -155,7 +168,13 @@
             android:layout_marginTop="@dimen/spacing_md"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" android:background="@color/border_light" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/border_light" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,7 +182,12 @@
                 android:layout_marginEnd="@dimen/spacing_sm"
                 android:text="@string/or_divider"
                 style="@style/Text.Small" />
-            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" android:background="@color/border_light" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/border_light" />
         </LinearLayout>
 
         <Button
@@ -185,11 +209,13 @@
             android:background="@drawable/bg_button_secondary"
             android:orientation="horizontal"
             android:gravity="center">
+
             <ImageView
                 android:layout_width="@dimen/icon_size_sm"
                 android:layout_height="@dimen/icon_size_sm"
                 android:src="@drawable/ic_fingerprint"
                 app:tint="@color/text_primary" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

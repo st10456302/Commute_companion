@@ -2,15 +2,19 @@ package com.example.commute_companion_app
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -51,6 +55,21 @@ class SignInActivity : AppCompatActivity() {
         val etPassword =
             findViewById<EditText>(R.id.etPassword)
 
+        val emailInputContainer =
+            findViewById<LinearLayout>(R.id.emailInputContainer)
+
+        val passwordInputContainer =
+            findViewById<LinearLayout>(R.id.passwordInputContainer)
+
+        val emailIcon =
+            findViewById<ImageView>(R.id.ivEmailIcon)
+
+        val passwordIcon =
+            findViewById<ImageView>(R.id.ivPasswordIcon)
+
+        val passwordLabel =
+            findViewById<TextView>(R.id.tvPasswordLabel)
+
         findViewById<TextView>(
             R.id.tvForgotPassword
         ).setOnClickListener {
@@ -73,32 +92,63 @@ class SignInActivity : AppCompatActivity() {
             val password =
                 etPassword.text.toString()
 
+            // Reset previous validation state.
+            clearValidationErrors(
+                emailInputContainer = emailInputContainer,
+                passwordInputContainer = passwordInputContainer,
+                emailIcon = emailIcon,
+                passwordIcon = passwordIcon,
+                passwordLabel = passwordLabel
+            )
+
             // --- Validation ---
 
             if (email.isEmpty()) {
+
+                showEmailError(
+                    emailInputContainer,
+                    emailIcon
+                )
+
                 Toast.makeText(
                     this,
                     "Please enter your email address.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+                showEmailError(
+                    emailInputContainer,
+                    emailIcon
+                )
+
                 Toast.makeText(
                     this,
                     "Please enter a valid email address.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
             if (password.isEmpty()) {
+
+                showPasswordError(
+                    passwordInputContainer,
+                    passwordIcon,
+                    passwordLabel
+                )
+
                 Toast.makeText(
                     this,
                     "Please enter your password.",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
@@ -126,6 +176,65 @@ class SignInActivity : AppCompatActivity() {
                 )
             )
         }
+    }
+
+    private fun showEmailError(
+        emailInputContainer: LinearLayout,
+        emailIcon: ImageView
+    ) {
+        emailInputContainer.setBackgroundResource(
+            R.drawable.bg_input_error
+        )
+
+        emailIcon.setColorFilter(
+            getColor(R.color.red_error)
+        )
+    }
+
+    private fun showPasswordError(
+        passwordInputContainer: LinearLayout,
+        passwordIcon: ImageView,
+        passwordLabel: TextView
+    ) {
+        passwordInputContainer.setBackgroundResource(
+            R.drawable.bg_input_error
+        )
+
+        passwordIcon.setColorFilter(
+            getColor(R.color.red_error)
+        )
+
+        passwordLabel.setTextColor(
+            getColor(R.color.red_error)
+        )
+    }
+
+    private fun clearValidationErrors(
+        emailInputContainer: LinearLayout,
+        passwordInputContainer: LinearLayout,
+        emailIcon: ImageView,
+        passwordIcon: ImageView,
+        passwordLabel: TextView
+    ) {
+        emailInputContainer.setBackgroundResource(
+            R.drawable.bg_input_field
+        )
+
+        passwordInputContainer.setBackgroundResource(
+            R.drawable.bg_input_field
+        )
+
+        emailIcon.setColorFilter(
+            getColor(R.color.text_secondary)
+        )
+
+        passwordIcon.setColorFilter(
+            getColor(R.color.text_secondary)
+        )
+
+        passwordLabel.setTextColor(
+            getColor(R.color.text_primary)
+        )
     }
 
     /**
