@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.commute_companion_app.api.CommuteRepository
 import com.example.commute_companion_app.api.DashboardResponse
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class LiveDashboardActivity : AppCompatActivity() {
 
@@ -32,6 +33,8 @@ class LiveDashboardActivity : AppCompatActivity() {
             AppPreferences(this)
         )
 
+        updateGreeting()
+
         // Open saved-location management.
         findViewById<LinearLayout>(
             R.id.locationSelector
@@ -49,8 +52,47 @@ class LiveDashboardActivity : AppCompatActivity() {
         super.onResume()
 
         if (::repository.isInitialized) {
+            updateGreeting()
             loadDashboard()
         }
+    }
+
+    private fun updateGreeting() {
+
+        val prefs =
+            AppPreferences(this)
+
+        val userName =
+            prefs.userName.trim()
+
+        val hour =
+            Calendar.getInstance().get(
+                Calendar.HOUR_OF_DAY
+            )
+
+        val greeting =
+            when (hour) {
+                in 5..11 -> "Good Morning"
+                in 12..17 -> "Good Afternoon"
+                else -> "Good Evening"
+            }
+
+        val greetingText =
+            if (userName.isNotEmpty()) {
+                "$greeting, $userName."
+            } else {
+                "$greeting."
+            }
+
+        findViewById<TextView>(
+            R.id.tvGreeting
+        ).text = greetingText
+
+        Log.d(
+            "CommuteCompanion",
+            "Live Dashboard greeting updated — " +
+                    "greeting='$greetingText'"
+        )
     }
 
     private fun loadDashboard() {
@@ -238,7 +280,6 @@ class LiveDashboardActivity : AppCompatActivity() {
                 "${dashboard.traffic.incidentCount} incidents"
             }
 
-
         // -------------------------
         // Load shedding
         // -------------------------
@@ -266,7 +307,6 @@ class LiveDashboardActivity : AppCompatActivity() {
             R.id.tvNextLoadSheddingSlot
         ).text =
             dashboard.loadShedding.nextSlot
-
 
         // -------------------------
         // Weather
