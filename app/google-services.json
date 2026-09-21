@@ -12,7 +12,20 @@
           "package_name": "com.example.commute_companion_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "66503485822-gnbeaj3j7g32i9p29l7s9gv1td67g1s5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.commute_companion_app",
+            "certificate_hash": "eea1fe26058f08d7e445ba5fb5d7ac42b9629ea0"
+          }
+        },
+        {
+          "client_id": "66503485822-k81om7iskbsqb6a4a0pp7rtsbm004e8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB1d70VEDRxJRKphkYX6313NUK39bKv5Kg"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "66503485822-k81om7iskbsqb6a4a0pp7rtsbm004e8p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
