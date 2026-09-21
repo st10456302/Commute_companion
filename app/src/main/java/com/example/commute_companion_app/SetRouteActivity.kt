@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -32,17 +32,38 @@ class SetRouteActivity : AppCompatActivity() {
         val etDestination =
             findViewById<EditText>(R.id.etDestination)
 
-        val chipHome =
-            findViewById<LinearLayout>(R.id.chipHomeRoute)
+        val tvStartingPoint =
+            findViewById<TextView>(R.id.tvStartingPoint)
 
-        val chipOffice =
-            findViewById<LinearLayout>(R.id.chipOfficeRoute)
-
-        val prefs = AppPreferences(this)
+        val prefs =
+            AppPreferences(this)
 
         // Restore whether this route setup came from first-time onboarding.
         val firstTimeSetup =
             intent.getBooleanExtra("firstTimeSetup", false)
+
+        // Display the location saved through Set Location.
+        val savedLocation =
+            prefs.savedLocationAddress.trim()
+
+        if (savedLocation.isNotEmpty()) {
+            tvStartingPoint.text = savedLocation
+        } else {
+            tvStartingPoint.text =
+                getString(R.string.current_location)
+
+            Log.w(
+                "CommuteCompanion",
+                "No saved location was found for route starting point."
+            )
+        }
+
+        Log.d(
+            "CommuteCompanion",
+            "Route starting point loaded — " +
+                    "label='${prefs.savedLocationLabel}', " +
+                    "address='$savedLocation'"
+        )
 
         // Restore the previously saved route.
         if (prefs.savedRouteName.isNotEmpty()) {
@@ -54,44 +75,6 @@ class SetRouteActivity : AppCompatActivity() {
         if (prefs.savedRouteDestination.isNotEmpty()) {
             etDestination.setText(
                 prefs.savedRouteDestination
-            )
-        }
-
-        // Home quick-select.
-        chipHome.setOnClickListener {
-
-            etRouteName.setText(
-                getString(R.string.home)
-            )
-
-            if (prefs.savedLocationAddress.isNotEmpty()) {
-                etDestination.setText(
-                    prefs.savedLocationAddress
-                )
-            }
-
-            Log.d(
-                "CommuteCompanion",
-                "Home route selected."
-            )
-        }
-
-        // Office quick-select.
-        chipOffice.setOnClickListener {
-
-            etRouteName.setText(
-                getString(R.string.work)
-            )
-
-            if (prefs.savedLocationAddress.isNotEmpty()) {
-                etDestination.setText(
-                    prefs.savedLocationAddress
-                )
-            }
-
-            Log.d(
-                "CommuteCompanion",
-                "Office route selected."
             )
         }
 
@@ -143,6 +126,7 @@ class SetRouteActivity : AppCompatActivity() {
                         "CommuteCompanionAPI",
                         "Saving route through REST API — " +
                                 "name='$routeName', " +
+                                "startingPoint='$savedLocation', " +
                                 "destination='$destination'"
                     )
 
@@ -176,13 +160,9 @@ class SetRouteActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        // Route setup is now complete.
-                        // Notification permission is handled earlier
-                        // during first-time onboarding, so do not send
-                        // the user through that screen again.
                         Log.d(
                             "CommuteCompanion",
-                            "Route setup complete — returning to Live Dashboard. " +
+                            "Route setup complete — returning to Home Dashboard. " +
                                     "firstTimeSetup=$firstTimeSetup"
                         )
 
