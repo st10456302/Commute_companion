@@ -18,10 +18,12 @@
         <activity
             android:name=".LoadingActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity
@@ -69,11 +71,15 @@
             android:exported="false" />
 
         <activity
+            android:name=".LiveDashboardActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".OfflineDashboardActivity"
             android:exported="false" />
 
         <activity
-            android:name=".LiveDashboardActivity"
+            android:name=".AlertsActivity"
             android:exported="false" />
 
         <activity

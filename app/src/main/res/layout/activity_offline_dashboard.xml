@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_light_blue"
     android:orientation="vertical">
 
@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="@dimen/spacing_md">
 
         <ImageView
@@ -19,20 +19,23 @@
             android:layout_height="@dimen/icon_size_sm"
             android:src="@drawable/ic_location_pin"
             app:tint="@color/teal_dark" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="@dimen/spacing_sm"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
             android:text="@string/app_name"
             android:textColor="@color/teal_dark"
-            android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_heading" />
+
         <ImageView
             android:layout_width="@dimen/icon_size_md"
             android:layout_height="@dimen/icon_size_md"
             android:src="@drawable/ic_notifications"
             app:tint="@color/text_primary" />
+
     </LinearLayout>
 
     <ScrollView
@@ -46,44 +49,48 @@
             android:orientation="vertical"
             android:padding="@dimen/spacing_md">
 
-            <!-- offline banner -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_banner_offline"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:padding="@dimen/spacing_md">
+
                 <ImageView
                     android:layout_width="@dimen/icon_size_sm"
                     android:layout_height="@dimen/icon_size_sm"
                     android:src="@drawable/ic_wifi_off"
                     app:tint="@color/red_offline_dark" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/spacing_sm"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-medium"
                     android:text="@string/youre_offline"
                     android:textColor="@color/red_offline_dark"
-                    android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/text_body" />
+
                 <TextView
                     android:id="@+id/btnRetryOffline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_button_primary"
                     android:backgroundTint="@color/red_offline_dark"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:paddingStart="@dimen/spacing_md"
-                    android:paddingEnd="@dimen/spacing_md"
                     android:paddingTop="6dp"
+                    android:paddingEnd="@dimen/spacing_md"
                     android:paddingBottom="6dp"
                     android:text="@string/retry"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_small" />
+
             </LinearLayout>
 
-            <!-- Traffic cached -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,53 +98,29 @@
                 android:background="@drawable/bg_card_white"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    style="@style/Text.Heading"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_sm"
-                        android:layout_height="@dimen/icon_size_sm"
-                        android:src="@drawable/ic_directions_car"
-                        app:tint="@color/text_secondary" />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_xs"
-                        android:text="@string/traffic_cached"
-                        style="@style/Text.Heading" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_gray"
-                        android:paddingStart="@dimen/spacing_sm"
-                        android:paddingEnd="@dimen/spacing_sm"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="@string/moderate"
-                        android:textSize="@dimen/text_tiny"
-                        android:textColor="@color/text_secondary" />
-                </LinearLayout>
+                    android:text="@string/traffic_cached" />
 
                 <TextView
+                    style="@style/Text.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
                     android:text="@string/n1_delay"
-                    style="@style/Text.Body"
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    style="@style/Text.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="@string/offline_updated"
-                    style="@style/Text.Small" />
+                    android:text="@string/offline_updated" />
+
             </LinearLayout>
 
-            <!-- Load shedding -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,53 +128,29 @@
                 android:background="@drawable/bg_card_white"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    style="@style/Text.Heading"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="@dimen/icon_size_sm"
-                        android:layout_height="@dimen/icon_size_sm"
-                        android:src="@drawable/ic_bolt"
-                        app:tint="@color/blue_info" />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_xs"
-                        android:text="@string/load_shedding"
-                        style="@style/Text.Heading" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_orange"
-                        android:paddingStart="@dimen/spacing_sm"
-                        android:paddingEnd="@dimen/spacing_sm"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="@string/stage_2"
-                        android:textSize="@dimen/text_tiny"
-                        android:textColor="@color/orange_stage" />
-                </LinearLayout>
+                    android:text="@string/load_shedding" />
 
                 <TextView
+                    style="@style/Text.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
                     android:text="@string/next_slot_zone"
-                    style="@style/Text.Body"
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    style="@style/Text.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="@string/offline_updated"
-                    style="@style/Text.Small" />
+                    android:text="@string/offline_updated" />
+
             </LinearLayout>
 
-            <!-- Weather forecast -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -199,40 +158,24 @@
                 android:background="@drawable/bg_card_white"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    style="@style/Text.Heading"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/weather_forecast"
-                        style="@style/Text.Heading" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_teal"
-                        android:paddingStart="@dimen/spacing_sm"
-                        android:paddingEnd="@dimen/spacing_sm"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:text="@string/temp_22"
-                        android:textSize="@dimen/text_tiny"
-                        android:textColor="@color/teal_dark" />
-                </LinearLayout>
+                    android:text="@string/weather_forecast" />
 
                 <TextView
+                    style="@style/Text.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
                     android:text="@string/partly_cloudy"
-                    style="@style/Text.Body"
                     android:textColor="@color/text_primary" />
+
             </LinearLayout>
 
         </LinearLayout>
+
     </ScrollView>
 
     <include layout="@layout/bottom_nav_bar" />
