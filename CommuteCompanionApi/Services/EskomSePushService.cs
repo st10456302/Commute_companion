@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 
@@ -28,10 +27,10 @@ public class EskomSePushService
         using var request =
             new HttpRequestMessage(
                 HttpMethod.Get,
-                "https://developer.sepush.co.za/business/2.0/status");
+                "https://developer.sepush.co.za/business/3.1/status");
 
         request.Headers.TryAddWithoutValidation(
-            "Token",
+            "token",
             apiKey);
 
         var response =
@@ -52,14 +51,23 @@ public class EskomSePushService
             await response.Content.ReadFromJsonAsync<
                 EskomStatusResponse>();
 
-        if (result?.Status == null)
+        if (result?.Status?.Eskom == null)
         {
             return null;
         }
 
+        if (!int.TryParse(
+                result.Status.Eskom.Stage,
+                out var stage))
+        {
+            throw new InvalidOperationException(
+                $"EskomSePush returned an invalid load-shedding stage: " +
+                $"'{result.Status.Eskom.Stage}'.");
+        }
+
         return new EskomStatusResult
         {
-            Stage = result.Status.Eskom.Stage
+            Stage = stage
         };
     }
 }
@@ -67,19 +75,40 @@ public class EskomSePushService
 public class EskomStatusResponse
 {
     [JsonPropertyName("status")]
-    public EskomStatus? Status { get; set; }
+    public EskomStatusCollection? Status { get; set; }
 }
 
-public class EskomStatus
+public class EskomStatusCollection
 {
     [JsonPropertyName("eskom")]
-    public EskomStatusDetails Eskom { get; set; } = new();
+    public EskomStatusDetails? Eskom { get; set; }
 }
 
 public class EskomStatusDetails
 {
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+
     [JsonPropertyName("stage")]
-    public int Stage { get; set; }
+    public string Stage { get; set; } = "0";
+
+    [JsonPropertyName("stage_updated")]
+    public string StageUpdated { get; set; } = string.Empty;
+
+    [JsonPropertyName("next_stages")]
+    public List<EskomNextStage> NextStages { get; set; } = new();
+}
+
+public class EskomNextStage
+{
+    [JsonPropertyName("stage")]
+    public string Stage { get; set; } = string.Empty;
+
+    [JsonPropertyName("start")]
+    public string Start { get; set; } = string.Empty;
+
+    [JsonPropertyName("end")]
+    public string End { get; set; } = string.Empty;
 }
 
 public class EskomStatusResult
