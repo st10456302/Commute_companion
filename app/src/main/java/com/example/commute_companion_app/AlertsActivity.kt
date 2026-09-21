@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -85,6 +86,76 @@ class AlertsActivity : AppCompatActivity() {
 
             Log.d(
                 "CommuteCompanionAPI",
+                "Loading notification preferences for Alerts..."
+            )
+
+            val preferencesResult =
+                repository.getNotificationPreferences()
+
+            preferencesResult.onSuccess { preferences ->
+
+                Log.d(
+                    "CommuteCompanionAPI",
+                    "Alert preferences loaded — " +
+                            "notificationsEnabled=" +
+                            "${preferences.notificationsEnabled}, " +
+                            "trafficAlerts=" +
+                            "${preferences.trafficAlerts}, " +
+                            "weatherAlerts=" +
+                            "${preferences.weatherAlerts}, " +
+                            "loadSheddingAlerts=" +
+                            "${preferences.loadSheddingAlerts}"
+                )
+
+                if (!preferences.notificationsEnabled) {
+
+                    Log.d(
+                        "CommuteCompanionAPI",
+                        "Notifications are disabled. " +
+                                "Hiding all alert categories."
+                    )
+
+                    hideAllAlerts()
+
+                    return@onSuccess
+                }
+
+                loadSavedLocation(
+                    prefs,
+                    preferences.trafficAlerts,
+                    preferences.weatherAlerts,
+                    preferences.loadSheddingAlerts
+                )
+            }
+
+            preferencesResult.onFailure { exception ->
+
+                Log.e(
+                    "CommuteCompanionAPI",
+                    "Failed to load notification preferences.",
+                    exception
+                )
+
+                Toast.makeText(
+                    this@AlertsActivity,
+                    "Unable to load notification settings.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun loadSavedLocation(
+        prefs: AppPreferences,
+        trafficAlertsEnabled: Boolean,
+        weatherAlertsEnabled: Boolean,
+        loadSheddingAlertsEnabled: Boolean
+    ) {
+
+        lifecycleScope.launch {
+
+            Log.d(
+                "CommuteCompanionAPI",
                 "Loading saved locations for Alerts..."
             )
 
@@ -122,7 +193,10 @@ class AlertsActivity : AppCompatActivity() {
                 )
 
                 loadDashboardAlerts(
-                    selectedLocation.id
+                    selectedLocation.id,
+                    trafficAlertsEnabled,
+                    weatherAlertsEnabled,
+                    loadSheddingAlertsEnabled
                 )
             }
 
@@ -144,7 +218,10 @@ class AlertsActivity : AppCompatActivity() {
     }
 
     private fun loadDashboardAlerts(
-        locationId: Int
+        locationId: Int,
+        trafficAlertsEnabled: Boolean,
+        weatherAlertsEnabled: Boolean,
+        loadSheddingAlertsEnabled: Boolean
     ) {
 
         lifecycleScope.launch {
@@ -170,7 +247,12 @@ class AlertsActivity : AppCompatActivity() {
                             "wetRoads=${dashboard.weather.wetRoads}"
                 )
 
-                updateAlertsUi(dashboard)
+                updateAlertsUi(
+                    dashboard,
+                    trafficAlertsEnabled,
+                    weatherAlertsEnabled,
+                    loadSheddingAlertsEnabled
+                )
             }
 
             result.onFailure { exception ->
@@ -191,131 +273,209 @@ class AlertsActivity : AppCompatActivity() {
     }
 
     private fun updateAlertsUi(
-        dashboard: DashboardResponse
+        dashboard: DashboardResponse,
+        trafficAlertsEnabled: Boolean,
+        weatherAlertsEnabled: Boolean,
+        loadSheddingAlertsEnabled: Boolean
     ) {
 
-        // -------------------------------------------------
-        // TRAFFIC ALERT
-        // -------------------------------------------------
+        val trafficCard =
+            findViewById<LinearLayout>(
+                R.id.cardTrafficAlert
+            )
 
-        findViewById<TextView>(
-            R.id.tvTrafficAlertStatus
-        ).text =
-            dashboard.traffic.status
+        val loadSheddingCard =
+            findViewById<LinearLayout>(
+                R.id.cardLoadSheddingAlert
+            )
 
-        val trafficMessage =
-            when {
-                dashboard.traffic.incidentCount > 0 &&
-                        dashboard.traffic.delayMinutes > 0 -> {
-                    "${dashboard.traffic.incidentCount} traffic " +
-                            "incident(s) detected. " +
-                            "${dashboard.traffic.delayMinutes} min delay."
+        val weatherCard =
+            findViewById<LinearLayout>(
+                R.id.cardWeatherAlert
+            )
+
+        /*
+         * Traffic Alerts
+         *
+         * The category is visible only when the user has enabled
+         * Traffic Alerts in Settings.
+         */
+        if (trafficAlertsEnabled) {
+
+            trafficCard.visibility = View.VISIBLE
+
+            findViewById<TextView>(
+                R.id.tvTrafficAlertStatus
+            ).text =
+                dashboard.traffic.status
+
+            val trafficMessage =
+                when {
+                    dashboard.traffic.incidentCount > 0 &&
+                            dashboard.traffic.delayMinutes > 0 -> {
+                        "${dashboard.traffic.incidentCount} traffic " +
+                                "incident(s) detected. " +
+                                "${dashboard.traffic.delayMinutes} min delay."
+                    }
+
+                    dashboard.traffic.incidentCount > 0 -> {
+                        "${dashboard.traffic.incidentCount} traffic " +
+                                "incident(s) detected near your route."
+                    }
+
+                    dashboard.traffic.delayMinutes > 0 -> {
+                        "${dashboard.traffic.delayMinutes} min traffic delay " +
+                                "reported on your route."
+                    }
+
+                    else -> {
+                        "Traffic is currently ${dashboard.traffic.status.lowercase()} " +
+                                "with no reported incidents."
+                    }
                 }
 
-                dashboard.traffic.incidentCount > 0 -> {
-                    "${dashboard.traffic.incidentCount} traffic " +
-                            "incident(s) detected near your route."
-                }
+            findViewById<TextView>(
+                R.id.tvTrafficAlertMessage
+            ).text = trafficMessage
 
-                dashboard.traffic.delayMinutes > 0 -> {
-                    "${dashboard.traffic.delayMinutes} min traffic delay " +
-                            "reported on your route."
-                }
+        } else {
 
-                else -> {
-                    "Traffic is currently ${dashboard.traffic.status.lowercase()} " +
-                            "with no reported incidents."
-                }
-            }
+            trafficCard.visibility = View.GONE
 
-        findViewById<TextView>(
-            R.id.tvTrafficAlertMessage
-        ).text = trafficMessage
+            Log.d(
+                "CommuteCompanionAPI",
+                "Traffic Alerts disabled — hiding traffic card."
+            )
+        }
 
-        // -------------------------------------------------
-        // LOAD SHEDDING ALERT
-        // -------------------------------------------------
+        /*
+         * Load-shedding Alerts
+         *
+         * The category is visible only when the user has enabled
+         * Load-shedding Alerts in Settings.
+         */
+        if (loadSheddingAlertsEnabled) {
 
-        findViewById<TextView>(
-            R.id.tvLoadSheddingAlertStatus
-        ).text =
-            "Stage ${dashboard.loadShedding.stage}"
+            loadSheddingCard.visibility = View.VISIBLE
 
-        val loadSheddingMessage =
-            if (dashboard.loadShedding.stage > 0) {
+            findViewById<TextView>(
+                R.id.tvLoadSheddingAlertStatus
+            ).text =
+                "Stage ${dashboard.loadShedding.stage}"
 
-                "${dashboard.loadShedding.changeIn}. " +
-                        dashboard.loadShedding.nextSlot
+            val loadSheddingMessage =
+                if (dashboard.loadShedding.stage > 0) {
 
-            } else {
+                    "${dashboard.loadShedding.changeIn}. " +
+                            dashboard.loadShedding.nextSlot
 
-                if (
-                    dashboard.loadShedding.nextSlot
-                        .equals(
-                            "No upcoming load-shedding event",
-                            ignoreCase = true
-                        )
-                ) {
-                    "Power is currently available. " +
-                            "No upcoming load-shedding event."
                 } else {
-                    dashboard.loadShedding.nextSlot
+
+                    if (
+                        dashboard.loadShedding.nextSlot
+                            .equals(
+                                "No upcoming load-shedding event",
+                                ignoreCase = true
+                            )
+                    ) {
+                        "Power is currently available. " +
+                                "No upcoming load-shedding event."
+                    } else {
+                        dashboard.loadShedding.nextSlot
+                    }
                 }
-            }
 
-        findViewById<TextView>(
-            R.id.tvLoadSheddingAlertMessage
-        ).text = loadSheddingMessage
+            findViewById<TextView>(
+                R.id.tvLoadSheddingAlertMessage
+            ).text = loadSheddingMessage
 
-        // -------------------------------------------------
-        // WEATHER ALERT
-        // -------------------------------------------------
+        } else {
 
-        findViewById<TextView>(
-            R.id.tvWeatherAlertStatus
-        ).text =
-            if (dashboard.weather.wetRoads) {
-                "Alert"
-            } else {
-                "Info"
-            }
+            loadSheddingCard.visibility = View.GONE
 
-        val weatherMessage =
-            if (dashboard.weather.wetRoads) {
+            Log.d(
+                "CommuteCompanionAPI",
+                "Load-shedding Alerts disabled — " +
+                        "hiding load-shedding card."
+            )
+        }
 
-                "Wet road conditions reported. " +
-                        "Current temperature: " +
-                        "${dashboard.weather.temperatureCelsius.toInt()}°C."
+        /*
+         * Weather Alerts
+         *
+         * The category is visible only when the user has enabled
+         * Weather Alerts in Settings.
+         */
+        if (weatherAlertsEnabled) {
 
-            } else {
+            weatherCard.visibility = View.VISIBLE
 
-                "Current temperature: " +
-                        "${dashboard.weather.temperatureCelsius.toInt()}°C. " +
-                        dashboard.weather.condition
-            }
+            findViewById<TextView>(
+                R.id.tvWeatherAlertStatus
+            ).text =
+                if (dashboard.weather.wetRoads) {
+                    "Alert"
+                } else {
+                    "Info"
+                }
 
-        findViewById<TextView>(
-            R.id.tvWeatherAlertMessage
-        ).text = weatherMessage
+            val weatherMessage =
+                if (dashboard.weather.wetRoads) {
 
-        // -------------------------------------------------
-        // ALERT COUNT
-        // -------------------------------------------------
+                    "Wet road conditions reported. " +
+                            "Current temperature: " +
+                            "${dashboard.weather.temperatureCelsius.toInt()}°C."
 
+                } else {
+
+                    "Current temperature: " +
+                            "${dashboard.weather.temperatureCelsius.toInt()}°C. " +
+                            dashboard.weather.condition
+                }
+
+            findViewById<TextView>(
+                R.id.tvWeatherAlertMessage
+            ).text = weatherMessage
+
+        } else {
+
+            weatherCard.visibility = View.GONE
+
+            Log.d(
+                "CommuteCompanionAPI",
+                "Weather Alerts disabled — hiding weather card."
+            )
+        }
+
+        /*
+         * Alert badge
+         *
+         * Only enabled categories with an actual alert contribute
+         * to the notification count.
+         */
         var alertCount = 0
 
         if (
-            dashboard.traffic.incidentCount > 0 ||
-            dashboard.traffic.delayMinutes > 0
+            trafficAlertsEnabled &&
+            (
+                    dashboard.traffic.incidentCount > 0 ||
+                            dashboard.traffic.delayMinutes > 0
+                    )
         ) {
             alertCount++
         }
 
-        if (dashboard.loadShedding.stage > 0) {
+        if (
+            loadSheddingAlertsEnabled &&
+            dashboard.loadShedding.stage > 0
+        ) {
             alertCount++
         }
 
-        if (dashboard.weather.wetRoads) {
+        if (
+            weatherAlertsEnabled &&
+            dashboard.weather.wetRoads
+        ) {
             alertCount++
         }
 
@@ -328,6 +488,30 @@ class AlertsActivity : AppCompatActivity() {
             "CommuteCompanionAPI",
             "Alerts UI updated successfully — " +
                     "alertCount=$alertCount"
+        )
+    }
+
+    private fun hideAllAlerts() {
+
+        findViewById<LinearLayout>(
+            R.id.cardTrafficAlert
+        ).visibility = View.GONE
+
+        findViewById<LinearLayout>(
+            R.id.cardLoadSheddingAlert
+        ).visibility = View.GONE
+
+        findViewById<LinearLayout>(
+            R.id.cardWeatherAlert
+        ).visibility = View.GONE
+
+        findViewById<TextView>(
+            R.id.tvAlertsCount
+        ).text = "0"
+
+        Log.d(
+            "CommuteCompanionAPI",
+            "All alert cards hidden and alert count reset to 0."
         )
     }
 }
